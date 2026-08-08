@@ -22,11 +22,27 @@ cd site; npm install; npm run dev
 
 ## Embed in WordPress
 
+The site posts its rendered height to the embedding page (`{source: "wpr-watch-ledger",
+height}`) whenever content changes, so the iframe can size itself — no hardcoded
+min-height. Paste both the iframe and the listener into a Custom HTML block:
+
 ```html
-<iframe src="https://YOUR-GH-USERNAME.github.io/wpr-watch-ledger/"
-        style="width:100%;border:none;min-height:3400px" title="The Watch Ledger"
+<iframe id="watch-ledger" src="https://YOUR-GH-USERNAME.github.io/wpr-watch-ledger/"
+        style="width:100%;border:none;height:1200px" title="The Watch Ledger"
         loading="lazy"></iframe>
+<script>
+window.addEventListener("message", function (e) {
+  if (!e.data || e.data.source !== "wpr-watch-ledger") return;
+  var frame = document.getElementById("watch-ledger");
+  if (!frame || e.origin !== new URL(frame.src).origin) return;
+  if (typeof e.data.height === "number" && e.data.height > 0) {
+    frame.style.height = Math.ceil(e.data.height) + "px";
+  }
+});
+</script>
 ```
+
+The `height:1200px` is only the placeholder before the first message arrives.
 
 ## Editorial workflow
 
