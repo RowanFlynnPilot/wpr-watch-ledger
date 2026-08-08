@@ -1,0 +1,106 @@
+{
+  "wausau pd": {
+    "name": "Wausau Police Department",
+    "county": "Marathon County",
+    "status": "active",
+    "as_of": "2026-06-16",
+    "note": "20 cameras at city entry points; statewide-only sharing (opted out of nationwide network); 30-day retention; 10-year contract",
+    "source": "https://www.wsaw.com/2026/06/16/wausau-police-highlight-use-flock-cameras-downtown-patrol-successes/"
+  },
+  "marathon county so": {
+    "name": "Marathon County Sheriff's Office",
+    "county": "Marathon County",
+    "status": "active",
+    "as_of": "2022-12-30",
+    "note": "First camera installed in Rib Mountain in 2022 — VERIFY CURRENT COUNT",
+    "source": "https://www.wsaw.com/2022/12/30/marathon-county-sherriffs-office-is-using-flock-cameras-catch-criminals/"
+  },
+  "dane county so": {
+    "name": "Dane County Sheriff's Office",
+    "county": "Dane County",
+    "status": "dropped",
+    "as_of": "2026-04-30",
+    "note": "County board voted 32-1 to strip $80,000 in Flock funding; sheriff confirmed ceasing use",
+    "source": "https://wisconsinwatch.org/2026/05/wisconsin-flock-camera-ai-surveillance-backlash-police-privacy-dane-county-milwaukee/"
+  },
+  "verona pd": {
+    "name": "Verona Police Department",
+    "county": "Dane County",
+    "status": "dropped",
+    "as_of": "2026-05-15",
+    "note": "Contract ended; city covered remaining cameras after Flock delayed removal",
+    "source": "https://wisconsinwatch.org/2026/05/wisconsin-flock-camera-ai-surveillance-backlash-police-privacy-dane-county-milwaukee/"
+  },
+  "monona pd": {
+    "name": "Monona Police Department",
+    "county": "Dane County",
+    "status": "dropped",
+    "as_of": "2026-06-04",
+    "note": "Among Wisconsin communities ending Flock contracts amid privacy concerns",
+    "source": "https://wisconsinexaminer.com/2026/06/04/flock-on-shaky-ground-in-wisconsin-as-communities-weigh-privacy-and-safety/"
+  },
+  "fitchburg pd": {
+    "name": "Fitchburg Police Department",
+    "county": "Dane County",
+    "status": "dropped",
+    "as_of": "2026-06-04",
+    "note": "Among Wisconsin communities ending Flock contracts amid privacy concerns",
+    "source": "https://wisconsinexaminer.com/2026/06/04/flock-on-shaky-ground-in-wisconsin-as-communities-weigh-privacy-and-safety/"
+  },
+  "appleton pd": {
+    "name": "Appleton Police Department",
+    "county": "Outagamie County",
+    "status": "dropped",
+    "as_of": "2026-06-04",
+    "note": "Among Wisconsin communities ending Flock contracts amid privacy concerns",
+    "source": "https://wisconsinexaminer.com/2026/06/04/flock-on-shaky-ground-in-wisconsin-as-communities-weigh-privacy-and-safety/"
+  },
+  "oshkosh pd": {
+    "name": "Oshkosh Police Department",
+    "county": "Winnebago County",
+    "status": "dropped",
+    "as_of": "2026-06-04",
+    "note": "Among Wisconsin communities ending Flock contracts amid privacy concerns",
+    "source": "https://wisconsinexaminer.com/2026/06/04/flock-on-shaky-ground-in-wisconsin-as-communities-weigh-privacy-and-safety/"
+  },
+  "sturgeon bay pd": {
+    "name": "Sturgeon Bay Police Department",
+    "county": "Door County",
+    "status": "dropped",
+    "as_of": "2026-06-04",
+    "note": "Among Wisconsin communities ending Flock contracts amid privacy concerns",
+    "source": "https://wisconsinexaminer.com/2026/06/04/flock-on-shaky-ground-in-wisconsin-as-communities-weigh-privacy-and-safety/"
+  },
+  "university of madison pd": {
+    "name": "University of Wisconsin-Madison Police Department",
+    "county": "Dane County",
+    "status": "dropped",
+    "as_of": "2026-07-06",
+    "note": "Removing Flock cameras from campus after faculty criticism; plans to seek a different ALPR vendor",
+    "source": "https://captimes.com/news/education/uw-madison-police-to-remove-contentious-flock-cameras-from-campus/article_150acf6c-c335-45f4-9b10-ab99d7f9b910.html"
+  },
+  "milwaukee pd": {
+    "name": "Milwaukee Police Department",
+    "county": "Milwaukee County",
+    "status": "active",
+    "as_of": "2026-05-08",
+    "note": "Continuing Flock use after officer misuse case and Fire & Police Commission review; monthly audits added",
+    "source": "https://spectrumnews1.com/wi/milwaukee/news/2026/05/08/where-wisconsin-cities-stand-on-flock-camera-programs"
+  },
+  "chetek pd": {
+    "name": "Chetek Police Department",
+    "county": "Barron County",
+    "status": "active",
+    "as_of": "2026-07-21",
+    "note": "Two cameras installed May 2026 without notifying the mayor or city council",
+    "source": "https://www.weau.com/2026/07/21/chetek-police-install-flock-cameras-without-mayors-knowledge/"
+  },
+  "brown county so": {
+    "name": "Brown County Sheriff's Office",
+    "county": "Brown County",
+    "status": "active",
+    "as_of": "2026-08-06",
+    "note": "Used multi-state Flock network to track a Wisconsin resident across state lines over an out-of-state marijuana purchase (404 Media)",
+    "source": "https://gizmodo.com/wisconsin-cops-tracked-a-man-with-flock-cameras-to-arrest-him-for-weed-2000795424"
+  }
+}
