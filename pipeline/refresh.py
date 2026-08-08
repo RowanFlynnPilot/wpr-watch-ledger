@@ -38,6 +38,8 @@ ATLAS_URL = "https://atlasofsurveillance.org/download"
 
 VALID_STATUSES = {"active", "dropped", "never"}
 
+HISTORY_STAT_KEYS = {"cameras", "searches_30d", "vehicles_captured_30d", "hotlist_hits_30d"}
+
 
 # ---------------------------------------------------------------- name matching
 
@@ -185,6 +187,52 @@ def fetch_atlas() -> list[dict]:
     return out
 
 
+# ---------------------------------------------------------------- history
+
+def load_history() -> dict:
+    """Load data/history.json, validating every snapshot. Missing file bootstraps an
+    empty ledger (first run); any corruption or shape drift aborts the run."""
+    path = DATA / "history.json"
+    if not path.exists():
+        return {"snapshots": []}
+    history = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(history, dict) or list(history.keys()) != ["snapshots"] or not isinstance(history["snapshots"], list):
+        raise RuntimeError("history.json corrupt: expected {'snapshots': [...]}")
+    prev_date = ""
+    for snap in history["snapshots"]:
+        if not isinstance(snap, dict) or set(snap.keys()) != {"date", "portals"}:
+            raise RuntimeError(f"history.json corrupt: snapshot keys must be {{date, portals}}, got {snap if not isinstance(snap, dict) else set(snap.keys())}")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", snap["date"]):
+            raise RuntimeError(f"history.json corrupt: bad snapshot date '{snap['date']}'")
+        if snap["date"] <= prev_date:
+            raise RuntimeError(f"history.json corrupt: snapshot dates not strictly increasing at '{snap['date']}'")
+        prev_date = snap["date"]
+        if not isinstance(snap["portals"], dict):
+            raise RuntimeError(f"history.json corrupt: snapshot '{snap['date']}' portals is not an object")
+        for key, stats in snap["portals"].items():
+            if not isinstance(stats, dict) or set(stats.keys()) != HISTORY_STAT_KEYS:
+                raise RuntimeError(f"history.json corrupt: snapshot '{snap['date']}' entry '{key}' must have exactly {sorted(HISTORY_STAT_KEYS)}")
+            for stat, value in stats.items():
+                if value is not None and not isinstance(value, int):
+                    raise RuntimeError(f"history.json corrupt: snapshot '{snap['date']}' entry '{key}' stat '{stat}' is {type(value).__name__}, expected int or null")
+    return history
+
+
+def append_snapshot(history: dict, portals: list[dict], run_date: str) -> None:
+    """Append today's per-portal stats. Past snapshots are never rewritten; a rerun
+    on the same date replaces that date's snapshot instead of duplicating it."""
+    entry = {p["canonical"]: {k: p[k] for k in HISTORY_STAT_KEYS} for p in portals}
+    for key, stats in entry.items():
+        for stat, value in stats.items():
+            if value is not None and not isinstance(value, int):
+                raise RuntimeError(f"Portal '{key}' stat '{stat}' is {type(value).__name__}, expected int or null; refusing to write history.json")
+    snapshots = history["snapshots"]
+    if snapshots and snapshots[-1]["date"] == run_date:
+        snapshots[-1]["portals"] = entry
+    else:
+        snapshots.append({"date": run_date, "portals": entry})
+
+
 # ---------------------------------------------------------------- overlay + merge
 
 def load_overlay() -> dict:
@@ -257,21 +305,26 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
 def main() -> None:
     generated = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    print("[1/4] Overpass: Wisconsin ALPR nodes...")
+    print("[1/5] Overpass: Wisconsin ALPR nodes...")
     cameras = fetch_cameras()
     print(f"      {cameras['count']} cameras ({cameras['flock_count']} Flock Safety)")
 
-    print("[2/4] Eyes On Flock: transparency portals + network edges...")
+    print("[2/5] Eyes On Flock: transparency portals + network edges...")
     portals, edges = fetch_portals()
     print(f"      {len(portals)} WI portals, {len(edges)} WI agencies in sharing lists")
 
-    print("[3/4] EFF Atlas of Surveillance: WI ALPR records...")
+    print("[3/5] EFF Atlas of Surveillance: WI ALPR records...")
     atlas = fetch_atlas()
     print(f"      {len(atlas)} sourced records")
 
-    print("[4/4] Merging with curated status overlay...")
+    print("[4/5] Merging with curated status overlay...")
     overlay = load_overlay()
     agencies = build_agencies(portals, edges, atlas, overlay)
+
+    print("[5/5] Appending portal stats to history ledger...")
+    history = load_history()
+    append_snapshot(history, portals, generated[:10])
+    print(f"      {len(history['snapshots'])} snapshot(s) on record")
 
     meta = {
         "generated": generated,
@@ -291,6 +344,7 @@ def main() -> None:
     (DATA / "cameras.json").write_text(json.dumps(cameras, separators=(",", ":")), encoding="utf-8")
     (DATA / "agencies.json").write_text(json.dumps({"generated": generated, "agencies": agencies}, separators=(",", ":")), encoding="utf-8")
     (DATA / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    (DATA / "history.json").write_text(json.dumps(history, indent=1), encoding="utf-8")
     print(f"Done. {len(agencies)} agencies, {cameras['count']} cameras -> data/")
 
 

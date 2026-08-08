@@ -10,21 +10,38 @@ export default function App() {
 
   useEffect(() => {
     Promise.all(
-      ["meta", "cameras", "agencies"].map((f) =>
+      ["meta", "cameras", "agencies", "history"].map((f) =>
         fetch(`${import.meta.env.BASE_URL}data/${f}.json`).then((r) => {
           if (!r.ok) throw new Error(`Failed to load ${f}.json (${r.status})`);
           return r.json();
         })
       )
     )
-      .then(([meta, cameras, agencies]) => setData({ meta, cameras, agencies: agencies.agencies }))
+      .then(([meta, cameras, agencies, history]) =>
+        setData({ meta, cameras, agencies: agencies.agencies, history })
+      )
       .catch((e) => setError(e.message));
   }, []);
 
   if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
   if (!data) return <div className="loading">Loading the ledger…</div>;
 
-  const { meta, cameras, agencies } = data;
+  const { meta, cameras, agencies, history } = data;
+
+  // Week-over-week search deltas from the last two history snapshots.
+  // Null until two snapshots exist; per-agency null when either week lacks a figure.
+  let searchDeltas = null;
+  if (history.snapshots.length >= 2) {
+    const [prev, latest] = history.snapshots.slice(-2);
+    searchDeltas = {};
+    for (const [key, stats] of Object.entries(latest.portals)) {
+      const before = prev.portals[key];
+      if (before && stats.searches_30d != null && before.searches_30d != null) {
+        searchDeltas[key] = stats.searches_30d - before.searches_30d;
+      }
+    }
+  }
+
   const inNetwork = agencies.filter((a) => a.in_network);
   const withPortal = agencies.filter((a) => a.portal);
   const dropped = agencies.filter((a) => a.status.value === "dropped");
@@ -111,7 +128,7 @@ export default function App() {
           data-sharing lists. Camera and search figures come from each agency's own transparency
           portal; a dash means the agency publishes nothing.
         </p>
-        <AgencyTable agencies={agencies} />
+        <AgencyTable agencies={agencies} searchDeltas={searchDeltas} />
       </section>
 
       <footer className="methodology">

@@ -11,7 +11,7 @@ const COLUMNS = [
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
-export default function AgencyTable({ agencies }) {
+export default function AgencyTable({ agencies, searchDeltas }) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState({ key: null, dir: 1 });
 
@@ -74,7 +74,19 @@ export default function AgencyTable({ agencies }) {
                   {!a.status.derived && a.status.as_of && <span className="asof"> {a.status.as_of}</span>}
                 </td>
                 <td className="cell-num">{fmt(a.portal?.cameras)}</td>
-                <td className="cell-num">{fmt(a.portal?.searches_30d)}</td>
+                <td className="cell-num">
+                  {fmt(a.portal?.searches_30d)}
+                  {searchDeltas != null && searchDeltas[a.canonical] != null && searchDeltas[a.canonical] !== 0 && (
+                    <span
+                      className="delta"
+                      title="Change since the previous weekly snapshot"
+                      aria-label={`${searchDeltas[a.canonical] > 0 ? "up" : "down"} ${Math.abs(searchDeltas[a.canonical]).toLocaleString("en-US")} from last week`}
+                    >
+                      {searchDeltas[a.canonical] > 0 ? "▲" : "▼"}
+                      {Math.abs(searchDeltas[a.canonical]).toLocaleString("en-US")}
+                    </span>
+                  )}
+                </td>
                 <td className="cell-num">{fmt(a.portal?.shared_with_count)}</td>
                 <td className="cell-sources">
                   {a.portal && (
