@@ -245,6 +245,49 @@ def append_snapshot(history: dict, portals: list[dict], run_date: str) -> None:
         snapshots.append({"date": run_date, "portals": entry})
 
 
+# ---------------------------------------------------------------- county enrichment
+
+# One spelling per county, USPS style. Sources disagree: EOF says "Saint Croix",
+# the Atlas ships a mangled "Croix County", title-casing yields "St Croix".
+COUNTY_FIXUPS = {
+    "Croix County": "St. Croix County",
+    "Saint Croix County": "St. Croix County",
+    "St Croix County": "St. Croix County",
+    "Fond Du Lac County": "Fond du Lac County",
+}
+
+COUNTY_IN_NAME = re.compile(r"^(.+?) county\b")
+CO_SO = re.compile(r"^(.+?) co so$")
+MUNI_PREFIX = re.compile(r"^(city|town|village|university) of ")
+
+
+def load_city_county() -> dict:
+    path = DATA / "wi_city_county.json"
+    if not path.exists():
+        raise RuntimeError("data/wi_city_county.json is missing; the municipality->county lookup is required.")
+    lookup = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(lookup, dict) or not lookup:
+        raise RuntimeError("wi_city_county.json must be a non-empty object of municipality -> county")
+    for muni, county in lookup.items():
+        if canonicalize(muni) != muni:
+            raise RuntimeError(f"wi_city_county.json key is not canonical: '{muni}' (should be '{canonicalize(muni)}')")
+        if not isinstance(county, str) or not county.endswith(" County"):
+            raise RuntimeError(f"wi_city_county.json '{muni}': value must end in ' County', got {county!r}")
+    return lookup
+
+
+def resolve_county(canonical: str, city_county: dict) -> str | None:
+    """County for an agency whose sources supplied none. Two rules, no guessing:
+    the name states its county outright (sheriffs, county agencies), or the name
+    minus a municipal prefix/PD suffix exactly matches a known municipality."""
+    m = COUNTY_IN_NAME.match(canonical) or CO_SO.match(canonical)
+    if m:
+        return " ".join(w.title() for w in m.group(1).split()) + " County"
+    muni = MUNI_PREFIX.sub("", canonical)
+    muni = re.sub(r" pd$", "", muni)
+    return city_county.get(muni)
+
+
 # ---------------------------------------------------------------- overlay + merge
 
 def load_overlay() -> dict:
@@ -261,7 +304,7 @@ def load_overlay() -> dict:
     return overlay
 
 
-def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict) -> list[dict]:
+def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict, city_county: dict) -> list[dict]:
     agencies: dict[str, dict] = {}
 
     def get(key: str, name: str) -> dict:
@@ -306,6 +349,12 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         a["status"] = {"value": o["status"], "derived": False, "as_of": o["as_of"],
                        "source": o["source"], "note": o.get("note")}
 
+    for a in agencies.values():
+        if a["county"] is None:
+            a["county"] = resolve_county(a["canonical"], city_county)
+        if a["county"] in COUNTY_FIXUPS:
+            a["county"] = COUNTY_FIXUPS[a["county"]]
+
     result = sorted(agencies.values(), key=lambda a: ((a["portal"] is None), -(a["portal"]["cameras"] or 0) if a["portal"] else 0, a["name"]))
     if len(result) < 100:
         raise RuntimeError(f"Merged roster has only {len(result)} agencies; expected 200+. Aborting.")
@@ -330,9 +379,12 @@ def main() -> None:
     atlas = fetch_atlas()
     print(f"      {len(atlas)} sourced records")
 
-    print("[4/5] Merging with curated status overlay...")
+    print("[4/5] Merging with curated status overlay + county lookup...")
     overlay = load_overlay()
-    agencies = build_agencies(portals, edges, atlas, overlay)
+    city_county = load_city_county()
+    agencies = build_agencies(portals, edges, atlas, overlay, city_county)
+    unresolved = sum(1 for a in agencies if a["county"] is None)
+    print(f"      {len(agencies) - unresolved} agencies with a county, {unresolved} unresolved")
 
     print("[5/5] Appending portal stats to history ledger...")
     history = load_history()
