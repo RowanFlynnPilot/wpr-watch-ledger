@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import CameraMap from "./CameraMap.jsx";
 import AgencyTable from "./AgencyTable.jsx";
+import SharingList from "./SharingList.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -10,15 +11,15 @@ export default function App() {
 
   useEffect(() => {
     Promise.all(
-      ["meta", "cameras", "agencies", "history"].map((f) =>
+      ["meta", "cameras", "agencies", "history", "edges"].map((f) =>
         fetch(`${import.meta.env.BASE_URL}data/${f}.json`).then((r) => {
           if (!r.ok) throw new Error(`Failed to load ${f}.json (${r.status})`);
           return r.json();
         })
       )
     )
-      .then(([meta, cameras, agencies, history]) =>
-        setData({ meta, cameras, agencies: agencies.agencies, history })
+      .then(([meta, cameras, agencies, history, edges]) =>
+        setData({ meta, cameras, agencies: agencies.agencies, history, edges: edges.edges })
       )
       .catch((e) => setError(e.message));
   }, []);
@@ -26,7 +27,7 @@ export default function App() {
   if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
   if (!data) return <div className="loading">Loading the ledger…</div>;
 
-  const { meta, cameras, agencies, history } = data;
+  const { meta, cameras, agencies, history, edges } = data;
 
   // Week-over-week search deltas from the last two history snapshots.
   // Null until two snapshots exist; per-agency null when either week lacks a figure.
@@ -129,6 +130,16 @@ export default function App() {
           portal; a dash means the agency publishes nothing.
         </p>
         <AgencyTable agencies={agencies} searchDeltas={searchDeltas} />
+      </section>
+
+      <section className="sharing" aria-label="Who shares with whom">
+        <h2>Who shares with whom</h2>
+        <p className="sharing-dek">
+          Agencies that publish a transparency portal also disclose which other agencies can
+          search their camera data. These are the Wisconsin partners each portal currently
+          lists — out-of-state partners are not shown.
+        </p>
+        <SharingList agencies={agencies} edges={edges} />
       </section>
 
       <footer className="methodology">

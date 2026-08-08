@@ -156,6 +156,34 @@ th { position: sticky; top: 0; background: var(--white); }
 tbody tr:hover { background: var(--cream); }
 .table-count { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); }
 
+/* who shares with whom */
+.sharing { margin-bottom: 3rem; }
+.sharing-dek { max-width: 44rem; }
+.sharing-list { border: 1px solid var(--line); background: var(--white); }
+.sharing-row { border-bottom: 1px solid var(--line); }
+.sharing-row:last-child { border-bottom: none; }
+.sharing-row summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 0.85rem;
+  cursor: pointer;
+  list-style-position: inside;
+}
+.sharing-row summary:hover { background: var(--cream); }
+.sharing-name { font-weight: 500; font-size: 0.92rem; }
+.sharing-count { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-soft); white-space: nowrap; }
+.sharing-partners {
+  columns: 2;
+  column-gap: 2rem;
+  margin: 0;
+  padding: 0.25rem 0.85rem 0.85rem 2rem;
+  font-size: 0.85rem;
+}
+.sharing-partners li { break-inside: avoid; padding: 0.12rem 0; }
+.sharing-partners .badge { margin-left: 0.45rem; }
+
 /* methodology */
 .methodology { border-top: 2px solid var(--ink); padding-top: 1.25rem; }
 .methodology p { font-size: 0.85rem; color: var(--ink-soft); max-width: 46rem; }

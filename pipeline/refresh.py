@@ -107,8 +107,10 @@ def portal_name_from_slug(slug: str) -> str:
     return f"{base} {suffix}".strip()
 
 
-def fetch_portals() -> tuple[list[dict], dict]:
-    """Returns (WI portal records, WI network-edge roster derived from national sharing lists)."""
+def fetch_portals() -> tuple[list[dict], dict, dict]:
+    """Returns (WI portal records,
+                WI network-edge roster derived from national sharing lists,
+                per-portal WI sharing partners: portal canonical -> sorted partner canonicals)."""
     r = requests.get(EOF_URL, headers=UA, timeout=120)
     r.raise_for_status()
     payload = r.json()
@@ -121,14 +123,25 @@ def fetch_portals() -> tuple[list[dict], dict]:
     if missing:
         raise RuntimeError(f"Eyes On Flock portal record missing expected keys: {missing}")
 
+    wi_pattern = re.compile(r"\bWI\b")
     wi_portals = []
+    sharing: dict[str, list[str]] = {}
     for p in portals:
         if (p.get("state") or "").upper() != "WI":
             continue
         name = portal_name_from_slug(p["slug"])
+        portal_key = canonicalize(name)
+        partners = set()
+        for org in p.get("organizations_shared_with") or []:
+            if "[Inactive]" in org or not wi_pattern.search(org):
+                continue
+            partner_key = canonicalize(org)
+            if partner_key != portal_key:
+                partners.add(partner_key)
+        sharing[portal_key] = sorted(partners)
         wi_portals.append({
             "name": name,
-            "canonical": canonicalize(name),
+            "canonical": portal_key,
             "portal_url": p.get("portal_url") or f"https://transparency.flocksafety.com/{p['slug']}",
             "county": p.get("county"),
             "type": p.get("type"),
@@ -145,7 +158,6 @@ def fetch_portals() -> tuple[list[dict], dict]:
     # Derive the WI roster from every portal's sharing lists nationwide.
     # An agency in these lists participates in the Flock network even without a portal.
     edges: dict[str, dict] = {}
-    wi_pattern = re.compile(r"\bWI\b")
     for p in portals:
         for org in (p.get("organizations_shared_with") or []) + (p.get("organizations_received_from") or []):
             if not wi_pattern.search(org):
@@ -158,7 +170,7 @@ def fetch_portals() -> tuple[list[dict], dict]:
             entry["mentions"] += 1
             if not inactive:
                 entry["active_mentions"] += 1
-    return wi_portals, edges
+    return wi_portals, edges, sharing
 
 
 def fetch_atlas() -> list[dict]:
@@ -310,8 +322,9 @@ def main() -> None:
     print(f"      {cameras['count']} cameras ({cameras['flock_count']} Flock Safety)")
 
     print("[2/5] Eyes On Flock: transparency portals + network edges...")
-    portals, edges = fetch_portals()
-    print(f"      {len(portals)} WI portals, {len(edges)} WI agencies in sharing lists")
+    portals, edges, sharing = fetch_portals()
+    print(f"      {len(portals)} WI portals, {len(edges)} WI agencies in sharing lists, "
+          f"{sum(len(v) for v in sharing.values())} WI->WI active edges")
 
     print("[3/5] EFF Atlas of Surveillance: WI ALPR records...")
     atlas = fetch_atlas()
@@ -345,6 +358,7 @@ def main() -> None:
     (DATA / "agencies.json").write_text(json.dumps({"generated": generated, "agencies": agencies}, separators=(",", ":")), encoding="utf-8")
     (DATA / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
     (DATA / "history.json").write_text(json.dumps(history, indent=1), encoding="utf-8")
+    (DATA / "edges.json").write_text(json.dumps({"generated": generated, "edges": sharing}, separators=(",", ":")), encoding="utf-8")
     print(f"Done. {len(agencies)} agencies, {cameras['count']} cameras -> data/")
 
 
