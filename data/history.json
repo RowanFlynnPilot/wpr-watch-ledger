@@ -5,123 +5,123 @@
    "portals": {
     "altoona pd": {
      "hotlist_hits_30d": 181,
+     "searches_30d": 62,
      "cameras": 11,
-     "vehicles_captured_30d": 179419,
-     "searches_30d": 62
+     "vehicles_captured_30d": 179419
     },
     "appleton pd": {
      "hotlist_hits_30d": 64,
+     "searches_30d": 141,
      "cameras": 20,
-     "vehicles_captured_30d": 420996,
-     "searches_30d": 141
+     "vehicles_captured_30d": 420996
     },
     "baraboo pd": {
      "hotlist_hits_30d": 2215,
+     "searches_30d": 14,
      "cameras": 6,
-     "vehicles_captured_30d": 131804,
-     "searches_30d": 14
+     "vehicles_captured_30d": 131804
     },
     "cottage grove pd": {
      "hotlist_hits_30d": 555,
+     "searches_30d": 37,
      "cameras": 12,
-     "vehicles_captured_30d": 132596,
-     "searches_30d": 37
+     "vehicles_captured_30d": 132596
     },
     "dane county so": {
      "hotlist_hits_30d": 2888,
+     "searches_30d": 120,
      "cameras": 24,
-     "vehicles_captured_30d": 747129,
-     "searches_30d": 120
+     "vehicles_captured_30d": 747129
     },
     "fitchburg pd": {
      "hotlist_hits_30d": 70,
+     "searches_30d": 17,
      "cameras": 3,
-     "vehicles_captured_30d": 21890,
-     "searches_30d": 17
+     "vehicles_captured_30d": 21890
     },
     "fond du lac pd": {
      "hotlist_hits_30d": 3804,
+     "searches_30d": 202,
      "cameras": 14,
-     "vehicles_captured_30d": 314847,
-     "searches_30d": 202
+     "vehicles_captured_30d": 314847
     },
     "germantown pd": {
      "hotlist_hits_30d": 1262,
+     "searches_30d": 137,
      "cameras": 12,
-     "vehicles_captured_30d": 300506,
-     "searches_30d": 137
+     "vehicles_captured_30d": 300506
     },
     "grafton pd": {
      "hotlist_hits_30d": 985,
+     "searches_30d": 33,
      "cameras": 9,
-     "vehicles_captured_30d": 216408,
-     "searches_30d": 33
+     "vehicles_captured_30d": 216408
     },
     "green bay pd": {
      "hotlist_hits_30d": 7944,
+     "searches_30d": 442,
      "cameras": 48,
-     "vehicles_captured_30d": 456078,
-     "searches_30d": 442
+     "vehicles_captured_30d": 456078
     },
     "hudson pd": {
      "hotlist_hits_30d": 1065,
+     "searches_30d": 123,
      "cameras": 16,
-     "vehicles_captured_30d": 338658,
-     "searches_30d": 123
+     "vehicles_captured_30d": 338658
     },
     "maple bluff pd": {
      "hotlist_hits_30d": 251,
+     "searches_30d": 36,
      "cameras": 17,
-     "vehicles_captured_30d": 80237,
-     "searches_30d": 36
+     "vehicles_captured_30d": 80237
     },
     "menasha pd": {
      "hotlist_hits_30d": 830,
+     "searches_30d": 42,
      "cameras": 8,
-     "vehicles_captured_30d": 161272,
-     "searches_30d": 42
+     "vehicles_captured_30d": 161272
     },
     "monona pd": {
      "hotlist_hits_30d": 1065,
+     "searches_30d": 35,
      "cameras": 4,
-     "vehicles_captured_30d": 241393,
-     "searches_30d": 35
+     "vehicles_captured_30d": 241393
     },
     "oshkosh pd": {
      "hotlist_hits_30d": null,
+     "searches_30d": 0,
      "cameras": null,
-     "vehicles_captured_30d": 32057,
-     "searches_30d": 0
+     "vehicles_captured_30d": 32057
     },
     "sharon pd": {
      "hotlist_hits_30d": 28,
+     "searches_30d": 3,
      "cameras": 3,
-     "vehicles_captured_30d": 17560,
-     "searches_30d": 3
+     "vehicles_captured_30d": 17560
     },
     "slinger pd": {
      "hotlist_hits_30d": 502,
+     "searches_30d": 7,
      "cameras": 5,
-     "vehicles_captured_30d": 183079,
-     "searches_30d": 7
+     "vehicles_captured_30d": 183079
     },
     "sun prairie pd": {
      "hotlist_hits_30d": 1743,
+     "searches_30d": 154,
      "cameras": 9,
-     "vehicles_captured_30d": 256137,
-     "searches_30d": 154
+     "vehicles_captured_30d": 256137
     },
     "university of madison pd": {
      "hotlist_hits_30d": null,
+     "searches_30d": 6,
      "cameras": 8,
-     "vehicles_captured_30d": 272245,
-     "searches_30d": 6
+     "vehicles_captured_30d": 272245
     },
     "rapids pd": {
      "hotlist_hits_30d": 1043,
+     "searches_30d": 95,
      "cameras": 6,
-     "vehicles_captured_30d": 133714,
-     "searches_30d": 95
+     "vehicles_captured_30d": 133714
     }
    }
   }
