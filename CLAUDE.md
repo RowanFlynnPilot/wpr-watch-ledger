@@ -16,8 +16,13 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
      WI transparency portals + WI agency roster DERIVED from every portal's
      `organizations_shared_with` lists nationwide -> portal stats + network edges
   3. EFF Atlas of Surveillance CSV (`atlasofsurveillance.org/download`): sourced WI ALPR rows
-  4. Merge on `canonicalize(name)` keys + apply `data/status_overlay.json`
-     -> `data/agencies.json`, `data/meta.json`
+  4. Merge on `canonicalize(name)` keys + apply `data/status_overlay.json` and join
+     `data/wisdot_permits.json` -> `data/agencies.json`, `data/meta.json`
+- `data/wisdot_permits.json` — COMMITTED SNAPSHOT of WisDOT state-highway right-of-way
+  permit records (obtained under the WI Open Records Law; mapped by Deflock Dane,
+  deflockdane.org — attribute them). Validated at every build, fails if missing. Refreshed
+  by a new records release, not the weekly run. Registry typos are corrected only via the
+  hand-checked WISDOT_OWNER_ALIASES map in refresh.py; ambiguous owners stay as written.
 - `data/status_overlay.json` — HAND-CURATED, never generated. Overlay always wins.
   Keys must be canonical (`canonicalize(key) == key`, validated at build).
   Required per row: name, status (active|dropped|never), as_of, source URL.
@@ -27,8 +32,9 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
 ## Name matching
 
 `canonicalize()` collapses variants across sources: strips apostrophes/periods first
-(sheriff's -> sheriffs), drops WI/Wisconsin tokens, maps suffixes (Police Department -> pd,
-Sheriffs Office -> so). "Marathon County Sheriff's Office" == "Marathon County WI SO".
+(sheriff's -> sheriffs), drops WI/Wisconsin tokens, expands Co -> County and St -> Saint,
+maps suffixes (Police Department -> pd, Sheriffs Office/bare Sheriff -> so).
+"Marathon County Sheriff's Office" == "Marathon County WI SO" == "Marathon Co Sheriff".
 Display-name precedence: overlay > Atlas (formal) > portal/edge shorthand.
 
 ## Design system (WPR)
@@ -46,7 +52,10 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
 
 ## Backlog (not v1)
 
-- Records requests: Wausau PD + Marathon County SO Flock audit logs (the Waukesha treatment)
-- WisDOT highway right-of-way ALPR permit records (permits exist; no published dataset found)
+- Records requests: Wausau PD + Marathon County SO Flock audit logs (the Waukesha treatment).
+  One agency's NETWORK audit names every agency that searched it (Wisconsin Examiner proved
+  this statewide); cross-submit obtained logs to haveibeenflocked.com
 - Sharing-network graph visualization from the organizations_shared_with edges
+- Contracts overlay (amount, term, source per agency) fed by Legistar/CivicClerk agenda
+  mining + records requests; Deflock Dane's reading room has six Dane County contracts
 - TODO in App.jsx: real corrections contact for the newsroom
