@@ -96,13 +96,17 @@ def fetch_cameras() -> dict:
     }
 
 
+LOWERCASE_NAME_TOKENS = {"of", "du"}  # 'Fond du Lac', 'University of Wisconsin'
+
+
 def portal_name_from_slug(slug: str) -> str:
-    """'altoona-wi-pd' -> 'Altoona PD'; 'university-of-wisconsin-madison-wi-pd' -> 'University Of Wisconsin Madison PD'"""
+    """'altoona-wi-pd' -> 'Altoona PD'; 'fond-du-lac-wi-pd' -> 'Fond du Lac PD';
+    'university-of-wisconsin-madison-wi-pd' -> 'University of Wisconsin Madison PD'"""
     tokens = slug.split("-")
     if "wi" not in tokens:
         raise RuntimeError(f"Portal slug missing WI marker: {slug}")
     i = tokens.index("wi")
-    base = " ".join(t.title() for t in tokens[:i])
+    base = " ".join(t if n > 0 and t in LOWERCASE_NAME_TOKENS else t.title() for n, t in enumerate(tokens[:i]))
     suffix = " ".join(t.upper() for t in tokens[i + 1:])
     return f"{base} {suffix}".strip()
 
