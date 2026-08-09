@@ -147,6 +147,16 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .legend-flock { background: #3a867c; border: 1.25px solid #2c6b62; }
 .legend-other { background: #b9b9b2; border: 1.25px solid #6b6b66; }
+.legend-official { background: transparent; border: 1.75px solid var(--ink); }
+.map-toggle {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+  margin: 0 0 0.6rem;
+  cursor: pointer;
+}
+.map-toggle input { accent-color: var(--teal-deep); margin-right: 0.45rem; }
 .leaflet-popup-content { font-family: var(--body); font-size: 0.85rem; }
 
 /* marathon spotlight */
@@ -221,7 +231,7 @@ tbody tr:hover td:first-child { background: var(--cream); }
 }
 .table-hint { display: none; }
 .table-scroll { overflow-x: auto; border: 1px solid var(--line); background: var(--white); }
-table { border-collapse: collapse; width: 100%; min-width: 720px; }
+table { border-collapse: collapse; width: 100%; min-width: 790px; }
 th, td { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); font-size: 0.88rem; }
 th { position: sticky; top: 0; background: var(--white); }
 .th-sort {

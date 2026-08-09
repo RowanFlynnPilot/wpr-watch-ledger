@@ -8,18 +8,19 @@ const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [showWisdot, setShowWisdot] = useState(true);
 
   useEffect(() => {
     Promise.all(
-      ["meta", "cameras", "agencies", "history", "edges"].map((f) =>
+      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits"].map((f) =>
         fetch(`${import.meta.env.BASE_URL}data/${f}.json`).then((r) => {
           if (!r.ok) throw new Error(`Failed to load ${f}.json (${r.status})`);
           return r.json();
         })
       )
     )
-      .then(([meta, cameras, agencies, history, edges]) =>
-        setData({ meta, cameras, agencies: agencies.agencies, history, edges: edges.edges })
+      .then(([meta, cameras, agencies, history, edges, wisdot]) =>
+        setData({ meta, cameras, agencies: agencies.agencies, history, edges: edges.edges, wisdot })
       )
       .catch((e) => setError(e.message));
   }, []);
@@ -27,7 +28,7 @@ export default function App() {
   if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
   if (!data) return <div className="loading">Loading the ledger…</div>;
 
-  const { meta, cameras, agencies, history, edges } = data;
+  const { meta, cameras, agencies, history, edges, wisdot } = data;
 
   // Week-over-week search deltas from the last two history snapshots.
   // Null until two snapshots exist; per-agency null when either week lacks a figure.
@@ -76,6 +77,7 @@ export default function App() {
         <div className="stat"><span className="stat-num">{fmt(cameras.count)}</span><span className="stat-label">ALPR cameras mapped in Wisconsin</span></div>
         <div className="stat"><span className="stat-num">{fmt(cameras.flock_count)}</span><span className="stat-label">made by Flock Safety</span></div>
         <div className="stat"><span className="stat-num">{fmt(inNetwork.length)}</span><span className="stat-label">agencies in the Flock sharing network</span></div>
+        <div className="stat"><span className="stat-num">{fmt(wisdot.camera_count)}</span><span className="stat-label">cameras permitted on state highways, per WisDOT records</span></div>
         <div className="stat"><span className="stat-num">{fmt(dropped.length)}</span><span className="stat-label">agencies have dropped Flock</span></div>
       </section>
 
@@ -121,14 +123,27 @@ export default function App() {
 
       <section className="map-section" aria-label="Camera map">
         <h2>Every mapped camera</h2>
-        <CameraMap cameras={cameras.cameras} />
+        <label className="map-toggle">
+          <input
+            type="checkbox"
+            checked={showWisdot}
+            onChange={(e) => setShowWisdot(e.target.checked)}
+          />
+          Show the {fmt(wisdot.camera_count)} cameras permitted on state-highway right-of-way
+          (WisDOT records)
+        </label>
+        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} showWisdot={showWisdot} />
         <div className="map-legend">
           <span className="legend-item"><span className="legend-dot legend-flock" aria-hidden="true" />Flock Safety</span>
           <span className="legend-item"><span className="legend-dot legend-other" aria-hidden="true" />Other ALPR vendors</span>
+          <span className="legend-item"><span className="legend-dot legend-official" aria-hidden="true" />WisDOT-permitted (state highways)</span>
         </div>
         <p className="map-caption">
-          Locations are community-reported by volunteers to OpenStreetMap via the DeFlock project
-          and are incomplete — the true number of cameras is higher.
+          Dots are community-reported by volunteers to OpenStreetMap via the DeFlock project and
+          are incomplete — the true number of cameras is higher. Rings are official: cameras
+          permitted by the Wisconsin DOT on state-highway right-of-way, from records released
+          under the state Open Records Law. A ring with no dot inside it is a camera the
+          volunteers haven't found yet.
         </p>
       </section>
 
@@ -182,6 +197,11 @@ export default function App() {
         <p>{meta.attribution.cameras}.</p>
         <p>{meta.attribution.portals}.</p>
         <p>{meta.attribution.atlas}.</p>
+        <p>
+          {meta.attribution.wisdot ||
+            "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)"}
+          . Snapshot dated {wisdot.snapshot_date}; refreshed when WisDOT releases new records.
+        </p>
         <p>
           Contract status for {meta.curated_count} agencies is hand-verified against published
           reporting, linked per row. All other statuses are derived automatically: an agency is

@@ -49,6 +49,7 @@ SUFFIX_MAP = [
     (r"sheriffs? office$", "so"),
     (r"sheriffs? department$", "so"),
     (r"sheriffs? dept$", "so"),
+    (r"sheriffs?$", "so"),  # WisDOT permit registry style: 'Dane Co Sheriff'
 ]
 
 
@@ -62,6 +63,8 @@ def canonicalize(name: str) -> str:
     s = re.sub(r"['’.]", "", s)  # sheriff's -> sheriffs BEFORE punctuation becomes spaces
     s = re.sub(r"[^a-z0-9 ]", " ", s)
     s = re.sub(r"\b(wi|wisconsin)\b", " ", s)
+    s = re.sub(r"\bco\b", "county", s)  # 'Florence Co. SO' == 'Florence County SO'
+    s = re.sub(r"\bst\b", "saint", s)  # 'St Croix Falls PD' == 'Saint Croix Falls PD'
     s = re.sub(r"\s+", " ", s).strip()
     for pattern, abbr in SUFFIX_MAP:
         s = re.sub(pattern, abbr, s)
@@ -292,6 +295,70 @@ def resolve_county(canonical: str, city_county: dict) -> str | None:
     return city_county.get(muni)
 
 
+# ---------------------------------------------------------------- wisdot permits
+
+WISDOT_CAMERA_KEYS = {"lat", "lon", "permit_id", "owner", "county", "address",
+                      "product", "power", "permit_status", "confirmation", "date_approved"}
+
+# Hand-checked corrections for the WisDOT permit registry's typos, abbreviation
+# styles, and location annotations. Keys are exact owner strings from the
+# snapshot; values are the agency as named elsewhere in the roster. Corrections
+# only — anything ambiguous stays exactly as WisDOT wrote it.
+WISDOT_OWNER_ALIASES = {
+    "Adams SO": "Adams County SO",
+    "Altoon PD": "Altoona PD",
+    "Campbell PD": "Town of Campbell PD",
+    "City of New Berlin PD": "New Berlin PD",
+    "City of Onalaska PD": "Onalaska PD",
+    "City of Waukesha PD": "Waukesha PD",
+    "Colby/Abbotsford PD": "Abbotsford PD",
+    "Columbia Co SO-Pardeeville": "Columbia County SO",
+    "KewaskumPD": "Kewaskum PD",
+    "Menominee Falls PD": "Menomonee Falls PD",
+    "Menomonee SO": "Menominee County SO",
+    "Merrilll PD": "Merrill PD",
+    "Mukwonago PD": "Village of Mukwonago PD",
+    "Prairie du Chien": "Prairie du Chien PD",
+    "Richland SO": "Richland County SO",
+    "Shawano PD (in Town of Wescott)": "Shawano PD",
+    "Tomah PD (for Tomah Health)": "Tomah PD",
+    "Turtle Lake PD": "Village of Turtle Lake PD",
+    "V Pleasant Prairie": "Pleasant Prairie PD",
+    "V Richfield": "Village of Richfield",
+    "Village & Town of Somers": "Village of Somers",
+    "Village of Pleasant Prairie PD": "Pleasant Prairie PD",
+    "Waukesha Co SD-Sussex": "Waukesha County SO",
+    "Waukesha Co SD-T of Lisbon": "Waukesha County SO",
+}
+
+# 12 cameras whose registry rows name no owning agency: they stay on the map
+# but never become roster rows.
+WISDOT_SKIP_OWNERS = {"Unknown", "Unknown Agency"}
+
+
+def load_wisdot() -> dict:
+    """Committed snapshot of WisDOT state-highway right-of-way permit records
+    (obtained via open records by Deflock Dane). Static like the county lookup:
+    refreshed by a new records release, not by the weekly run."""
+    path = DATA / "wisdot_permits.json"
+    if not path.exists():
+        raise RuntimeError("data/wisdot_permits.json is missing; the WisDOT permit snapshot is required.")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    cameras = doc.get("cameras")
+    if not isinstance(cameras, list) or doc.get("camera_count") != len(cameras):
+        raise RuntimeError("wisdot_permits.json corrupt: camera_count does not match cameras list")
+    if len(cameras) < 500:
+        raise RuntimeError(f"wisdot_permits.json has only {len(cameras)} cameras; expected 700+. Truncated?")
+    for c in cameras:
+        if set(c.keys()) != WISDOT_CAMERA_KEYS:
+            raise RuntimeError(f"wisdot_permits.json camera has wrong keys: {set(c.keys()) ^ WISDOT_CAMERA_KEYS}")
+        if not (42.0 < c["lat"] < 47.5 and -93.5 < c["lon"] < -86.0):
+            raise RuntimeError(f"wisdot_permits.json camera outside Wisconsin: {c['lat']},{c['lon']} ({c['owner']})")
+        if not c["owner"]:
+            raise RuntimeError("wisdot_permits.json camera with empty owner")
+    return doc
+
+
 # ---------------------------------------------------------------- overlay + merge
 
 def load_overlay() -> dict:
@@ -308,14 +375,15 @@ def load_overlay() -> dict:
     return overlay
 
 
-def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict, city_county: dict) -> list[dict]:
+def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict,
+                   city_county: dict, wisdot: dict) -> list[dict]:
     agencies: dict[str, dict] = {}
 
     def get(key: str, name: str) -> dict:
         return agencies.setdefault(key, {
             "name": name, "canonical": key, "county": None, "type": None,
             "in_network": False, "network_mentions": 0,
-            "portal": None, "atlas": None,
+            "portal": None, "atlas": None, "wisdot": None,
             "status": {"value": "unknown", "derived": True, "as_of": None, "source": None, "note": None},
         })
 
@@ -353,9 +421,32 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         a["status"] = {"value": o["status"], "derived": False, "as_of": o["as_of"],
                        "source": o["source"], "note": o.get("note")}
 
+    # WisDOT highway right-of-way permits: official per-agency camera counts.
+    # Documents ALPR use even for agencies absent from every other source, but
+    # says nothing about Flock network membership, so in_network is untouched.
+    by_owner: dict[str, dict] = {}
+    for c in wisdot["cameras"]:
+        owner = WISDOT_OWNER_ALIASES.get(c["owner"], c["owner"])
+        if owner in WISDOT_SKIP_OWNERS:
+            continue
+        key = canonicalize(owner)
+        entry = by_owner.setdefault(key, {"name": owner, "cameras": 0,
+                                          "counties": set(), "permits": set()})
+        entry["cameras"] += 1
+        entry["counties"].add(c["county"])
+        if c["permit_id"]:
+            entry["permits"].add(c["permit_id"])
+    for key, w in by_owner.items():
+        a = get(key, w["name"])
+        a["wisdot"] = {"cameras": w["cameras"], "permits": sorted(w["permits"]),
+                       "counties": sorted(w["counties"])}
+
     for a in agencies.values():
         if a["county"] is None:
             a["county"] = resolve_county(a["canonical"], city_county)
+        if a["county"] is None and a["wisdot"] and len(a["wisdot"]["counties"]) == 1:
+            # weakest signal, used last: every permitted camera stands in one county
+            a["county"] = f"{a['wisdot']['counties'][0]} County"
         if a["county"] in COUNTY_FIXUPS:
             a["county"] = COUNTY_FIXUPS[a["county"]]
 
@@ -383,12 +474,15 @@ def main() -> None:
     atlas = fetch_atlas()
     print(f"      {len(atlas)} sourced records")
 
-    print("[4/5] Merging with curated status overlay + county lookup...")
+    print("[4/5] Merging with curated status overlay + county lookup + WisDOT permits...")
     overlay = load_overlay()
     city_county = load_city_county()
-    agencies = build_agencies(portals, edges, atlas, overlay, city_county)
+    wisdot = load_wisdot()
+    agencies = build_agencies(portals, edges, atlas, overlay, city_county, wisdot)
     unresolved = sum(1 for a in agencies if a["county"] is None)
-    print(f"      {len(agencies) - unresolved} agencies with a county, {unresolved} unresolved")
+    with_wisdot = sum(1 for a in agencies if a["wisdot"])
+    print(f"      {len(agencies) - unresolved} agencies with a county, {unresolved} unresolved; "
+          f"{with_wisdot} agencies hold WisDOT highway permits")
 
     print("[5/5] Appending portal stats to history ledger...")
     history = load_history()
@@ -402,10 +496,13 @@ def main() -> None:
         "agency_count": len(agencies),
         "portal_count": len(portals),
         "curated_count": len(overlay),
+        "wisdot_camera_count": wisdot["camera_count"],
+        "wisdot_agency_count": with_wisdot,
         "attribution": {
             "cameras": "Camera locations © OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)",
             "portals": "Transparency portal statistics aggregated by Eyes On Flock (eyesonflock.com)",
             "atlas": "Agency records from EFF's Atlas of Surveillance (atlasofsurveillance.org)",
+            "wisdot": "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)",
         },
     }
 

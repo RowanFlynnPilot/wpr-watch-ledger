@@ -3,13 +3,16 @@ import L from "leaflet";
 
 const WI_BOUNDS = [[42.4, -93.0], [47.1, -86.7]];
 
-export default function CameraMap({ cameras }) {
+export default function CameraMap({ cameras, wisdotCameras, showWisdot }) {
   const el = useRef(null);
+  const mapRef = useRef(null);
+  const wisdotLayerRef = useRef(null);
 
   useEffect(() => {
     const map = L.map(el.current, {
       scrollWheelZoom: false, // page scroll must not fight the map inside an iframe embed
     });
+    mapRef.current = map;
     map.fitBounds(WI_BOUNDS);
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
@@ -36,8 +39,42 @@ export default function CameraMap({ cameras }) {
       );
     }
 
-    return () => map.remove();
-  }, [cameras]);
+    // WisDOT-permitted highway cameras: hollow rings over the community dots,
+    // toggled by the checkbox above the map.
+    const wisdotLayer = L.layerGroup();
+    wisdotLayerRef.current = wisdotLayer;
+    for (const c of wisdotCameras) {
+      const marker = L.circleMarker([c.lat, c.lon], {
+        renderer,
+        radius: 7,
+        weight: 1.75,
+        color: "#1F2421",
+        fillColor: "#FFFDF8",
+        fillOpacity: 0,
+      });
+      marker.bindPopup(
+        `<strong>${c.owner}</strong><br/>` +
+          `${c.product}<br/>` +
+          (c.permit_id ? `WisDOT permit ${c.permit_id}` : "In WisDOT map export; no permit number on file") +
+          (c.date_approved ? ` &middot; approved ${c.date_approved}` : "") +
+          `<br/>${c.address}`
+      );
+      wisdotLayer.addLayer(marker);
+    }
+
+    return () => {
+      mapRef.current = null;
+      wisdotLayerRef.current = null;
+      map.remove();
+    };
+  }, [cameras, wisdotCameras]);
+
+  useEffect(() => {
+    const map = mapRef.current, layer = wisdotLayerRef.current;
+    if (!map || !layer) return;
+    if (showWisdot) layer.addTo(map);
+    else layer.remove();
+  }, [showWisdot, cameras, wisdotCameras]);
 
   return <div className="camera-map" ref={el} />;
 }

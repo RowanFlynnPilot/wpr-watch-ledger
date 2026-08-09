@@ -5,6 +5,7 @@ const COLUMNS = [
   { key: "county", label: "County", get: (a) => a.county || "" },
   { key: "status", label: "Status", get: (a) => a.status.value },
   { key: "cameras", label: "Cameras", get: (a) => a.portal?.cameras ?? -1, numeric: true },
+  { key: "hwy", label: "Hwy cams", title: "Cameras permitted on state-highway right-of-way (WisDOT records)", get: (a) => a.wisdot?.cameras ?? -1, numeric: true },
   { key: "searches", label: "Searches / 30d", get: (a) => a.portal?.searches_30d ?? -1, numeric: true },
   { key: "shared", label: "Shares with", get: (a) => a.portal?.shared_with_count ?? -1, numeric: true },
 ];
@@ -80,7 +81,7 @@ export default function AgencyTable({ agencies, searchDeltas }) {
                   scope="col"
                   aria-sort={sort.key === c.key ? (sort.dir === 1 ? "ascending" : "descending") : undefined}
                 >
-                  <button className="th-sort" onClick={() => toggleSort(c.key)}>
+                  <button className="th-sort" title={c.title} onClick={() => toggleSort(c.key)}>
                     {c.label}
                     {sort.key === c.key && <span aria-hidden="true">{sort.dir === 1 ? " ↑" : " ↓"}</span>}
                   </button>
@@ -104,6 +105,7 @@ export default function AgencyTable({ agencies, searchDeltas }) {
                   {!a.status.derived && a.status.as_of && <span className="asof"> {a.status.as_of}</span>}
                 </td>
                 <td className="cell-num">{fmt(a.portal?.cameras)}</td>
+                <td className="cell-num">{fmt(a.wisdot?.cameras)}</td>
                 <td className="cell-num">
                   {fmt(a.portal?.searches_30d)}
                   {searchDeltas != null && searchDeltas[a.canonical] != null && searchDeltas[a.canonical] !== 0 && (
