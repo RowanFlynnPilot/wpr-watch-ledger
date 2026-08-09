@@ -127,6 +127,14 @@ export default function App() {
           ))}
         </div>
         <p className="gap-caption">Each mark is one agency. Filled marks publish their usage data.</p>
+        {meta.national && (
+          <p className="gap-line gap-national">
+            For national context: Wisconsin's {meta.national.wi_portal_count} transparency
+            portals rank <strong>#{meta.national.wi_rank_by_portals}</strong> among the{" "}
+            {meta.national.states_with_portals} states where any agency publishes one
+            ({meta.national.us_portal_count.toLocaleString("en-US")} portals nationwide).
+          </p>
+        )}
       </section>
 
       <section className="map-section" aria-label="Camera map">

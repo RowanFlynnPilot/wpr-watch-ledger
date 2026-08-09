@@ -114,10 +114,11 @@ def portal_name_from_slug(slug: str) -> str:
     return f"{base} {suffix}".strip()
 
 
-def fetch_portals() -> tuple[list[dict], dict, dict]:
+def fetch_portals() -> tuple[list[dict], dict, dict, dict]:
     """Returns (WI portal records,
                 WI network-edge roster derived from national sharing lists,
-                per-portal WI sharing partners: portal canonical -> sorted partner canonicals)."""
+                per-portal WI sharing partners: portal canonical -> sorted partner canonicals,
+                national portal counts for the how-WI-compares line)."""
     r = requests.get(EOF_URL, headers=UA, timeout=120)
     r.raise_for_status()
     payload = r.json()
@@ -177,7 +178,24 @@ def fetch_portals() -> tuple[list[dict], dict, dict]:
             entry["mentions"] += 1
             if not inactive:
                 entry["active_mentions"] += 1
-    return wi_portals, edges, sharing
+
+    # National context from the same payload: portal counts per state, WI's rank.
+    state_counts: dict[str, int] = {}
+    for p in portals:
+        st = (p.get("state") or "").upper()
+        if st:
+            state_counts[st] = state_counts.get(st, 0) + 1
+    wi_count = state_counts.get("WI", 0)
+    leader = max(state_counts.items(), key=lambda kv: kv[1])
+    national = {
+        "us_portal_count": len(portals),
+        "states_with_portals": len(state_counts),
+        "wi_portal_count": wi_count,
+        "wi_rank_by_portals": 1 + sum(1 for c in state_counts.values() if c > wi_count),
+        "leader_state": leader[0],
+        "leader_portal_count": leader[1],
+    }
+    return wi_portals, edges, sharing, national
 
 
 def fetch_atlas() -> list[dict]:
@@ -532,9 +550,10 @@ def main() -> None:
     print(f"      {cameras['count']} cameras ({cameras['flock_count']} Flock Safety)")
 
     print("[2/5] Eyes On Flock: transparency portals + network edges...")
-    portals, edges, sharing = fetch_portals()
+    portals, edges, sharing, national = fetch_portals()
     print(f"      {len(portals)} WI portals, {len(edges)} WI agencies in sharing lists, "
-          f"{sum(len(v) for v in sharing.values())} WI->WI active edges")
+          f"{sum(len(v) for v in sharing.values())} WI->WI active edges; "
+          f"WI ranks #{national['wi_rank_by_portals']} of {national['states_with_portals']} states by portal count")
 
     print("[3/5] EFF Atlas of Surveillance: WI ALPR records...")
     atlas = fetch_atlas()
@@ -568,6 +587,7 @@ def main() -> None:
         "curated_count": len(overlay),
         "wisdot_camera_count": wisdot["camera_count"],
         "wisdot_agency_count": with_wisdot,
+        "national": national,
         "attribution": {
             "cameras": "Camera locations © OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)",
             "portals": "Transparency portal statistics aggregated by Eyes On Flock (eyesonflock.com)",
