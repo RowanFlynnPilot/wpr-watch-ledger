@@ -1,13 +1,16 @@
 {
-  "generated": "2026-08-09T04:52:17Z",
+  "generated": "2026-08-09T05:11:48Z",
   "camera_count": 2107,
   "flock_camera_count": 1606,
-  "agency_count": 263,
+  "agency_count": 281,
   "portal_count": 20,
-  "curated_count": 13,
+  "curated_count": 14,
+  "wisdot_camera_count": 759,
+  "wisdot_agency_count": 186,
   "attribution": {
     "cameras": "Camera locations \u00a9 OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)",
     "portals": "Transparency portal statistics aggregated by Eyes On Flock (eyesonflock.com)",
-    "atlas": "Agency records from EFF's Atlas of Surveillance (atlasofsurveillance.org)"
+    "atlas": "Agency records from EFF's Atlas of Surveillance (atlasofsurveillance.org)",
+    "wisdot": "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)"
   }
 }
