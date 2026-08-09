@@ -23,6 +23,10 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   deflockdane.org — attribute them). Validated at every build, fails if missing. Refreshed
   by a new records release, not the weekly run. Registry typos are corrected only via the
   hand-checked WISDOT_OWNER_ALIASES map in refresh.py; ambiguous owners stay as written.
+- `data/wi_population.json` — COMMITTED SNAPSHOT of WI DOA official final population
+  estimates (state/counties/places/towns). Joined at build into `data/counties.json`
+  (per-county rollup + statewide coverage); county spellings are validated against DOA's
+  official list and a mismatch aborts the run.
 - `data/status_overlay.json` — HAND-CURATED, never generated. Overlay always wins.
   Keys must be canonical (`canonicalize(key) == key`, validated at build).
   Required per row: name, status (active|dropped|never), as_of, source URL.
@@ -56,6 +60,10 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
   One agency's NETWORK audit names every agency that searched it (Wisconsin Examiner proved
   this statewide); cross-submit obtained logs to haveibeenflocked.com
 - Sharing-network graph visualization from the organizations_shared_with edges
-- Contracts overlay (amount, term, source per agency) fed by Legistar/CivicClerk agenda
-  mining + records requests; Deflock Dane's reading room has six Dane County contracts
+- Contracts overlay (amount, term, source per agency) fed by Legistar agenda mining +
+  records requests; Deflock Dane's reading room has six Dane County contracts. Scoped
+  2026-08: webapi.legistar.com serves milwaukee, madison, racine, waukesha,
+  milwaukeecounty; substringof('Flock', MatterTitle) returns real contract matters
+  (Waukesha 2022 pilot -> 2023 5-yr agreement -> 2025 expansion). Needs editorial review
+  before publish — Madison returns false positives like "#FLOCKTOSTATE".
 - TODO in App.jsx: real corrections contact for the newsroom
