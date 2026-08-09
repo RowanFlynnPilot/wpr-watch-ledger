@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-09T05:13:25Z",
+  "generated": "2026-08-09T05:53:54Z",
   "camera_count": 2107,
   "flock_camera_count": 1606,
   "agency_count": 281,
@@ -7,6 +7,14 @@
   "curated_count": 14,
   "wisdot_camera_count": 759,
   "wisdot_agency_count": 186,
+  "national": {
+    "us_portal_count": 950,
+    "states_with_portals": 43,
+    "wi_portal_count": 20,
+    "wi_rank_by_portals": 13,
+    "leader_state": "CA",
+    "leader_portal_count": 198
+  },
   "attribution": {
     "cameras": "Camera locations \u00a9 OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)",
     "portals": "Transparency portal statistics aggregated by Eyes On Flock (eyesonflock.com)",
