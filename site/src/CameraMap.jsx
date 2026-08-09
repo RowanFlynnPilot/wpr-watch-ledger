@@ -1,12 +1,17 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 
 const WI_BOUNDS = [[42.4, -93.0], [47.1, -86.7]];
+const MARATHON_BOUNDS = [[44.68, -90.36], [45.15, -89.15]];
 
-export default function CameraMap({ cameras, wisdotCameras, showWisdot }) {
+const fmt = (n) => n.toLocaleString("en-US");
+
+export default function CameraMap({ cameras, wisdotCameras }) {
   const el = useRef(null);
   const mapRef = useRef(null);
   const wisdotLayerRef = useRef(null);
+  const [showWisdot, setShowWisdot] = useState(true);
+  const [view, setView] = useState("state");
 
   useEffect(() => {
     const map = L.map(el.current, {
@@ -40,7 +45,7 @@ export default function CameraMap({ cameras, wisdotCameras, showWisdot }) {
     }
 
     // WisDOT-permitted highway cameras: hollow rings over the community dots,
-    // toggled by the checkbox above the map.
+    // toggled from the control card.
     const wisdotLayer = L.layerGroup();
     wisdotLayerRef.current = wisdotLayer;
     for (const c of wisdotCameras) {
@@ -76,5 +81,43 @@ export default function CameraMap({ cameras, wisdotCameras, showWisdot }) {
     else layer.remove();
   }, [showWisdot, cameras, wisdotCameras]);
 
-  return <div className="camera-map" ref={el} />;
+  const zoomTo = (key) => {
+    setView(key);
+    mapRef.current?.fitBounds(key === "marathon" ? MARATHON_BOUNDS : WI_BOUNDS);
+  };
+
+  return (
+    <div className="map-frame">
+      <div className="camera-map" ref={el} />
+      <div className="map-card">
+        <div className="map-card-zoom" role="group" aria-label="Zoom shortcuts">
+          <button
+            className={view === "state" ? "active" : ""}
+            onClick={() => zoomTo("state")}
+          >
+            Statewide
+          </button>
+          <button
+            className={view === "marathon" ? "active" : ""}
+            onClick={() => zoomTo("marathon")}
+          >
+            Marathon Co.
+          </button>
+        </div>
+        <div className="map-card-legend">
+          <span className="legend-item"><span className="legend-dot legend-flock" aria-hidden="true" />Flock Safety</span>
+          <span className="legend-item"><span className="legend-dot legend-other" aria-hidden="true" />Other ALPR vendors</span>
+          <label className="legend-item legend-toggle">
+            <input
+              type="checkbox"
+              checked={showWisdot}
+              onChange={(e) => setShowWisdot(e.target.checked)}
+            />
+            <span className="legend-dot legend-official" aria-hidden="true" />
+            WisDOT-permitted ({fmt(wisdotCameras.length)})
+          </label>
+        </div>
+      </div>
+    </div>
+  );
 }

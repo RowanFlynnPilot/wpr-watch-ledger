@@ -12,7 +12,6 @@ const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [showWisdot, setShowWisdot] = useState(true);
 
   useEffect(() => {
     Promise.all(
@@ -137,12 +136,37 @@ export default function App() {
           Wisconsin's 72 counties — home to <strong>{coveredPct}%</strong> of the state's{" "}
           {fmt(counties.state_population)} residents.
         </p>
-        <div className="gap-bar" role="img" aria-label={`${withPortal.length} of ${inNetwork.length} network agencies publish a transparency portal`}>
+        <div className="gap-key" aria-hidden="true">
+          <span className="gap-key-item">
+            <span className="tick filled key-swatch" /> {withPortal.length} publish usage data
+          </span>
+          <span className="gap-key-item">
+            <span className="tick key-swatch" /> {inNetwork.length - withPortal.length} disclose nothing
+          </span>
+          <span className="gap-key-item">
+            <span className="tick tick-dropped key-swatch" />{" "}
+            {inNetwork.filter((a) => a.status.value === "dropped").length} outlined in rust have
+            announced dropping Flock
+          </span>
+        </div>
+        <div
+          className="gap-bar"
+          role="img"
+          aria-label={`${withPortal.length} of ${inNetwork.length} network agencies publish a transparency portal; ${inNetwork.filter((a) => a.status.value === "dropped").length} have announced dropping Flock`}
+        >
           {inNetwork.map((a) => (
-            <span key={a.canonical} className={a.portal ? "tick filled" : "tick"} title={a.name} />
+            <span
+              key={a.canonical}
+              className={`tick${a.portal ? " filled" : ""}${a.status.value === "dropped" ? " tick-dropped" : ""}`}
+              title={`${a.name}${a.portal ? " — publishes usage data" : " — discloses nothing"}${a.status.value === "dropped" ? " · announced dropping Flock" : ""}`}
+            />
           ))}
         </div>
-        <p className="gap-caption">Each mark is one agency. Filled marks publish their usage data.</p>
+        <p className="gap-caption">
+          Each mark is one agency — {withPortal.length} of {inNetwork.length} (
+          {Math.round((100 * withPortal.length) / inNetwork.length)}%) let the public see how
+          the system is used.
+        </p>
         {meta.national && (
           <p className="gap-line gap-national">
             For national context: Wisconsin's {meta.national.wi_portal_count} transparency
@@ -155,21 +179,7 @@ export default function App() {
 
       <section className="map-section" aria-label="Camera map">
         <h2>Every mapped camera</h2>
-        <label className="map-toggle">
-          <input
-            type="checkbox"
-            checked={showWisdot}
-            onChange={(e) => setShowWisdot(e.target.checked)}
-          />
-          Show the {fmt(wisdot.camera_count)} cameras permitted on state-highway right-of-way
-          (WisDOT records)
-        </label>
-        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} showWisdot={showWisdot} />
-        <div className="map-legend">
-          <span className="legend-item"><span className="legend-dot legend-flock" aria-hidden="true" />Flock Safety</span>
-          <span className="legend-item"><span className="legend-dot legend-other" aria-hidden="true" />Other ALPR vendors</span>
-          <span className="legend-item"><span className="legend-dot legend-official" aria-hidden="true" />WisDOT-permitted (state highways)</span>
-        </div>
+        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} />
         <p className="map-caption">
           Dots are community-reported by volunteers to OpenStreetMap via the DeFlock project and
           are incomplete — the true number of cameras is higher. Rings are official: cameras

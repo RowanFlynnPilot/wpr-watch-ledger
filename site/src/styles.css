@@ -215,43 +215,73 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 /* transparency gap — the ledger bar */
 .gap { margin-bottom: 3rem; }
 .gap-line { max-width: 40rem; }
-.gap-bar { display: flex; flex-wrap: wrap; gap: 3px; margin: 1rem 0 0.4rem; }
+.gap-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin: 1.1rem 0 0.55rem;
+}
+.gap-key-item { display: inline-flex; align-items: center; gap: 0.45rem; }
+.key-swatch { width: 6px; height: 15px; flex-shrink: 0; }
+.gap-bar { display: flex; flex-wrap: wrap; gap: 5px 3px; margin: 0 0 0.5rem; }
 .tick {
   width: 6px;
   height: 26px;
   background: transparent;
-  border: 1.5px solid var(--ink-soft);
-  opacity: 0.55;
+  border: 1.25px solid var(--ink-soft);
+  opacity: 0.45;
+  transition: transform 0.12s, opacity 0.12s;
 }
 .tick.filled { background: var(--teal); border-color: var(--teal-deep); opacity: 1; }
+.tick.tick-dropped, .key-swatch.tick-dropped { border: 1.5px solid var(--rust); opacity: 0.9; }
+.tick.tick-dropped:not(.filled) { background: rgba(181, 84, 59, 0.12); }
+.tick.filled.tick-dropped { background: var(--teal); border-color: var(--rust); }
+.gap-bar .tick:hover { transform: scaleY(1.18); opacity: 1; }
 .gap-caption { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); margin: 0; }
 
 /* map */
 .map-section { margin-bottom: 3rem; }
 .camera-map { height: 520px; border: 1px solid var(--line); background: var(--white); }
 .map-caption { font-size: 0.85rem; color: var(--ink-soft); max-width: 44rem; }
-.map-legend {
-  display: flex;
-  gap: 1.25rem;
-  margin: 0.5rem 0 0.15rem;
+.map-frame { position: relative; border-top: 3px solid var(--teal-deep); margin-bottom: 0.6rem; }
+.map-card {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  background: var(--white);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 4px rgba(31, 36, 33, 0.12);
+  padding: 0.5rem 0.65rem 0.6rem;
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--ink-soft);
 }
+.map-card-zoom { display: flex; gap: 4px; margin-bottom: 0.5rem; }
+.map-card-zoom button {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+  cursor: pointer;
+}
+.map-card-zoom button:hover { border-color: var(--teal-deep); }
+.map-card-zoom button.active { background: var(--teal-deep); border-color: var(--teal-deep); color: var(--white); }
+.map-card-legend { display: flex; flex-direction: column; gap: 0.3rem; }
 .legend-item { display: inline-flex; align-items: center; gap: 0.4rem; }
-.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend-toggle { cursor: pointer; color: var(--ink); }
+.legend-toggle input { accent-color: var(--teal-deep); margin: 0; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 .legend-flock { background: #3a867c; border: 1.25px solid #2c6b62; }
 .legend-other { background: #b9b9b2; border: 1.25px solid #6b6b66; }
 .legend-official { background: transparent; border: 1.75px solid var(--ink); }
-.map-toggle {
-  display: block;
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  color: var(--ink);
-  margin: 0 0 0.6rem;
-  cursor: pointer;
-}
-.map-toggle input { accent-color: var(--teal-deep); margin-right: 0.45rem; }
 .leaflet-popup-content { font-family: var(--body); font-size: 0.85rem; }
 
 /* marathon spotlight */
@@ -496,6 +526,16 @@ tbody tr:hover td { background: var(--cream); }
   .gap-bar { gap: 2px; }
   .tick { width: 4px; height: 20px; border-width: 1px; }
   .camera-map { height: 380px; }
+  .map-card {
+    position: static;
+    box-shadow: none;
+    border-top: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.5rem 1.25rem;
+  }
+  .map-card-zoom { margin-bottom: 0; }
   .table-hint {
     display: block;
     font-family: var(--mono);
