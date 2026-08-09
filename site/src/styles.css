@@ -74,6 +74,37 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .stat-num { display: block; font-family: var(--mono); font-weight: 700; font-size: 1.9rem; color: var(--teal-deep); }
 .stat-label { font-size: 0.85rem; color: var(--ink-soft); }
 
+/* the 30-day ledger — statewide volume band */
+.ledger-line {
+  background: var(--teal-deep);
+  color: var(--white);
+  border-top: 3px solid var(--teal);
+  padding: 1.5rem 1.5rem 1.4rem;
+  margin-bottom: 3rem;
+}
+.ledger-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.85;
+  margin: 0 0 0.9rem;
+}
+.ledger-figures { display: flex; flex-wrap: wrap; gap: 1rem 3rem; margin-bottom: 1rem; }
+.ledger-num {
+  display: block;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 4.5vw, 2.5rem);
+  line-height: 1.1;
+  color: var(--white);
+}
+.ledger-label { font-size: 0.82rem; color: var(--cream); opacity: 0.9; }
+.ledger-kicker { max-width: 40rem; font-size: 0.95rem; margin: 0; color: var(--cream); }
+.ledger-kicker strong { color: var(--white); }
+
 /* transparency gap — the ledger bar */
 .gap { margin-bottom: 3rem; }
 .gap-line { max-width: 40rem; }

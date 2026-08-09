@@ -45,6 +45,13 @@ export default function App() {
 
   const inNetwork = agencies.filter((a) => a.in_network);
   const withPortal = agencies.filter((a) => a.portal);
+
+  // 30-day activity totals across the agencies that publish a portal. These cover
+  // ONLY the publishers — the real statewide totals are higher, and the copy says so.
+  const sightings30d = withPortal.reduce((n, a) => n + (a.portal.vehicles_captured_30d || 0), 0);
+  const searches30d = withPortal.reduce((n, a) => n + (a.portal.searches_30d || 0), 0);
+  const perDay = Math.round(sightings30d / 30);
+  const silentCount = inNetwork.length - withPortal.length;
   const dropped = agencies.filter((a) => a.status.value === "dropped");
   const marathon = agencies.filter((a) => a.county === "Marathon County");
   const updated = new Date(meta.generated).toLocaleDateString("en-US", {
@@ -71,6 +78,31 @@ export default function App() {
         <div className="stat"><span className="stat-num">{fmt(inNetwork.length)}</span><span className="stat-label">agencies in the Flock sharing network</span></div>
         <div className="stat"><span className="stat-num">{fmt(dropped.length)}</span><span className="stat-label">agencies have dropped Flock</span></div>
       </section>
+
+      {sightings30d > 0 && (
+        <section className="ledger-line" aria-label="Thirty-day surveillance volume">
+          <h2 className="ledger-eyebrow">The 30-day ledger</h2>
+          <div className="ledger-figures">
+            <div className="ledger-figure">
+              <span className="ledger-num">{fmt(sightings30d)}</span>
+              <span className="ledger-label">vehicle sightings logged</span>
+            </div>
+            <div className="ledger-figure">
+              <span className="ledger-num">≈{fmt(perDay)}</span>
+              <span className="ledger-label">every day</span>
+            </div>
+            <div className="ledger-figure">
+              <span className="ledger-num">{fmt(searches30d)}</span>
+              <span className="ledger-label">police searches against them</span>
+            </div>
+          </div>
+          <p className="ledger-kicker">
+            That is the past 30 days from just the <strong>{withPortal.length}</strong> Wisconsin
+            agencies that publish usage data. The other <strong>{silentCount}</strong> agencies in
+            the sharing network disclose nothing, so the true totals are higher.
+          </p>
+        </section>
+      )}
 
       <section className="gap" aria-label="Transparency gap">
         <h2>The transparency gap</h2>
