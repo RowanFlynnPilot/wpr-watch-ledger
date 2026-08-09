@@ -124,6 +124,16 @@ export default function AgencyTable({ agencies, searchDeltas }) {
                   {a.portal && (
                     <a href={a.portal.portal_url} target="_blank" rel="noreferrer">portal</a>
                   )}
+                  {a.portal?.public_search_audit && (
+                    <a
+                      href={a.portal.portal_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="This agency also publishes a redacted log of every search run against its cameras"
+                    >
+                      audit
+                    </a>
+                  )}
                   {!a.status.derived && a.status.source && (
                     <a href={a.status.source} target="_blank" rel="noreferrer">reporting</a>
                   )}

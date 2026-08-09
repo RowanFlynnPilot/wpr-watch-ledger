@@ -279,6 +279,13 @@ tbody tr:hover { background: var(--cream); }
 }
 .sharing-partners li { break-inside: avoid; padding: 0.12rem 0; }
 .sharing-partners .badge { margin-left: 0.45rem; }
+.sharing-prohibited {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: 0.25rem 0 0.35rem;
+  padding: 0 0.85rem 0 2rem;
+  max-width: 46rem;
+}
 
 /* methodology */
 .methodology { border-top: 2px solid var(--ink); padding-top: 1.25rem; }

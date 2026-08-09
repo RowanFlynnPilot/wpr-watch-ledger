@@ -20,6 +20,11 @@ export default function SharingList({ agencies, edges }) {
                   : `${partners.length} Wisconsin partner${partners.length === 1 ? "" : "s"}`}
               </span>
             </summary>
+            {a.portal.prohibited_uses && (
+              <p className="sharing-prohibited">
+                Self-declared prohibited uses: {a.portal.prohibited_uses}
+              </p>
+            )}
             {partners.length > 0 && (
               <ul className="sharing-partners">
                 {partners.map((c) => {
