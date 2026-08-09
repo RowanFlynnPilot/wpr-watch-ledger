@@ -1,11 +1,19 @@
 name: refresh-and-deploy
 
+# Weekly data refresh: the ONLY thing that queries Overpass/EOF/Atlas.
+# Runs Mondays 08:00 UTC (3 AM Central) — off the European midday peak that
+# 504s overpass-api.de — plus manual dispatch. Site-code pushes deploy via
+# deploy.yml without touching the pipeline.
+#
+# The single bounded retry below is workflow-level orchestration for a flaky
+# shared server, not pipeline logic: refresh.py itself remains one-path and
+# fails loudly, and if both attempts fail this run fails loudly too while the
+# site keeps serving the last committed data.
+
 on:
   schedule:
-    - cron: "0 11 * * 1" # Mondays 6:00 AM Central
+    - cron: "0 8 * * 1"
   workflow_dispatch:
-  push:
-    branches: [main]
 
 permissions:
   contents: write
@@ -29,10 +37,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Refresh data
+      - name: Refresh data (one 15-minute-backoff retry)
         run: |
           pip install -r pipeline/requirements.txt
-          python pipeline/refresh.py
+          python pipeline/refresh.py || {
+            echo "First attempt failed; backing off 15 minutes before the only retry."
+            sleep 900
+            python pipeline/refresh.py
+          }
 
       - name: Commit refreshed data
         run: |

@@ -18,7 +18,9 @@ cd site; npm install; npm run dev
 1. Push to a new GitHub repo (`main` branch)
 2. Repo Settings -> Pages -> Source: **GitHub Actions**
 3. Repo Settings -> Actions -> General -> Workflow permissions: **Read and write**
-4. Push (or run the `refresh-and-deploy` workflow manually). Data refreshes every Monday 6 AM Central.
+4. Pushes deploy the site from committed data (`deploy.yml`, no pipeline run).
+   Data refreshes every Monday 3 AM Central via `refresh.yml` — the only workflow
+   that queries the sources — or on manual dispatch.
 
 ## Embed in WordPress
 

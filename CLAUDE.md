@@ -52,6 +52,10 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
 - Flock's own transparency portals sit behind Cloudflare JS challenges — do NOT try to
   scrape transparency.flocksafety.com directly. Eyes On Flock is the one correct source.
 - Overpass etiquette: single weekly query, identified User-Agent. Don't shorten the cron.
+  Only refresh.yml (Monday 08:00 UTC cron + manual dispatch) queries Overpass, with one
+  workflow-level 15-minute-backoff retry; site-code pushes deploy from committed data via
+  deploy.yml and never touch the pipeline. Local dev runs should avoid Overpass when the
+  change doesn't need fresh camera data.
 - Camera locations are crowdsourced and incomplete — copy must never imply completeness.
 
 ## Backlog (not v1)
