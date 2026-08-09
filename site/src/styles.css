@@ -55,6 +55,34 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 /* masthead */
 .masthead { margin-bottom: 2.5rem; }
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  font-family: var(--display);
+  font-weight: 650;
+  font-size: clamp(1.3rem, 4.5vw, 1.6rem);
+  line-height: 1.1;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand:hover .brand-wordmark, .brand:focus-visible .brand-wordmark { color: var(--teal-deep); }
+.brand-badge {
+  display: inline-block;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  background: var(--white) center / cover no-repeat;
+}
+.amp { color: var(--teal-deep); font-weight: 500; font-style: italic; }
+.rule-double {
+  height: 4px;
+  margin: 10px 0 14px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
 .eyebrow {
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -241,8 +269,24 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   padding: 0.55rem 0.75rem;
   border: 1px solid var(--line);
   background: var(--white);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
 }
+.table-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+.chip {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.28rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--white);
+  color: var(--ink);
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--teal-deep); }
+.chip.active { background: var(--teal-deep); border-color: var(--teal-deep); color: var(--white); }
+.chip-count { opacity: 0.65; margin-left: 0.15rem; }
 .table-viewport { position: relative; }
 .table-viewport::after {
   content: "";
@@ -269,12 +313,15 @@ th:first-child, td:first-child {
   box-shadow: 1px 0 0 var(--line);
 }
 thead th:first-child { z-index: 3; }
-tbody tr:hover td:first-child { background: var(--cream); }
 .overflow-left th:first-child, .overflow-left td:first-child {
   box-shadow: 6px 0 8px -4px rgba(31, 36, 33, 0.22);
 }
 .table-hint { display: none; }
 .table-scroll { overflow-x: auto; border: 1px solid var(--line); background: var(--white); }
+/* cap the roster's height so the sticky header actually sticks and the page
+   (and the WordPress iframe) stays a sane height */
+.roster .table-scroll { max-height: 72vh; overflow-y: auto; }
+thead th { box-shadow: 0 1px 0 var(--line); }
 table { border-collapse: collapse; width: 100%; min-width: 790px; }
 table.county-table { min-width: 640px; }
 .county-rollup { margin-bottom: 3rem; }
@@ -297,7 +344,8 @@ th { position: sticky; top: 0; background: var(--white); }
 .cell-num { font-family: var(--mono); text-align: right; white-space: nowrap; }
 .delta { font-size: 0.68rem; color: var(--ink-soft); margin-left: 0.35rem; }
 .cell-sources a { margin-right: 0.6rem; font-size: 0.8rem; }
-tbody tr:hover { background: var(--cream); }
+tbody tr:nth-child(even) td { background: #fbf7ee; }
+tbody tr:hover td { background: var(--cream); }
 .table-count { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); }
 
 /* who shares with whom */
@@ -377,6 +425,32 @@ tbody tr:hover { background: var(--cream); }
 /* methodology */
 .methodology { border-top: 2px solid var(--ink); padding-top: 1.25rem; }
 .methodology p { font-size: 0.85rem; color: var(--ink-soft); max-width: 46rem; }
+.foot-brand {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 11px;
+  margin-top: 2rem;
+  text-decoration: none;
+  text-align: right;
+}
+.foot-brand:hover .foot-wordmark, .foot-brand:focus-visible .foot-wordmark { color: var(--teal-deep); }
+.foot-wordmark {
+  display: block;
+  font-family: var(--display);
+  font-weight: 650;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.foot-url {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--teal-deep);
+  margin-top: 2px;
+}
+.foot-badge { width: 44px; height: 44px; }
 
 /* mobile (~380px) */
 @media (max-width: 480px) {

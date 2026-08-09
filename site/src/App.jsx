@@ -69,7 +69,18 @@ export default function App() {
   return (
     <div className="page">
       <header className="masthead">
-        <p className="eyebrow">A Wausau Pilot &amp; Review data project</p>
+        <a className="brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">
+          <span
+            className="brand-badge"
+            aria-hidden="true"
+            style={{ backgroundImage: `url(${import.meta.env.BASE_URL}wpr-badge.jpg)` }}
+          />
+          <span className="brand-wordmark">
+            Wausau Pilot <span className="amp">&amp;</span> Review
+          </span>
+        </a>
+        <div className="rule-double" aria-hidden="true" />
+        <p className="eyebrow">A newsroom data project</p>
         <h1>The Watch Ledger</h1>
         <p className="dek">
           Automated license plate readers photograph every passing vehicle and log it in databases
@@ -280,6 +291,19 @@ export default function App() {
           is <a href="https://github.com/RowanFlynnPilot/wpr-watch-ledger/tree/main/data">public
           and versioned on GitHub</a>, refreshed every Monday.
         </p>
+        <a className="foot-brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">
+          <span>
+            <span className="foot-wordmark">
+              Wausau Pilot <span className="amp">&amp;</span> Review
+            </span>
+            <span className="foot-url">wausaupilotandreview.com</span>
+          </span>
+          <span
+            className="brand-badge foot-badge"
+            aria-hidden="true"
+            style={{ backgroundImage: `url(${import.meta.env.BASE_URL}wpr-badge.jpg)` }}
+          />
+        </a>
       </footer>
     </div>
   );

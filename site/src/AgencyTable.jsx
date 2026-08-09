@@ -12,8 +12,18 @@ const COLUMNS = [
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
+const FILTERS = [
+  { key: "all", label: "All", test: () => true },
+  { key: "network", label: "In network", test: (a) => a.in_network },
+  { key: "portal", label: "Publish data", test: (a) => !!a.portal },
+  { key: "hwy", label: "Hwy permits", test: (a) => !!a.wisdot },
+  { key: "dropped", label: "Dropped", test: (a) => a.status.value === "dropped" },
+  { key: "unverified", label: "Unverified", test: (a) => a.status.value === "unknown" },
+];
+
 export default function AgencyTable({ agencies, searchDeltas }) {
   const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState({ key: null, dir: 1 });
 
   // Edge fades + swipe hint, shown only while there is actually more table to scroll to.
@@ -38,9 +48,12 @@ export default function AgencyTable({ agencies, searchDeltas }) {
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    let out = q
-      ? agencies.filter((a) => a.name.toLowerCase().includes(q) || (a.county || "").toLowerCase().includes(q))
-      : [...agencies];
+    const active = FILTERS.find((f) => f.key === filter);
+    let out = agencies.filter(
+      (a) =>
+        active.test(a) &&
+        (!q || a.name.toLowerCase().includes(q) || (a.county || "").toLowerCase().includes(q))
+    );
     if (sort.key) {
       const col = COLUMNS.find((c) => c.key === sort.key);
       out.sort((x, y) => {
@@ -50,7 +63,7 @@ export default function AgencyTable({ agencies, searchDeltas }) {
       });
     }
     return out;
-  }, [agencies, query, sort]);
+  }, [agencies, query, filter, sort]);
 
   const toggleSort = (key) =>
     setSort((s) => (s.key === key ? { key, dir: -s.dir } : { key, dir: key === "name" || key === "county" ? 1 : -1 }));
@@ -65,6 +78,21 @@ export default function AgencyTable({ agencies, searchDeltas }) {
         onChange={(e) => setQuery(e.target.value)}
         aria-label="Filter agencies"
       />
+      <div className="table-filters" role="group" aria-label="Quick filters">
+        {FILTERS.map((f) => {
+          const count = f.key === "all" ? agencies.length : agencies.filter(f.test).length;
+          return (
+            <button
+              key={f.key}
+              className={`chip${filter === f.key ? " active" : ""}`}
+              aria-pressed={filter === f.key}
+              onClick={() => setFilter(f.key)}
+            >
+              {f.label} <span className="chip-count">{count.toLocaleString("en-US")}</span>
+            </button>
+          );
+        })}
+      </div>
       {overflow.right && <p className="table-hint">Swipe sideways for more columns →</p>}
       <div className={`table-viewport${overflow.left ? " overflow-left" : ""}${overflow.right ? " overflow-right" : ""}`}>
         <div className="table-scroll" ref={scrollRef}>
