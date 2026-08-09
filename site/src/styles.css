@@ -291,6 +291,26 @@ tbody tr:hover { background: var(--cream); }
   max-width: 46rem;
 }
 
+/* who else is in the network */
+.who-else-section { margin-bottom: 3rem; }
+.who-else-dek { max-width: 44rem; }
+.who-else { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+.who-else-group { background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--teal); padding: 1rem 1.2rem; }
+.who-else-group h3 {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin: 0 0 0.6rem;
+}
+.who-else-group ul { list-style: none; margin: 0; padding: 0; }
+.who-else-group li { padding: 0.3rem 0; font-size: 0.88rem; border-bottom: 1px solid var(--line); }
+.who-else-group li:last-child { border-bottom: none; }
+.who-else-name { font-weight: 500; }
+.who-else-facts { color: var(--ink-soft); font-size: 0.8rem; }
+
 /* methodology */
 .methodology { border-top: 2px solid var(--ink); padding-top: 1.25rem; }
 .methodology p { font-size: 0.85rem; color: var(--ink-soft); max-width: 46rem; }

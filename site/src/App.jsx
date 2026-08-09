@@ -3,6 +3,7 @@ import CameraMap from "./CameraMap.jsx";
 import AgencyTable from "./AgencyTable.jsx";
 import SharingList from "./SharingList.jsx";
 import CountyTable from "./CountyTable.jsx";
+import WhoElse from "./WhoElse.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -210,6 +211,16 @@ export default function App() {
           lists — out-of-state partners are not shown.
         </p>
         <SharingList agencies={agencies} edges={edges} />
+      </section>
+
+      <section className="who-else-section" aria-label="Who else is in the network">
+        <h2>Who else is in the network</h2>
+        <p className="who-else-dek">
+          A plate-reader network is not only police. These entities appear in Wisconsin
+          agencies' Flock sharing lists, hold state-highway camera permits of their own, or
+          are otherwise documented operating ALPRs.
+        </p>
+        <WhoElse agencies={agencies} />
       </section>
 
       <footer className="methodology">
