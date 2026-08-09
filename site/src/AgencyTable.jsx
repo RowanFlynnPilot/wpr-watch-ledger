@@ -68,17 +68,25 @@ export default function AgencyTable({ agencies, searchDeltas }) {
       <div className={`table-viewport${overflow.left ? " overflow-left" : ""}${overflow.right ? " overflow-right" : ""}`}>
         <div className="table-scroll" ref={scrollRef}>
           <table>
+          <caption className="visually-hidden">
+            Wisconsin agencies documented using automated license plate readers, with
+            transparency portal statistics where the agency publishes them
+          </caption>
           <thead>
             <tr>
               {COLUMNS.map((c) => (
-                <th key={c.key}>
+                <th
+                  key={c.key}
+                  scope="col"
+                  aria-sort={sort.key === c.key ? (sort.dir === 1 ? "ascending" : "descending") : undefined}
+                >
                   <button className="th-sort" onClick={() => toggleSort(c.key)}>
                     {c.label}
                     {sort.key === c.key && <span aria-hidden="true">{sort.dir === 1 ? " ↑" : " ↓"}</span>}
                   </button>
                 </th>
               ))}
-              <th>Sources</th>
+              <th scope="col">Sources</th>
             </tr>
           </thead>
           <tbody>

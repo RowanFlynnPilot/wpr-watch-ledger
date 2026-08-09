@@ -14,6 +14,18 @@
 
 * { box-sizing: border-box; }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body {
   margin: 0;
   background: var(--cream);
@@ -123,6 +135,18 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .map-section { margin-bottom: 3rem; }
 .camera-map { height: 520px; border: 1px solid var(--line); background: var(--white); }
 .map-caption { font-size: 0.85rem; color: var(--ink-soft); max-width: 44rem; }
+.map-legend {
+  display: flex;
+  gap: 1.25rem;
+  margin: 0.5rem 0 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+.legend-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend-flock { background: #3a867c; border: 1.25px solid #2c6b62; }
+.legend-other { background: #b9b9b2; border: 1.25px solid #6b6b66; }
 .leaflet-popup-content { font-family: var(--body); font-size: 0.85rem; }
 
 /* marathon spotlight */
@@ -166,21 +190,35 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   margin-bottom: 0.75rem;
 }
 .table-viewport { position: relative; }
-.table-viewport::before, .table-viewport::after {
+.table-viewport::after {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
+  right: 0;
   width: 18px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.15s;
   z-index: 1;
+  background: linear-gradient(to left, rgba(31, 36, 33, 0.14), transparent);
 }
-.table-viewport::before { left: 0; background: linear-gradient(to right, rgba(31, 36, 33, 0.14), transparent); }
-.table-viewport::after { right: 0; background: linear-gradient(to left, rgba(31, 36, 33, 0.14), transparent); }
-.table-viewport.overflow-left::before { opacity: 1; }
 .table-viewport.overflow-right::after { opacity: 1; }
+
+/* agency name stays put while the rest of the table scrolls sideways;
+   once scrolled, it casts a shadow on the columns sliding beneath it */
+th:first-child, td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--white);
+  box-shadow: 1px 0 0 var(--line);
+}
+thead th:first-child { z-index: 3; }
+tbody tr:hover td:first-child { background: var(--cream); }
+.overflow-left th:first-child, .overflow-left td:first-child {
+  box-shadow: 6px 0 8px -4px rgba(31, 36, 33, 0.22);
+}
 .table-hint { display: none; }
 .table-scroll { overflow-x: auto; border: 1px solid var(--line); background: var(--white); }
 table { border-collapse: collapse; width: 100%; min-width: 720px; }
@@ -253,6 +291,7 @@ tbody tr:hover { background: var(--cream); }
     color: var(--ink-soft);
     margin: 0 0 0.4rem;
   }
+  .cell-name { max-width: 10.5rem; }
   .sharing-row summary { flex-wrap: wrap; gap: 0.15rem 1rem; }
   .sharing-partners { columns: 1; padding-left: 1.5rem; }
 }

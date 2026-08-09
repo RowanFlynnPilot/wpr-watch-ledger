@@ -122,10 +122,13 @@ export default function App() {
       <section className="map-section" aria-label="Camera map">
         <h2>Every mapped camera</h2>
         <CameraMap cameras={cameras.cameras} />
+        <div className="map-legend">
+          <span className="legend-item"><span className="legend-dot legend-flock" aria-hidden="true" />Flock Safety</span>
+          <span className="legend-item"><span className="legend-dot legend-other" aria-hidden="true" />Other ALPR vendors</span>
+        </div>
         <p className="map-caption">
           Locations are community-reported by volunteers to OpenStreetMap via the DeFlock project
-          and are incomplete — the true number of cameras is higher. Teal points are Flock Safety
-          devices; gray points are other ALPR vendors.
+          and are incomplete — the true number of cameras is higher.
         </p>
       </section>
 
@@ -186,6 +189,12 @@ export default function App() {
           sharing lists, and unverified otherwise. Data refreshes weekly. Corrections:{" "}
           <a href="https://wausaupilotandreview.com">contact the newsroom</a>.
           {/* TODO(rowan): point this at the real corrections contact */}
+        </p>
+        <p>
+          This ledger holds itself to the standard it asks of police agencies: every dataset
+          behind this page — agencies, cameras, sharing edges, and weekly history snapshots —
+          is <a href="https://github.com/RowanFlynnPilot/wpr-watch-ledger/tree/main/data">public
+          and versioned on GitHub</a>, refreshed every Monday.
         </p>
       </footer>
     </div>
