@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import CameraMap from "./CameraMap.jsx";
 import AgencyTable from "./AgencyTable.jsx";
 import SharingList from "./SharingList.jsx";
+import CountyTable from "./CountyTable.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -12,15 +13,15 @@ export default function App() {
 
   useEffect(() => {
     Promise.all(
-      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits"].map((f) =>
+      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits", "counties"].map((f) =>
         fetch(`${import.meta.env.BASE_URL}data/${f}.json`).then((r) => {
           if (!r.ok) throw new Error(`Failed to load ${f}.json (${r.status})`);
           return r.json();
         })
       )
     )
-      .then(([meta, cameras, agencies, history, edges, wisdot]) =>
-        setData({ meta, cameras, agencies: agencies.agencies, history, edges: edges.edges, wisdot })
+      .then(([meta, cameras, agencies, history, edges, wisdot, counties]) =>
+        setData({ meta, cameras, agencies: agencies.agencies, history, edges: edges.edges, wisdot, counties })
       )
       .catch((e) => setError(e.message));
   }, []);
@@ -28,7 +29,8 @@ export default function App() {
   if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
   if (!data) return <div className="loading">Loading the ledger…</div>;
 
-  const { meta, cameras, agencies, history, edges, wisdot } = data;
+  const { meta, cameras, agencies, history, edges, wisdot, counties } = data;
+  const coveredPct = Math.round((100 * counties.covered_population) / counties.state_population);
 
   // Week-over-week search deltas from the last two history snapshots.
   // Null until two snapshots exist; per-agency null when either week lacks a figure.
@@ -113,6 +115,11 @@ export default function App() {
           data-sharing network, only <strong>{withPortal.length}</strong> publish a public
           transparency portal showing how they use it.
         </p>
+        <p className="gap-line">
+          Agencies in the network operate in <strong>{counties.covered_counties}</strong> of
+          Wisconsin's 72 counties — home to <strong>{coveredPct}%</strong> of the state's{" "}
+          {fmt(counties.state_population)} residents.
+        </p>
         <div className="gap-bar" role="img" aria-label={`${withPortal.length} of ${inNetwork.length} network agencies publish a transparency portal`}>
           {inNetwork.map((a) => (
             <span key={a.canonical} className={a.portal ? "tick filled" : "tick"} title={a.name} />
@@ -170,6 +177,19 @@ export default function App() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="county-rollup" aria-label="County by county">
+        <h2>County by county</h2>
+        <p className="county-dek">
+          Where the cameras, the agencies, and the transparency are — and aren't. Population
+          figures are Wisconsin DOA official estimates as of January 1, 2025.
+        </p>
+        <CountyTable counties={counties.counties} />
+        <p className="table-count">
+          {counties.unresolved_agencies} statewide or unresolved agencies and{" "}
+          {counties.unlocated_cameras} cameras without a usable county are not shown.
+        </p>
       </section>
 
       <section className="roster" aria-label="Agency roster">

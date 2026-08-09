@@ -261,6 +261,11 @@ COUNTY_FIXUPS = {
     "Saint Croix County": "St. Croix County",
     "St Croix County": "St. Croix County",
     "Fond Du Lac County": "Fond du Lac County",
+    "Monre County": "Monroe County",        # WisDOT registry typo
+    "Menomonee County": "Menominee County",  # WisDOT registry typo
+    "Saywer County": "Sawyer County",        # WisDOT registry typo
+    "Ozuakee County": "Ozaukee County",      # WisDOT registry typo
+    "LaCrosse County": "La Crosse County",   # WisDOT registry spacing
 }
 
 COUNTY_IN_NAME = re.compile(r"^(.+?) county\b")
@@ -293,6 +298,67 @@ def resolve_county(canonical: str, city_county: dict) -> str | None:
     muni = MUNI_PREFIX.sub("", canonical)
     muni = re.sub(r" pd$", "", muni)
     return city_county.get(muni)
+
+
+# ---------------------------------------------------------------- population
+
+def load_population() -> dict:
+    """Committed WI DOA official population estimates (state, counties, places, towns).
+    Static like the county lookup; refreshed when DOA publishes new final estimates."""
+    path = DATA / "wi_population.json"
+    if not path.exists():
+        raise RuntimeError("data/wi_population.json is missing; the DOA population estimates are required.")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(doc.get("state"), int) or doc["state"] < 5_000_000:
+        raise RuntimeError("wi_population.json corrupt: implausible state population")
+    if not isinstance(doc.get("counties"), dict) or len(doc["counties"]) != 72:
+        raise RuntimeError(f"wi_population.json corrupt: expected 72 counties, got {len(doc.get('counties', {}))}")
+    for name, pop in doc["counties"].items():
+        if not name.endswith(" County") or not isinstance(pop, int) or pop <= 0:
+            raise RuntimeError(f"wi_population.json corrupt county row: {name!r}: {pop!r}")
+    return doc
+
+
+def build_counties(agencies: list[dict], wisdot: dict, population: dict, generated: str) -> dict:
+    """Per-county rollup + statewide coverage. County spellings are enforced against
+    DOA's official list — a new source misspelling aborts instead of leaking through."""
+    rows = {name: {"name": name, "population": pop, "agencies": 0, "in_network": 0,
+                   "portals": 0, "dropped": 0, "wisdot_cameras": 0}
+            for name, pop in population["counties"].items()}
+    unresolved = 0
+    for a in agencies:
+        c = a["county"]
+        if c is None:
+            unresolved += 1
+            continue
+        if c not in rows:
+            raise RuntimeError(f"Agency county not in DOA county list: {c!r} ({a['name']})")
+        rows[c]["agencies"] += 1
+        if a["in_network"]:
+            rows[c]["in_network"] += 1
+        if a["portal"]:
+            rows[c]["portals"] += 1
+        if a["status"]["value"] == "dropped":
+            rows[c]["dropped"] += 1
+    unlocated_cameras = 0
+    for cam in wisdot["cameras"]:
+        c = f"{cam['county']} County"
+        c = COUNTY_FIXUPS.get(c, c)
+        if c in rows:
+            rows[c]["wisdot_cameras"] += 1
+        else:
+            unlocated_cameras += 1
+    covered = [r for r in rows.values() if r["in_network"] > 0]
+    return {
+        "generated": generated,
+        "population_as_of": population["as_of"],
+        "state_population": population["state"],
+        "covered_counties": len(covered),
+        "covered_population": sum(r["population"] for r in covered),
+        "unresolved_agencies": unresolved,
+        "unlocated_cameras": unlocated_cameras,
+        "counties": sorted(rows.values(), key=lambda r: -r["population"]),
+    }
 
 
 # ---------------------------------------------------------------- wisdot permits
@@ -478,11 +544,15 @@ def main() -> None:
     overlay = load_overlay()
     city_county = load_city_county()
     wisdot = load_wisdot()
+    population = load_population()
     agencies = build_agencies(portals, edges, atlas, overlay, city_county, wisdot)
     unresolved = sum(1 for a in agencies if a["county"] is None)
     with_wisdot = sum(1 for a in agencies if a["wisdot"])
+    counties = build_counties(agencies, wisdot, population, generated)
     print(f"      {len(agencies) - unresolved} agencies with a county, {unresolved} unresolved; "
           f"{with_wisdot} agencies hold WisDOT highway permits")
+    print(f"      network agencies in {counties['covered_counties']}/72 counties, "
+          f"home to {counties['covered_population']:,} of {counties['state_population']:,} residents")
 
     print("[5/5] Appending portal stats to history ledger...")
     history = load_history()
@@ -512,6 +582,7 @@ def main() -> None:
     (DATA / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
     (DATA / "history.json").write_text(json.dumps(history, indent=1), encoding="utf-8")
     (DATA / "edges.json").write_text(json.dumps({"generated": generated, "edges": sharing}, separators=(",", ":")), encoding="utf-8")
+    (DATA / "counties.json").write_text(json.dumps(counties, separators=(",", ":")), encoding="utf-8")
     print(f"Done. {len(agencies)} agencies, {cameras['count']} cameras -> data/")
 
 

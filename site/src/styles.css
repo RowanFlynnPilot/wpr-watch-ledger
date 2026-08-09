@@ -232,6 +232,10 @@ tbody tr:hover td:first-child { background: var(--cream); }
 .table-hint { display: none; }
 .table-scroll { overflow-x: auto; border: 1px solid var(--line); background: var(--white); }
 table { border-collapse: collapse; width: 100%; min-width: 790px; }
+table.county-table { min-width: 640px; }
+.county-rollup { margin-bottom: 3rem; }
+.county-rollup .table-scroll { max-height: 30rem; overflow-y: auto; }
+.county-dek { max-width: 44rem; }
 th, td { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); font-size: 0.88rem; }
 th { position: sticky; top: 0; background: var(--white); }
 .th-sort {
