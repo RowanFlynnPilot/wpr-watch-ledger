@@ -95,6 +95,14 @@
     "note": "Two cameras installed May 2026 without notifying the mayor or city council",
     "source": "https://www.weau.com/2026/07/21/chetek-police-install-flock-cameras-without-mayors-knowledge/"
   },
+  "stoughton pd": {
+    "name": "Stoughton Police Department",
+    "county": "Dane County",
+    "status": "dropped",
+    "as_of": "2026-07-28",
+    "note": "Common Council adopted R-103-2026 ending the Flock contract seven months into a two-year term: cameras off within 48 hours, plate data deleted with public confirmation, no replacement ALPR system",
+    "source": "https://www.cityofstoughton.com/AgendaCenter/ViewFile/Agenda/_07282026-249?html=true"
+  },
   "brown county so": {
     "name": "Brown County Sheriff's Office",
     "county": "Brown County",
