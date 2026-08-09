@@ -76,15 +76,45 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 /* stat strip */
 .stat-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
+  border-top: 3px solid var(--teal-deep);
   margin-bottom: 3rem;
 }
-.stat { background: var(--white); padding: 1.1rem 1.2rem; }
-.stat-num { display: block; font-family: var(--mono); font-weight: 700; font-size: 1.9rem; color: var(--teal-deep); }
-.stat-label { font-size: 0.85rem; color: var(--ink-soft); }
+.stat {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  padding: 1.15rem 1.3rem 0.95rem;
+}
+.stat-num {
+  display: block;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 2.15rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--teal-deep);
+  margin-bottom: 0.3rem;
+}
+.stat-label { font-size: 0.85rem; font-weight: 500; color: var(--ink); line-height: 1.35; }
+.stat-sub {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  margin-top: auto;
+  padding-top: 0.65rem;
+}
+.stat-sub::before {
+  content: "";
+  display: block;
+  width: 1.6rem;
+  border-top: 1px solid var(--line);
+  margin-bottom: 0.45rem;
+}
+.stat-dropped .stat-num { color: var(--rust); }
 
 /* the 30-day ledger — statewide volume band */
 .ledger-line {
@@ -104,16 +134,30 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   opacity: 0.85;
   margin: 0 0 0.9rem;
 }
-.ledger-figures { display: flex; flex-wrap: wrap; gap: 1rem 3rem; margin-bottom: 1rem; }
+.ledger-figures { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1.1rem 0; margin-bottom: 1.1rem; }
+.ledger-figure { display: flex; flex-direction: column; }
+.ledger-figure + .ledger-figure {
+  border-left: 1px solid rgba(246, 242, 233, 0.3);
+  margin-left: 2rem;
+  padding-left: 2rem;
+}
 .ledger-num {
   display: block;
   font-family: var(--mono);
   font-weight: 700;
-  font-size: clamp(1.7rem, 4.5vw, 2.5rem);
+  font-size: clamp(1.35rem, 3.2vw, 1.9rem);
   line-height: 1.1;
-  color: var(--white);
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  opacity: 0.92;
 }
-.ledger-label { font-size: 0.82rem; color: var(--cream); opacity: 0.9; }
+.ledger-hero .ledger-num {
+  font-size: clamp(2rem, 6vw, 3.1rem);
+  color: var(--white);
+  opacity: 1;
+}
+.ledger-label { font-size: 0.78rem; color: var(--cream); opacity: 0.85; margin-top: 0.25rem; }
+.ledger-hero .ledger-label { font-size: 0.85rem; opacity: 0.95; }
 .ledger-kicker { max-width: 40rem; font-size: 0.95rem; margin: 0; color: var(--cream); }
 .ledger-kicker strong { color: var(--white); }
 
@@ -338,9 +382,18 @@ tbody tr:hover { background: var(--cream); }
 @media (max-width: 480px) {
   .page { padding: 1.75rem 1rem 3rem; }
   .stat-strip { grid-template-columns: 1fr 1fr; }
-  .stat { padding: 0.8rem 0.85rem; }
-  .stat-num { font-size: 1.45rem; }
+  .stat { padding: 0.85rem 0.9rem 0.75rem; }
+  .stat-num { font-size: 1.6rem; }
   .stat-label { font-size: 0.78rem; }
+  .stat-sub { font-size: 0.66rem; padding-top: 0.5rem; }
+  .ledger-figures { flex-direction: column; align-items: stretch; gap: 0.9rem; }
+  .ledger-figure + .ledger-figure {
+    border-left: none;
+    margin-left: 0;
+    padding-left: 0;
+    border-top: 1px solid rgba(246, 242, 233, 0.3);
+    padding-top: 0.9rem;
+  }
   .gap-bar { gap: 2px; }
   .tick { width: 4px; height: 20px; border-width: 1px; }
   .camera-map { height: 380px; }

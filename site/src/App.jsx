@@ -58,6 +58,9 @@ export default function App() {
   const perDay = Math.round(sightings30d / 30);
   const silentCount = inNetwork.length - withPortal.length;
   const dropped = agencies.filter((a) => a.status.value === "dropped");
+  const droppedSince = new Date(
+    Math.min(...dropped.map((a) => new Date(a.status.as_of || Date.now()).getTime()))
+  ).toLocaleDateString("en-US", { year: "numeric", month: "long", timeZone: "UTC" });
   const marathon = agencies.filter((a) => a.county === "Marathon County");
   const updated = new Date(meta.generated).toLocaleDateString("en-US", {
     year: "numeric", month: "long", day: "numeric",
@@ -78,24 +81,39 @@ export default function App() {
       </header>
 
       <section className="stat-strip" aria-label="Key figures">
-        <div className="stat"><span className="stat-num">{fmt(cameras.count)}</span><span className="stat-label">ALPR cameras mapped in Wisconsin</span></div>
-        <div className="stat"><span className="stat-num">{fmt(cameras.flock_count)}</span><span className="stat-label">made by Flock Safety</span></div>
-        <div className="stat"><span className="stat-num">{fmt(inNetwork.length)}</span><span className="stat-label">agencies in the Flock sharing network</span></div>
-        <div className="stat"><span className="stat-num">{fmt(wisdot.camera_count)}</span><span className="stat-label">cameras permitted on state highways, per WisDOT records</span></div>
-        <div className="stat"><span className="stat-num">{fmt(dropped.length)}</span><span className="stat-label">agencies have dropped Flock</span></div>
+        <div className="stat">
+          <span className="stat-num">{fmt(cameras.count)}</span>
+          <span className="stat-label">ALPR cameras mapped by volunteers</span>
+          <span className="stat-sub">{fmt(cameras.flock_count)} made by Flock Safety</span>
+        </div>
+        <div className="stat">
+          <span className="stat-num">{fmt(wisdot.camera_count)}</span>
+          <span className="stat-label">cameras permitted on state highways</span>
+          <span className="stat-sub">WisDOT records · {fmt(agencies.filter((a) => a.wisdot).length)} agencies</span>
+        </div>
+        <div className="stat">
+          <span className="stat-num">{fmt(inNetwork.length)}</span>
+          <span className="stat-label">agencies in the Flock sharing network</span>
+          <span className="stat-sub">only {fmt(withPortal.length)} publish usage data</span>
+        </div>
+        <div className="stat stat-dropped">
+          <span className="stat-num">{fmt(dropped.length)}</span>
+          <span className="stat-label">agencies have dropped Flock</span>
+          <span className="stat-sub">all since {droppedSince}</span>
+        </div>
       </section>
 
       {sightings30d > 0 && (
         <section className="ledger-line" aria-label="Thirty-day surveillance volume">
           <h2 className="ledger-eyebrow">The 30-day ledger</h2>
           <div className="ledger-figures">
-            <div className="ledger-figure">
+            <div className="ledger-figure ledger-hero">
               <span className="ledger-num">{fmt(sightings30d)}</span>
               <span className="ledger-label">vehicle sightings logged</span>
             </div>
             <div className="ledger-figure">
-              <span className="ledger-num">≈{fmt(perDay)}</span>
-              <span className="ledger-label">every day</span>
+              <span className="ledger-num">≈{fmt(Math.round(perDay / 100) * 100)}</span>
+              <span className="ledger-label">sightings a day</span>
             </div>
             <div className="ledger-figure">
               <span className="ledger-num">{fmt(searches30d)}</span>
