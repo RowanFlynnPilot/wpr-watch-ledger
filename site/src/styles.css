@@ -291,6 +291,25 @@ tbody tr:hover { background: var(--cream); }
   max-width: 46rem;
 }
 
+/* inner-circle sharing graph */
+.inner-circle-title { font-family: var(--display); font-weight: 600; font-size: 1.15rem; margin: 1.75rem 0 0.4rem; }
+.graph-scroll { overflow-x: auto; }
+.sharing-graph {
+  display: block;
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+.sg-link { stroke: var(--ink-soft); stroke-opacity: 0.22; stroke-width: 1; }
+.sg-link.mutual { stroke: var(--teal); stroke-opacity: 0.55; stroke-width: 1.5; }
+.sg-link.dim { stroke-opacity: 0.05; }
+.sg-node { fill: var(--teal); stroke: var(--teal-deep); stroke-width: 1.25; cursor: pointer; }
+.sg-node.dim { opacity: 0.2; }
+.sg-label { font-family: var(--mono); font-size: 9.5px; fill: var(--ink); }
+.sg-label.dim { opacity: 0.25; }
+
 /* who else is in the network */
 .who-else-section { margin-bottom: 3rem; }
 .who-else-dek { max-width: 44rem; }

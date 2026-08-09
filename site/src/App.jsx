@@ -4,6 +4,7 @@ import AgencyTable from "./AgencyTable.jsx";
 import SharingList from "./SharingList.jsx";
 import CountyTable from "./CountyTable.jsx";
 import WhoElse from "./WhoElse.jsx";
+import SharingGraph from "./SharingGraph.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -219,6 +220,12 @@ export default function App() {
           lists — out-of-state partners are not shown.
         </p>
         <SharingList agencies={agencies} edges={edges} />
+        <h3 className="inner-circle-title">The inner circle</h3>
+        <p className="sharing-dek">
+          Among the {withPortal.length} agencies transparent enough to publish a portal, who
+          names whom as a data-sharing partner:
+        </p>
+        <SharingGraph agencies={agencies} edges={edges} />
       </section>
 
       <section className="who-else-section" aria-label="Who else is in the network">
