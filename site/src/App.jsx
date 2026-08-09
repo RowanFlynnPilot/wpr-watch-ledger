@@ -5,6 +5,7 @@ import SharingList from "./SharingList.jsx";
 import CountyTable from "./CountyTable.jsx";
 import WhoElse from "./WhoElse.jsx";
 import SharingGraph from "./SharingGraph.jsx";
+import LedgerBand from "./LedgerBand.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -115,28 +116,13 @@ export default function App() {
       </section>
 
       {sightings30d > 0 && (
-        <section className="ledger-line" aria-label="Thirty-day surveillance volume">
-          <h2 className="ledger-eyebrow">The 30-day ledger</h2>
-          <div className="ledger-figures">
-            <div className="ledger-figure ledger-hero">
-              <span className="ledger-num">{fmt(sightings30d)}</span>
-              <span className="ledger-label">vehicle sightings logged</span>
-            </div>
-            <div className="ledger-figure">
-              <span className="ledger-num">≈{fmt(Math.round(perDay / 100) * 100)}</span>
-              <span className="ledger-label">sightings a day</span>
-            </div>
-            <div className="ledger-figure">
-              <span className="ledger-num">{fmt(searches30d)}</span>
-              <span className="ledger-label">police searches against them</span>
-            </div>
-          </div>
-          <p className="ledger-kicker">
-            That is the past 30 days from just the <strong>{withPortal.length}</strong> Wisconsin
-            agencies that publish usage data. The other <strong>{silentCount}</strong> agencies in
-            the sharing network disclose nothing, so the true totals are higher.
-          </p>
-        </section>
+        <LedgerBand
+          sightings={sightings30d}
+          perDay={Math.round(perDay / 100) * 100}
+          searches={searches30d}
+          publisherCount={withPortal.length}
+          silentCount={silentCount}
+        />
       )}
 
       <section className="gap" aria-label="Transparency gap">

@@ -144,13 +144,28 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .stat-dropped .stat-num { color: var(--rust); }
 
-/* the 30-day ledger — statewide volume band */
+/* the 30-day ledger — statewide volume band, dressed as actual ledger paper:
+   faint ruled lines and the traditional rust margin rule */
 .ledger-line {
-  background: var(--teal-deep);
+  position: relative;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 27px, rgba(246, 242, 233, 0.08) 27px 28px),
+    var(--teal-deep);
   color: var(--white);
   border-top: 3px solid var(--teal);
-  padding: 1.5rem 1.5rem 1.4rem;
+  padding: 1.5rem 1.5rem 1.4rem 3.1rem;
   margin-bottom: 3rem;
+  overflow: hidden;
+}
+.ledger-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2.1rem;
+  width: 1px;
+  background: rgba(181, 84, 59, 0.8);
+  box-shadow: 3px 0 0 rgba(181, 84, 59, 0.3);
 }
 .ledger-eyebrow {
   font-family: var(--mono);
@@ -186,6 +201,14 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .ledger-label { font-size: 0.78rem; color: var(--cream); opacity: 0.85; margin-top: 0.25rem; }
 .ledger-hero .ledger-label { font-size: 0.85rem; opacity: 0.95; }
+.ledger-pace {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--cream);
+  opacity: 0.85;
+  margin: 0 0 0.9rem;
+}
+.ledger-pace-count { color: var(--white); font-weight: 700; }
 .ledger-kicker { max-width: 40rem; font-size: 0.95rem; margin: 0; color: var(--cream); }
 .ledger-kicker strong { color: var(--white); }
 
@@ -468,6 +491,8 @@ tbody tr:hover td { background: var(--cream); }
     border-top: 1px solid rgba(246, 242, 233, 0.3);
     padding-top: 0.9rem;
   }
+  .ledger-line { padding-left: 2.1rem; }
+  .ledger-line::before { left: 1.25rem; }
   .gap-bar { gap: 2px; }
   .tick { width: 4px; height: 20px; border-width: 1px; }
   .camera-map { height: 380px; }
