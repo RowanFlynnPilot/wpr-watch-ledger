@@ -1,12 +1,23 @@
 {
-  "generated": "2026-08-31T16:01:49Z",
+  "generated": "2026-09-02T01:38:04Z",
   "camera_count": 2100,
   "flock_camera_count": 1605,
-  "agency_count": 282,
+  "agency_count": 280,
   "portal_count": 22,
   "curated_count": 14,
   "wisdot_camera_count": 759,
   "wisdot_agency_count": 186,
+  "wisdot_permits_by_year": {
+    "2021": 10,
+    "2022": 37,
+    "2023": 214,
+    "2024": 170,
+    "2025": 224,
+    "2026": 82,
+    "unknown": 22
+  },
+  "stale_days_threshold": 45,
+  "stale_portal_count": 3,
   "national": {
     "us_portal_count": 1007,
     "states_with_portals": 43,

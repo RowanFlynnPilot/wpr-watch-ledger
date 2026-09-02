@@ -32,6 +32,7 @@ export default function CameraMap({ cameras, wisdotCameras }) {
     ).addTo(map);
 
     const renderer = L.canvas({ padding: 0.4 });
+    const dots = [], rings = [];
     for (const c of cameras) {
       const isFlock = c.manufacturer === "Flock Safety";
       const marker = L.circleMarker([c.lat, c.lon], {
@@ -42,6 +43,7 @@ export default function CameraMap({ cameras, wisdotCameras }) {
         fillColor: isFlock ? "#3A867C" : "#B9B9B2",
         fillOpacity: 0.75,
       }).addTo(map);
+      dots.push(marker);
       marker.bindPopup(
         `<strong>${c.manufacturer || "Unknown vendor"}</strong><br/>` +
           (c.operator ? `Operator: ${c.operator}<br/>` : "") +
@@ -71,7 +73,22 @@ export default function CameraMap({ cameras, wisdotCameras }) {
           `<br/>${c.address}`
       );
       wisdotLayer.addLayer(marker);
+      rings.push(marker);
     }
+
+    // Marker size follows zoom: at the statewide view 759 rings and 2,100 dots
+    // must read as a distribution, not a blot; zoomed in they become clickable targets.
+    const resize = () => {
+      const z = map.getZoom();
+      const s = z <= 6 ? { dot: 2.5, ring: 3.5, w: 1 }
+        : z <= 7 ? { dot: 3, ring: 4.5, w: 1.1 }
+        : z <= 9 ? { dot: 4, ring: 7, w: 1.5 }
+        : { dot: 5, ring: 9, w: 1.75 };
+      for (const m of dots) m.setRadius(s.dot);
+      for (const m of rings) m.setStyle({ radius: s.ring, weight: s.w });
+    };
+    map.on("zoomend", resize);
+    resize();
 
     return () => {
       mapRef.current = null;

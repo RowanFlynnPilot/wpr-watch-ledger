@@ -1,30 +1,49 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import Sparkline from "./Sparkline.jsx";
+
+const rate = (a) => (a.portal?.hit_rate == null ? -1 : parseFloat(a.portal.hit_rate));
 
 const COLUMNS = [
   { key: "name", label: "Agency", get: (a) => a.name },
   { key: "county", label: "County", get: (a) => a.county || "" },
   { key: "status", label: "Status", get: (a) => a.status.value },
-  { key: "cameras", label: "Cameras", get: (a) => a.portal?.cameras ?? -1, numeric: true },
+  { key: "cameras", label: "Cameras", title: "Cameras the agency reports on its own transparency portal", get: (a) => a.portal?.cameras ?? -1, numeric: true },
   { key: "hwy", label: "Hwy cams", title: "Cameras permitted on state-highway right-of-way (WisDOT records)", get: (a) => a.wisdot?.cameras ?? -1, numeric: true },
+  { key: "mapped", label: "Mapped", title: "Cameras volunteers have tagged with this operator on OpenStreetMap", get: (a) => a.osm_cameras || -1, numeric: true },
   { key: "searches", label: "Searches / 30d", get: (a) => a.portal?.searches_30d ?? -1, numeric: true },
+  { key: "hit", label: "Hit rate", title: "Hot-list hits as a percentage of vehicles sighted, per the portal", get: rate, numeric: true },
+  { key: "reach", label: "Can search", title: "Agencies nationwide whose searches can reach this agency's cameras (only some portals disclose this)", get: (a) => a.portal?.reach?.received?.total ?? -1, numeric: true },
   { key: "shared", label: "Shares with", get: (a) => a.portal?.shared_with_count ?? -1, numeric: true },
 ];
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
+const fmtZero = (n) => (n ? n.toLocaleString("en-US") : "—");
 
 const FILTERS = [
   { key: "all", label: "All", test: () => true },
   { key: "network", label: "In network", test: (a) => a.in_network },
   { key: "portal", label: "Publish data", test: (a) => !!a.portal },
+  { key: "audit", label: "Publish audit log", test: (a) => !!a.portal?.public_search_audit },
   { key: "hwy", label: "Hwy permits", test: (a) => !!a.wisdot },
   { key: "dropped", label: "Dropped", test: (a) => a.status.value === "dropped" },
   { key: "unverified", label: "Unverified", test: (a) => a.status.value === "unknown" },
 ];
 
-export default function AgencyTable({ agencies, searchDeltas }) {
+export default function AgencyTable({ agencies, searchDeltas, history, staleThreshold }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState({ key: null, dir: 1 });
+
+  // Per-agency weekly search series for the sparklines.
+  const series = useMemo(() => {
+    const out = {};
+    for (const snap of history.snapshots) {
+      for (const [key, stats] of Object.entries(snap.portals)) {
+        (out[key] ||= []).push({ date: snap.date, value: stats.searches_30d });
+      }
+    }
+    return out;
+  }, [history]);
 
   // Edge fades + swipe hint, shown only while there is actually more table to scroll to.
   const scrollRef = useRef(null);
@@ -67,6 +86,8 @@ export default function AgencyTable({ agencies, searchDeltas }) {
 
   const toggleSort = (key) =>
     setSort((s) => (s.key === key ? { key, dir: -s.dir } : { key, dir: key === "name" || key === "county" ? 1 : -1 }));
+
+  const isStale = (a) => a.portal?.stale_days != null && a.portal.stale_days > staleThreshold;
 
   return (
     <div className="table-wrap">
@@ -123,7 +144,7 @@ export default function AgencyTable({ agencies, searchDeltas }) {
               <tr key={a.canonical}>
                 <td className="cell-name">{a.name}</td>
                 <td>{a.county || "—"}</td>
-                <td>
+                <td className="cell-status">
                   <span
                     className={`badge badge-${a.status.value}`}
                     title={a.status.note || (a.status.value === "unknown" ? "Documented ALPR use, but current Flock network participation is unverified" : "")}
@@ -131,10 +152,27 @@ export default function AgencyTable({ agencies, searchDeltas }) {
                     {a.status.value === "unknown" ? "unverified" : a.status.value}
                   </span>
                   {!a.status.derived && a.status.as_of && <span className="asof"> {a.status.as_of}</span>}
+                  {a.status.value === "dropped" && a.portal && (
+                    <span
+                      className="flag"
+                      title={`Announced dropping Flock, but Flock still lists a portal for this agency${a.portal.updated ? ` last updated ${a.portal.updated}` : ""}`}
+                    >
+                      portal still up
+                    </span>
+                  )}
+                  {isStale(a) && (
+                    <span
+                      className="flag flag-stale"
+                      title={`Portal figures last changed ${a.portal.updated}, ${a.portal.stale_days} days before this refresh. Excluded from the statewide 30-day totals.`}
+                    >
+                      frozen {a.portal.stale_days}d
+                    </span>
+                  )}
                 </td>
                 <td className="cell-num">{fmt(a.portal?.cameras)}</td>
                 <td className="cell-num">{fmt(a.wisdot?.cameras)}</td>
-                <td className="cell-num">
+                <td className="cell-num">{fmtZero(a.osm_cameras)}</td>
+                <td className="cell-num cell-searches">
                   {fmt(a.portal?.searches_30d)}
                   {searchDeltas != null && searchDeltas[a.canonical] != null && searchDeltas[a.canonical] !== 0 && (
                     <span
@@ -146,7 +184,12 @@ export default function AgencyTable({ agencies, searchDeltas }) {
                       {Math.abs(searchDeltas[a.canonical]).toLocaleString("en-US")}
                     </span>
                   )}
+                  {series[a.canonical] && (
+                    <Sparkline points={series[a.canonical]} label={`Weekly search counts for ${a.name}`} />
+                  )}
                 </td>
+                <td className="cell-num">{a.portal?.hit_rate == null ? "—" : `${a.portal.hit_rate}%`}</td>
+                <td className="cell-num">{fmt(a.portal?.reach?.received?.total)}</td>
                 <td className="cell-num">{fmt(a.portal?.shared_with_count)}</td>
                 <td className="cell-sources">
                   {a.portal && (
@@ -157,9 +200,10 @@ export default function AgencyTable({ agencies, searchDeltas }) {
                       href={a.portal.portal_url}
                       target="_blank"
                       rel="noreferrer"
+                      className="src-audit"
                       title="This agency also publishes a redacted log of every search run against its cameras"
                     >
-                      audit
+                      audit log
                     </a>
                   )}
                   {!a.status.derived && a.status.source && (

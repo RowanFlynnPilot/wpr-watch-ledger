@@ -38,7 +38,43 @@ ATLAS_URL = "https://atlasofsurveillance.org/download"
 
 VALID_STATUSES = {"active", "dropped", "never"}
 
+# A portal whose figures Flock has not updated in this many days is excluded from
+# the statewide 30-day totals and flagged in the roster.
+STALE_DAYS = 45
+
 HISTORY_STAT_KEYS = {"cameras", "searches_30d", "vehicles_captured_30d", "hotlist_hits_30d"}
+
+WI_PATTERN = re.compile(r"\bWI\b")
+US_STATES = set("""AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV
+NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC""".split())
+# Flock's own placeholder entries inside sharing lists — never counted as agencies.
+DEAD_ORG = re.compile(r"\[(DEACTIVATED|Inactive)\]|\bdemo\b|DO NOT USE", re.I)
+
+# OSM operator tags naming the vendor rather than the agency running the camera.
+VENDOR_OPERATORS = {"flock safety", "flock", "motorola solutions", "genetec", "leonardo",
+                    "axon enterprise", "vigilant solutions", "rekor"}
+
+# Hand-checked corrections for OSM operator tags whose typo hides an obvious agency.
+# Corrections only — joint or ambiguous tags stay exactly as volunteers wrote them.
+OSM_OPERATOR_ALIASES = {
+    "Bayfield County Sherrif's Dept": "Bayfield County Sheriff's Office",
+}
+
+
+def classify_orgs(orgs: list[str] | None) -> dict:
+    """Split one portal's sharing list into Wisconsin vs out-of-state agencies, with
+    the set of states reached. Deactivated/demo placeholders are dropped from every count."""
+    wi = out = 0
+    states: set[str] = set()
+    for org in orgs or []:
+        if DEAD_ORG.search(org):
+            continue
+        if WI_PATTERN.search(org):
+            wi += 1
+            continue
+        out += 1
+        states.update(t for t in re.findall(r"\b[A-Z]{2}\b", org) if t in US_STATES)
+    return {"total": wi + out, "wi": wi, "out_of_state": out, "states": sorted(states)}
 
 
 # ---------------------------------------------------------------- name matching
@@ -66,6 +102,9 @@ def canonicalize(name: str) -> str:
     s = re.sub(r"\bco\b", "county", s)  # 'Florence Co. SO' == 'Florence County SO'
     s = re.sub(r"\bst\b", "saint", s)  # 'St Croix Falls PD' == 'Saint Croix Falls PD'
     s = re.sub(r"\s+", " ", s).strip()
+    # 'Village of Fox Point PD' == 'Fox Point PD'. 'Town of X' is kept: a town and a
+    # city of the same name (Delavan) run separate departments.
+    s = re.sub(r"^(city|village) of ", "", s)
     for pattern, abbr in SUFFIX_MAP:
         s = re.sub(pattern, abbr, s)
     return s
@@ -131,7 +170,8 @@ def fetch_portals() -> tuple[list[dict], dict, dict, dict]:
     if missing:
         raise RuntimeError(f"Eyes On Flock portal record missing expected keys: {missing}")
 
-    wi_pattern = re.compile(r"\bWI\b")
+    wi_pattern = WI_PATTERN
+    today = datetime.now(timezone.utc).date()
     wi_portals = []
     sharing: dict[str, list[str]] = {}
     for p in portals:
@@ -147,6 +187,18 @@ def fetch_portals() -> tuple[list[dict], dict, dict, dict]:
             if partner_key != portal_key:
                 partners.add(partner_key)
         sharing[portal_key] = sorted(partners)
+        # Freshness: Flock stamps each portal with when its figures last changed. A
+        # portal frozen for weeks (typically an agency that quit) must not keep feeding
+        # the statewide 30-day totals as if it were current.
+        updated = p.get("data_last_updated")
+        if updated:
+            try:
+                stale_days = (today - datetime.strptime(updated[:10], "%Y-%m-%d").date()).days
+            except ValueError as exc:
+                raise RuntimeError(f"Portal {p['slug']} has unparsable data_last_updated {updated!r}") from exc
+        else:
+            stale_days = None
+        received = p.get("organizations_received_from") or []
         wi_portals.append({
             "name": name,
             "canonical": portal_key,
@@ -161,6 +213,14 @@ def fetch_portals() -> tuple[list[dict], dict, dict, dict]:
             "shared_with_count": p.get("organization_count"),
             "prohibited_uses": p.get("prohibited_uses"),
             "public_search_audit": bool(p.get("public_search_audit")),
+            "updated": updated[:10] if updated else None,
+            "stale_days": stale_days,
+            "hit_rate": p.get("hotlist_hit_rate"),
+            # reach.received is None when the portal discloses no inbound list at all.
+            "reach": {
+                "shared": classify_orgs(p.get("organizations_shared_with")),
+                "received": classify_orgs(received) if received else None,
+            },
         })
 
     # Derive the WI roster from every portal's sharing lists nationwide.
@@ -460,14 +520,15 @@ def load_overlay() -> dict:
 
 
 def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict,
-                   city_county: dict, wisdot: dict) -> list[dict]:
+                   city_county: dict, wisdot: dict, cameras: dict) -> tuple[list[dict], list[dict]]:
+    """Returns (roster, OSM operators that matched no roster agency)."""
     agencies: dict[str, dict] = {}
 
     def get(key: str, name: str) -> dict:
         return agencies.setdefault(key, {
             "name": name, "canonical": key, "county": None, "type": None,
             "in_network": False, "network_mentions": 0,
-            "portal": None, "atlas": None, "wisdot": None,
+            "portal": None, "atlas": None, "wisdot": None, "osm_cameras": 0,
             "status": {"value": "unknown", "derived": True, "as_of": None, "source": None, "note": None},
         })
 
@@ -476,7 +537,8 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         a["county"], a["type"] = p["county"], p["type"]
         a["portal"] = {k: p[k] for k in ("portal_url", "cameras", "searches_30d", "retention_days",
                                          "vehicles_captured_30d", "hotlist_hits_30d",
-                                         "shared_with_count", "prohibited_uses", "public_search_audit")}
+                                         "shared_with_count", "prohibited_uses", "public_search_audit",
+                                         "updated", "stale_days", "hit_rate", "reach")}
         a["in_network"] = True
         a["status"] = {"value": "active", "derived": True, "as_of": None, "source": p["portal_url"],
                        "note": "Publishes a live Flock transparency portal"}
@@ -525,6 +587,24 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         a["wisdot"] = {"cameras": w["cameras"], "permits": sorted(w["permits"]),
                        "counties": sorted(w["counties"])}
 
+    # OSM operator tags: volunteers sometimes record who runs a camera. Matched to the
+    # roster by canonical name (a bare municipality resolves to its PD, a bare county
+    # to its SO). Vendors are ignored; anything unmatched is reported, never guessed.
+    osm_counts: dict[str, int] = {}
+    for c in cameras["cameras"]:
+        op = OSM_OPERATOR_ALIASES.get(c["operator"], c["operator"])
+        if op and canonicalize(op) not in VENDOR_OPERATORS:
+            osm_counts[op] = osm_counts.get(op, 0) + 1
+    unmatched = []
+    for op, n in osm_counts.items():
+        key = canonicalize(op)
+        hit = next((k for k in (key, f"{key} pd", f"{key} so") if k in agencies), None)
+        if hit:
+            agencies[hit]["osm_cameras"] += n
+        else:
+            unmatched.append({"operator": op, "cameras": n})
+    unmatched.sort(key=lambda u: (-u["cameras"], u["operator"]))
+
     for a in agencies.values():
         if a["county"] is None:
             a["county"] = resolve_county(a["canonical"], city_county)
@@ -537,7 +617,7 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
     result = sorted(agencies.values(), key=lambda a: ((a["portal"] is None), -(a["portal"]["cameras"] or 0) if a["portal"] else 0, a["name"]))
     if len(result) < 100:
         raise RuntimeError(f"Merged roster has only {len(result)} agencies; expected 200+. Aborting.")
-    return result
+    return result, unmatched
 
 
 # ---------------------------------------------------------------- main
@@ -564,7 +644,8 @@ def main() -> None:
     city_county = load_city_county()
     wisdot = load_wisdot()
     population = load_population()
-    agencies = build_agencies(portals, edges, atlas, overlay, city_county, wisdot)
+    agencies, unmatched_operators = build_agencies(portals, edges, atlas, overlay, city_county, wisdot, cameras)
+    stale = [p["name"] for p in portals if p["stale_days"] is not None and p["stale_days"] > STALE_DAYS]
     unresolved = sum(1 for a in agencies if a["county"] is None)
     with_wisdot = sum(1 for a in agencies if a["wisdot"])
     counties = build_counties(agencies, wisdot, population, generated)
@@ -572,6 +653,14 @@ def main() -> None:
           f"{with_wisdot} agencies hold WisDOT highway permits")
     print(f"      network agencies in {counties['covered_counties']}/72 counties, "
           f"home to {counties['covered_population']:,} of {counties['state_population']:,} residents")
+    print(f"      {sum(a['osm_cameras'] for a in agencies)} mapped cameras attributed to roster agencies "
+          f"via OSM operator tags; {len(unmatched_operators)} operators unmatched")
+    print(f"      {len(stale)} portal(s) frozen more than {STALE_DAYS} days: {', '.join(stale) or 'none'}")
+    permits_by_year: dict[str, int] = {}
+    for c in wisdot["cameras"]:
+        y = (c["date_approved"] or "")[:4]
+        y = y if re.fullmatch(r"\d{4}", y) else "unknown"
+        permits_by_year[y] = permits_by_year.get(y, 0) + 1
 
     print("[5/5] Appending portal stats to history ledger...")
     history = load_history()
@@ -587,6 +676,9 @@ def main() -> None:
         "curated_count": len(overlay),
         "wisdot_camera_count": wisdot["camera_count"],
         "wisdot_agency_count": with_wisdot,
+        "wisdot_permits_by_year": dict(sorted(permits_by_year.items())),
+        "stale_days_threshold": STALE_DAYS,
+        "stale_portal_count": len(stale),
         "national": national,
         "attribution": {
             "cameras": "Camera locations © OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)",
@@ -598,7 +690,7 @@ def main() -> None:
 
     cameras["generated"] = generated
     (DATA / "cameras.json").write_text(json.dumps(cameras, separators=(",", ":")), encoding="utf-8")
-    (DATA / "agencies.json").write_text(json.dumps({"generated": generated, "agencies": agencies}, separators=(",", ":")), encoding="utf-8")
+    (DATA / "agencies.json").write_text(json.dumps({"generated": generated, "agencies": agencies, "unmatched_operators": unmatched_operators}, separators=(",", ":")), encoding="utf-8")
     (DATA / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
     (DATA / "history.json").write_text(json.dumps(history, indent=1), encoding="utf-8")
     (DATA / "edges.json").write_text(json.dumps({"generated": generated, "edges": sharing}, separators=(",", ":")), encoding="utf-8")

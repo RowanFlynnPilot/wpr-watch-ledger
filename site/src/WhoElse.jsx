@@ -1,23 +1,24 @@
 import React from "react";
 
-// Roster entities that aren't police or sheriff's offices. Pattern-based grouping
-// with explicit overrides for today's known cases; anything new lands in "Other"
-// so it is never silently hidden.
+// Roster entities that aren't police or sheriff's offices, plus the private
+// operators volunteers have tagged on mapped cameras. Pattern-based grouping with
+// explicit overrides for today's known cases; anything new lands in "Other" so it
+// is never silently hidden.
 const LE_PATTERN = /\b(pd|so|police|sheriffs?|patrol|dtf|marshal)\b/;
-const BARE_MUNIS = new Set(["dodgeville"]);
+const BARE_MUNIS = new Set(["dodgeville", "richfield", "somers", "lomira", "maxville", "nelson"]);
 
 const GROUPS = [
   {
     label: "Private & institutional",
-    test: (c) => /gaming|casino|\bbid\b|university|college|parking/.test(c),
+    test: (n) => /gaming|casino|\bbid\b|university|college|parking|farm and fleet|commons/.test(n),
   },
   {
     label: "Municipal & county government",
-    test: (c) => /^(city|town|village) of /.test(c) || /county hwy|highway/.test(c) || BARE_MUNIS.has(c),
+    test: (n, c) => /^(city|town|village) of /.test(n) || /county hwy|highway/.test(n) || BARE_MUNIS.has(c),
   },
   {
     label: "Law-enforcement support & state agencies",
-    test: (c) => /communications|joint services|department of justice/.test(c),
+    test: (n) => /communications|joint services|department of justice/.test(n),
   },
 ];
 
@@ -28,15 +29,16 @@ function facts(a) {
   if (a.network_mentions > 0)
     parts.push(`named in ${fmt(a.network_mentions)} ${a.network_mentions === 1 ? "agency's" : "agencies'"} Flock sharing lists`);
   if (a.wisdot) parts.push(`${fmt(a.wisdot.cameras)} camera${a.wisdot.cameras === 1 ? "" : "s"} permitted on state highways`);
+  if (a.osm_cameras > 0) parts.push(`${fmt(a.osm_cameras)} mapped camera${a.osm_cameras === 1 ? "" : "s"} tagged by volunteers`);
   if (a.atlas) parts.push("documented in the Atlas of Surveillance");
   return parts.join(" · ");
 }
 
-export default function WhoElse({ agencies }) {
+export default function WhoElse({ agencies, operators }) {
   const nonPolice = agencies.filter((a) => !LE_PATTERN.test(a.canonical));
   const grouped = GROUPS.map((g) => ({
     label: g.label,
-    members: nonPolice.filter((a) => g.test(a.canonical)),
+    members: nonPolice.filter((a) => g.test(a.name.toLowerCase(), a.canonical)),
   }));
   const claimed = new Set(grouped.flatMap((g) => g.members.map((a) => a.canonical)));
   const other = nonPolice.filter((a) => !claimed.has(a.canonical));
@@ -59,6 +61,24 @@ export default function WhoElse({ agencies }) {
           </ul>
         </div>
       ))}
+      {operators.length > 0 && (
+        <div className="who-else-group">
+          <h3>Other operators on the volunteer map</h3>
+          <ul>
+            {operators.map((o) => (
+              <li key={o.operator}>
+                <span className="who-else-name">{o.operator}</span>
+                <span className="who-else-facts"> — {fmt(o.cameras)} mapped camera{o.cameras === 1 ? "" : "s"}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="who-else-note">
+            Operator names exactly as volunteers recorded them on OpenStreetMap, typos and
+            joint tags included. These cameras appear on the map above but matched no agency
+            in the roster — most are retailers, hospitals and resorts running their own readers.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -14,10 +14,20 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   1. Overpass API: WI nodes tagged `surveillance:type=ALPR` -> `data/cameras.json`
   2. Eyes On Flock (`eyesonflock.com/api/v1/data`, undocumented community API):
      WI transparency portals + WI agency roster DERIVED from every portal's
-     `organizations_shared_with` lists nationwide -> portal stats + network edges
+     `organizations_shared_with` lists nationwide -> portal stats + network edges.
+     Also carried through per portal: `updated`/`stale_days` (from `data_last_updated`;
+     a portal frozen > STALE_DAYS=45 is flagged and excluded from statewide 30-day
+     totals on the site), `hit_rate`, and `reach` (shared/received lists split WI vs
+     out-of-state with the states reached; Flock's demo/deactivated placeholders dropped;
+     `reach.received` is null when the portal publishes no inbound list)
   3. EFF Atlas of Surveillance CSV (`atlasofsurveillance.org/download`): sourced WI ALPR rows
   4. Merge on `canonicalize(name)` keys + apply `data/status_overlay.json` and join
-     `data/wisdot_permits.json` -> `data/agencies.json`, `data/meta.json`
+     `data/wisdot_permits.json` -> `data/agencies.json`, `data/meta.json`.
+     OSM `operator` tags are joined to the roster by canonical name (bare municipality ->
+     its PD, bare county -> its SO) into `osm_cameras`; vendors are ignored and unmatched
+     operators (Lowe's, Home Depot, hospitals...) are emitted as
+     `agencies.json.unmatched_operators`, never guessed into an agency.
+     `meta.wisdot_permits_by_year` is the permit-approval timeline.
 - `data/wisdot_permits.json` — COMMITTED SNAPSHOT of WisDOT state-highway right-of-way
   permit records (obtained under the WI Open Records Law; mapped by Deflock Dane,
   deflockdane.org — attribute them). Validated at every build, fails if missing. Refreshed
@@ -31,13 +41,19 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   Keys must be canonical (`canonicalize(key) == key`, validated at build).
   Required per row: name, status (active|dropped|never), as_of, source URL.
 - `site/` — React 18 + Leaflet (raw, no react-leaflet), hand-rolled table, no UI libs.
+  Basemap is Esri World Light Gray Canvas (keyless). CARTO's raster basemaps started
+  demanding an API key in 2026 (tiles render "API KEY REQUIRED") and are being retired;
+  do not switch back. Every chart (sparklines, week-by-week, reach bars, permit timeline,
+  inner-circle graph) is plain SVG/CSS — no chart library.
   `cpdata.mjs` copies `../data/*.json` into `public/data/` on every dev/build.
 
 ## Name matching
 
 `canonicalize()` collapses variants across sources: strips apostrophes/periods first
 (sheriff's -> sheriffs), drops WI/Wisconsin tokens, expands Co -> County and St -> Saint,
-maps suffixes (Police Department -> pd, Sheriffs Office/bare Sheriff -> so).
+maps suffixes (Police Department -> pd, Sheriffs Office/bare Sheriff -> so), and strips a
+leading "City of"/"Village of" (never "Town of": Town of Delavan PD and City of Delavan PD
+are different departments).
 "Marathon County Sheriff's Office" == "Marathon County WI SO" == "Marathon Co Sheriff".
 Display-name precedence: overlay > Atlas (formal) > portal/edge shorthand.
 
@@ -63,7 +79,8 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
 - Records requests: Wausau PD + Marathon County SO Flock audit logs (the Waukesha treatment).
   One agency's NETWORK audit names every agency that searched it (Wisconsin Examiner proved
   this statewide); cross-submit obtained logs to haveibeenflocked.com
-- Sharing-network graph visualization from the organizations_shared_with edges
+- Full sharing-network graph (all 249 agencies) from the organizations_shared_with edges;
+  the inner circle (portal agencies only) and inbound reach bars ship today
 - Contracts overlay (amount, term, source per agency) fed by Legistar agenda mining +
   records requests; Deflock Dane's reading room has six Dane County contracts. Scoped
   2026-08: webapi.legistar.com serves milwaukee, madison, racine, waukesha,

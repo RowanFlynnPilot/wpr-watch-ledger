@@ -6,7 +6,7 @@ const fmt = (n) => n.toLocaleString("en-US");
 // the count-up only replaces them once the band is actually seen and the
 // visitor hasn't asked for reduced motion, so prerenders, crawlers, and
 // hidden iframes always show real numbers.
-export default function LedgerBand({ sightings, perDay, searches, publisherCount, silentCount }) {
+export default function LedgerBand({ sightings, perDay, searches, hits, publisherCount, silentCount, stale, staleThreshold }) {
   const ref = useRef(null);
   const reduced =
     typeof window !== "undefined" &&
@@ -74,6 +74,12 @@ export default function LedgerBand({ sightings, perDay, searches, publisherCount
           <span className="ledger-num">{show(searches)}</span>
           <span className="ledger-label">police searches against them</span>
         </div>
+        <div className="ledger-figure">
+          <span className="ledger-num">{show(hits)}</span>
+          <span className="ledger-label">
+            hot-list hits · {(100 * hits / sightings).toFixed(2)}% of sightings
+          </span>
+        </div>
       </div>
       <p className="ledger-pace">
         At that pace, another plate is logged about every {gapText}
@@ -90,6 +96,13 @@ export default function LedgerBand({ sightings, perDay, searches, publisherCount
         That is the past 30 days from just the <strong>{publisherCount}</strong> Wisconsin
         agencies that publish usage data. The other <strong>{silentCount}</strong> agencies in
         the sharing network disclose nothing, so the true totals are higher.
+        {stale.length > 0 && (
+          <>
+            {" "}Left out: {stale.length === 1 ? "one portal" : `${stale.length} portals`} (
+            {stale.map((a) => a.name).join(", ")}) whose figures Flock has not updated in more
+            than {staleThreshold} days.
+          </>
+        )}
       </p>
     </section>
   );

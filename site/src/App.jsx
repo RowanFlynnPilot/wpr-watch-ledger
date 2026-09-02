@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CameraMap from "./CameraMap.jsx";
 import AgencyTable from "./AgencyTable.jsx";
 import SharingList from "./SharingList.jsx";
@@ -6,6 +6,9 @@ import CountyTable from "./CountyTable.jsx";
 import WhoElse from "./WhoElse.jsx";
 import SharingGraph from "./SharingGraph.jsx";
 import LedgerBand from "./LedgerBand.jsx";
+import Trend from "./Trend.jsx";
+import Reach from "./Reach.jsx";
+import PermitTimeline from "./PermitTimeline.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -23,7 +26,10 @@ export default function App() {
       )
     )
       .then(([meta, cameras, agencies, history, edges, wisdot, counties]) =>
-        setData({ meta, cameras, agencies: agencies.agencies, history, edges: edges.edges, wisdot, counties })
+        setData({
+          meta, cameras, agencies: agencies.agencies, operators: agencies.unmatched_operators || [],
+          history, edges: edges.edges, wisdot, counties,
+        })
       )
       .catch((e) => setError(e.message));
   }, []);
@@ -31,8 +37,10 @@ export default function App() {
   if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
   if (!data) return <div className="loading">Loading the ledger…</div>;
 
-  const { meta, cameras, agencies, history, edges, wisdot, counties } = data;
+  const { meta, cameras, agencies, operators, history, edges, wisdot, counties } = data;
   const coveredPct = Math.round((100 * counties.covered_population) / counties.state_population);
+  const staleThreshold = meta.stale_days_threshold ?? 45;
+  const isStale = (a) => a.portal?.stale_days != null && a.portal.stale_days > staleThreshold;
 
   // Week-over-week search deltas from the last two history snapshots.
   // Null until two snapshots exist; per-agency null when either week lacks a figure.
@@ -50,11 +58,15 @@ export default function App() {
 
   const inNetwork = agencies.filter((a) => a.in_network);
   const withPortal = agencies.filter((a) => a.portal);
+  const withAudit = withPortal.filter((a) => a.portal.public_search_audit);
+  const stalePortals = withPortal.filter(isStale);
+  const livePortals = withPortal.filter((a) => !isStale(a));
 
-  // 30-day activity totals across the agencies that publish a portal. These cover
+  // 30-day activity totals across the agencies whose portals are current. These cover
   // ONLY the publishers — the real statewide totals are higher, and the copy says so.
-  const sightings30d = withPortal.reduce((n, a) => n + (a.portal.vehicles_captured_30d || 0), 0);
-  const searches30d = withPortal.reduce((n, a) => n + (a.portal.searches_30d || 0), 0);
+  const sightings30d = livePortals.reduce((n, a) => n + (a.portal.vehicles_captured_30d || 0), 0);
+  const searches30d = livePortals.reduce((n, a) => n + (a.portal.searches_30d || 0), 0);
+  const hits30d = livePortals.reduce((n, a) => n + (a.portal.hotlist_hits_30d || 0), 0);
   const perDay = Math.round(sightings30d / 30);
   const silentCount = inNetwork.length - withPortal.length;
   const dropped = agencies.filter((a) => a.status.value === "dropped");
@@ -62,9 +74,15 @@ export default function App() {
     Math.min(...dropped.map((a) => new Date(a.status.as_of || Date.now()).getTime()))
   ).toLocaleDateString("en-US", { year: "numeric", month: "long", timeZone: "UTC" });
   const marathon = agencies.filter((a) => a.county === "Marathon County");
+  const mappedAttributed = agencies.reduce((n, a) => n + (a.osm_cameras || 0), 0);
   const updated = new Date(meta.generated).toLocaleDateString("en-US", {
     year: "numeric", month: "long", day: "numeric",
   });
+
+  const tickClass = (a) =>
+    `tick${a.portal ? " filled" : ""}${a.portal?.public_search_audit ? " audit" : ""}${a.status.value === "dropped" ? " tick-dropped" : ""}`;
+  const tickTitle = (a) =>
+    `${a.name}${a.portal ? (a.portal.public_search_audit ? " — publishes usage data and a search audit log" : " — publishes usage data") : " — discloses nothing"}${a.status.value === "dropped" ? " · announced dropping Flock" : ""}`;
 
   return (
     <div className="page">
@@ -119,17 +137,24 @@ export default function App() {
           sightings={sightings30d}
           perDay={Math.round(perDay / 100) * 100}
           searches={searches30d}
-          publisherCount={withPortal.length}
+          hits={hits30d}
+          publisherCount={livePortals.length}
           silentCount={silentCount}
+          stale={stalePortals}
+          staleThreshold={staleThreshold}
         />
       )}
+
+      <Trend history={history} agencies={agencies} />
 
       <section className="gap" aria-label="Transparency gap">
         <h2>The transparency gap</h2>
         <p className="gap-line">
           Of the <strong>{inNetwork.length}</strong> Wisconsin agencies participating in Flock's
           data-sharing network, only <strong>{withPortal.length}</strong> publish a public
-          transparency portal showing how they use it.
+          transparency portal showing how they use it — and just{" "}
+          <strong>{withAudit.length}</strong> go further and publish a log of every search run
+          against their cameras.
         </p>
         <p className="gap-line">
           Agencies in the network operate in <strong>{counties.covered_counties}</strong> of
@@ -138,7 +163,10 @@ export default function App() {
         </p>
         <div className="gap-key" aria-hidden="true">
           <span className="gap-key-item">
-            <span className="tick filled key-swatch" /> {withPortal.length} publish usage data
+            <span className="tick filled audit key-swatch" /> {withAudit.length} publish usage data and a search audit log
+          </span>
+          <span className="gap-key-item">
+            <span className="tick filled key-swatch" /> {withPortal.length - withAudit.length} publish usage data only
           </span>
           <span className="gap-key-item">
             <span className="tick key-swatch" /> {inNetwork.length - withPortal.length} disclose nothing
@@ -152,20 +180,17 @@ export default function App() {
         <div
           className="gap-bar"
           role="img"
-          aria-label={`${withPortal.length} of ${inNetwork.length} network agencies publish a transparency portal; ${inNetwork.filter((a) => a.status.value === "dropped").length} have announced dropping Flock`}
+          aria-label={`${withPortal.length} of ${inNetwork.length} network agencies publish a transparency portal, ${withAudit.length} of those also publish a search audit log; ${inNetwork.filter((a) => a.status.value === "dropped").length} have announced dropping Flock`}
         >
           {inNetwork.map((a) => (
-            <span
-              key={a.canonical}
-              className={`tick${a.portal ? " filled" : ""}${a.status.value === "dropped" ? " tick-dropped" : ""}`}
-              title={`${a.name}${a.portal ? " — publishes usage data" : " — discloses nothing"}${a.status.value === "dropped" ? " · announced dropping Flock" : ""}`}
-            />
+            <span key={a.canonical} className={tickClass(a)} title={tickTitle(a)} />
           ))}
         </div>
         <p className="gap-caption">
           Each mark is one agency — {withPortal.length} of {inNetwork.length} (
           {Math.round((100 * withPortal.length) / inNetwork.length)}%) let the public see how
-          the system is used.
+          the system is used; {withAudit.length} ({Math.round((100 * withAudit.length) / inNetwork.length)}%)
+          let the public see each individual search.
         </p>
         {meta.national && (
           <p className="gap-line gap-national">
@@ -185,8 +210,13 @@ export default function App() {
           are incomplete — the true number of cameras is higher. Rings are official: cameras
           permitted by the Wisconsin DOT on state-highway right-of-way, from records released
           under the state Open Records Law. A ring with no dot inside it is a camera the
-          volunteers haven't found yet.
+          volunteers haven't found yet. Volunteers tagged an operator on{" "}
+          {fmt(cameras.cameras.filter((c) => c.operator).length)} of the dots; {fmt(mappedAttributed)}{" "}
+          of those resolve to a roster agency and show in its "Mapped" column below.
         </p>
+        {meta.wisdot_permits_by_year && (
+          <PermitTimeline byYear={meta.wisdot_permits_by_year} snapshotDate={wisdot.snapshot_date} />
+        )}
       </section>
 
       <section className="spotlight" aria-label="Marathon County">
@@ -204,6 +234,8 @@ export default function App() {
                 {a.portal
                   ? `Publishes a transparency portal · ${fmt(a.portal.cameras)} cameras · ${fmt(a.portal.searches_30d)} searches in 30 days`
                   : "Does not publish a Flock transparency portal"}
+                {a.wisdot && ` · ${fmt(a.wisdot.cameras)} highway cameras permitted`}
+                {a.osm_cameras > 0 && ` · ${fmt(a.osm_cameras)} cameras mapped by volunteers`}
                 {a.network_mentions > 0 && ` · named in ${a.network_mentions} other agencies' sharing lists`}
               </p>
               {a.status.source && (
@@ -231,10 +263,11 @@ export default function App() {
         <h2>The agency roster</h2>
         <p className="roster-dek">
           Every Wisconsin agency documented using ALPRs or appearing in the Flock network's
-          data-sharing lists. Camera and search figures come from each agency's own transparency
-          portal; a dash means the agency publishes nothing.
+          data-sharing lists. Camera, search, hit-rate and reach figures come from each agency's
+          own transparency portal; a dash means the agency publishes nothing. The sparkline is
+          the agency's 30-day search count across every weekly snapshot on record.
         </p>
-        <AgencyTable agencies={agencies} searchDeltas={searchDeltas} />
+        <AgencyTable agencies={agencies} searchDeltas={searchDeltas} history={history} staleThreshold={staleThreshold} />
       </section>
 
       <section className="sharing" aria-label="Who shares with whom">
@@ -253,20 +286,27 @@ export default function App() {
         <SharingGraph agencies={agencies} edges={edges} />
       </section>
 
+      <Reach agencies={agencies} />
+
       <section className="who-else-section" aria-label="Who else is in the network">
         <h2>Who else is in the network</h2>
         <p className="who-else-dek">
           A plate-reader network is not only police. These entities appear in Wisconsin
-          agencies' Flock sharing lists, hold state-highway camera permits of their own, or
-          are otherwise documented operating ALPRs.
+          agencies' Flock sharing lists, hold state-highway camera permits of their own, run
+          cameras volunteers have mapped, or are otherwise documented operating ALPRs.
         </p>
-        <WhoElse agencies={agencies} />
+        <WhoElse agencies={agencies} operators={operators} />
       </section>
 
       <footer className="methodology">
         <h2>Methodology &amp; sources</h2>
-        <p>{meta.attribution.cameras}.</p>
-        <p>{meta.attribution.portals}.</p>
+        <p>{meta.attribution.cameras}. Where volunteers tagged an operator, cameras are matched to
+          the roster by name; unmatched operators are listed as written, never guessed.</p>
+        <p>{meta.attribution.portals}. Flock stamps each portal with the date its figures last
+          changed; a portal frozen for more than {staleThreshold} days is flagged in the roster and
+          left out of the statewide 30-day totals. Inbound reach (who can search an agency's
+          cameras) is shown only for portals that publish that list, with Flock's own demo and
+          deactivated placeholders removed.</p>
         <p>{meta.attribution.atlas}.</p>
         <p>
           {meta.attribution.wisdot ||
