@@ -233,7 +233,7 @@ export default function App() {
               {a.status.note && <p className="card-note">{a.status.note}</p>}
               <p className="card-facts">
                 {a.portal
-                  ? `Publishes a transparency portal · ${fmt(a.portal.cameras)} cameras · ${fmt(a.portal.searches_30d)} searches in 30 days`
+                  ? `Publishes a transparency portal${a.portal.hand_read ? " (not indexed by Eyes On Flock)" : ""} · ${fmt(a.portal.cameras)} cameras · ${fmt(a.portal.searches_30d)} searches in 30 days · shares with ${fmt(a.portal.shared_with_count)} agencies`
                   : "Does not publish a Flock transparency portal"}
                 {a.wisdot && ` · ${fmt(a.wisdot.cameras)} highway cameras permitted`}
                 {a.osm_cameras > 0 && ` · ${fmt(a.osm_cameras)} cameras mapped by volunteers`}
@@ -305,7 +305,15 @@ export default function App() {
           the roster by name; unmatched operators are listed as written, never guessed.</p>
         <p>{meta.attribution.portals}. Flock stamps each portal with the date its figures last
           changed; a portal frozen for more than {staleThreshold} days is flagged in the roster and
-          left out of the statewide 30-day totals. Inbound reach (who can search an agency's
+          left out of the statewide 30-day totals.
+          {meta.hand_read_portal_count > 0 && (
+            <>
+              {" "}{meta.hand_read_portal_count === 1 ? "One portal" : `${meta.hand_read_portal_count} portals`} that Eyes On
+              Flock does not index ({withPortal.filter((a) => a.portal.hand_read).map((a) => a.name).join(", ")}) were
+              read by hand from Flock's site; they are marked with an asterisk in the roster and age out of the
+              totals on the same {staleThreshold}-day rule unless re-read.
+            </>
+          )} Inbound reach (who can search an agency's
           cameras) is shown only for portals that publish that list, with Flock's own demo and
           deactivated placeholders removed.</p>
         <p>{meta.attribution.atlas}.</p>

@@ -1,9 +1,10 @@
 {
-  "generated": "2026-09-02T02:40:07Z",
+  "generated": "2026-09-02T02:50:07Z",
   "camera_count": 2100,
   "flock_camera_count": 1605,
   "agency_count": 280,
-  "portal_count": 22,
+  "portal_count": 24,
+  "hand_read_portal_count": 2,
   "curated_count": 14,
   "wisdot_camera_count": 759,
   "wisdot_agency_count": 186,

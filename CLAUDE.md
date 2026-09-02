@@ -40,6 +40,17 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
 - `data/status_overlay.json` — HAND-CURATED, never generated. Overlay always wins.
   Keys must be canonical (`canonicalize(key) == key`, validated at build).
   Required per row: name, status (active|dropped|never), as_of, source URL.
+  Optional `portal` block = a HAND-READ transparency portal that Eyes On Flock does not
+  index (Marathon County SO and Wausau PD both have live portals EOF misses, found
+  2026-09-01). A person opens transparency.flocksafety.com/<slug> in a browser and copies
+  the figures; `read_on` is the date they did so and drives staleness exactly like an
+  EOF portal's `data_last_updated`, so a hand-read portal drops out of the statewide
+  totals after STALE_DAYS unless re-read. Required: portal_url, read_on, shared_total,
+  shared_wi. Optional ints: cameras, searches_30d, vehicles_captured_30d,
+  hotlist_hits_30d, retention_days, received_total, received_wi; lists shared_states /
+  received_states (out-of-state codes); public_search_audit, prohibited_uses.
+  EOF wins the moment it indexes the agency. The pipeline never fetches these itself
+  (Cloudflare challenge; see constraints) — they are editorial, like status.
 - `site/` — React 18 + Leaflet (raw, no react-leaflet), hand-rolled table, no UI libs.
   Basemap is Esri World Light Gray Canvas (keyless). CARTO's raster basemaps started
   demanding an API key in 2026 (tiles render "API KEY REQUIRED") and are being retired;

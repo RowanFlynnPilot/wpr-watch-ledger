@@ -197,7 +197,14 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
                 <td className="cell-num">{fmt(a.portal?.shared_with_count)}</td>
                 <td className="cell-sources">
                   {a.portal && (
-                    <a href={a.portal.portal_url} target="_blank" rel="noreferrer">portal</a>
+                    <a
+                      href={a.portal.portal_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={a.portal.hand_read ? `Portal figures read by hand on ${a.portal.updated}; Eyes On Flock does not index this portal` : undefined}
+                    >
+                      portal{a.portal.hand_read ? "*" : ""}
+                    </a>
                   )}
                   {a.portal?.public_search_audit && (
                     <a

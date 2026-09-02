@@ -213,6 +213,7 @@ def fetch_portals() -> tuple[list[dict], dict, dict, dict]:
             "shared_with_count": p.get("organization_count"),
             "prohibited_uses": p.get("prohibited_uses"),
             "public_search_audit": bool(p.get("public_search_audit")),
+            "hand_read": False,
             "updated": updated[:10] if updated else None,
             "stale_days": stale_days,
             "hit_rate": p.get("hotlist_hit_rate"),
@@ -507,6 +508,68 @@ def load_wisdot() -> dict:
 
 # ---------------------------------------------------------------- overlay + merge
 
+OVERLAY_PORTAL_INT_KEYS = {"cameras", "searches_30d", "vehicles_captured_30d", "hotlist_hits_30d",
+                           "retention_days", "shared_total", "shared_wi", "received_total", "received_wi"}
+OVERLAY_PORTAL_KEYS = OVERLAY_PORTAL_INT_KEYS | {"portal_url", "read_on", "shared_states", "received_states",
+                                                 "public_search_audit", "prohibited_uses"}
+
+
+def validate_overlay_portal(key: str, block: dict) -> None:
+    """A hand-read portal: figures copied from transparency.flocksafety.com by a person
+    on `read_on`, for portals Eyes On Flock has not indexed. Eyes On Flock wins whenever
+    it does index the agency; until then these figures age exactly like any other
+    portal's (stale after STALE_DAYS from read_on)."""
+    extra = set(block) - OVERLAY_PORTAL_KEYS
+    if extra:
+        raise RuntimeError(f"Overlay '{key}' portal: unknown keys {sorted(extra)}")
+    for k in ("portal_url", "read_on", "shared_total", "shared_wi"):
+        if k not in block:
+            raise RuntimeError(f"Overlay '{key}' portal: '{k}' is required")
+    if not block["portal_url"].startswith("https://transparency.flocksafety.com/"):
+        raise RuntimeError(f"Overlay '{key}' portal: portal_url must be a transparency.flocksafety.com URL")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", block["read_on"]):
+        raise RuntimeError(f"Overlay '{key}' portal: read_on must be YYYY-MM-DD")
+    for k in OVERLAY_PORTAL_INT_KEYS:
+        v = block.get(k)
+        if v is not None and (not isinstance(v, int) or v < 0):
+            raise RuntimeError(f"Overlay '{key}' portal: '{k}' must be a non-negative int or null, got {v!r}")
+    for k in ("shared_states", "received_states"):
+        v = block.get(k, [])
+        if not isinstance(v, list) or any(st not in US_STATES for st in v):
+            raise RuntimeError(f"Overlay '{key}' portal: '{k}' must be a list of state codes")
+
+
+def portal_from_overlay(block: dict) -> dict:
+    today = datetime.now(timezone.utc).date()
+    stale_days = (today - datetime.strptime(block["read_on"], "%Y-%m-%d").date()).days
+    vehicles, hits = block.get("vehicles_captured_30d"), block.get("hotlist_hits_30d")
+    hit_rate = round(100 * hits / vehicles, 2) if vehicles and hits is not None else None
+    shared = {"total": block["shared_total"], "wi": block["shared_wi"],
+              "out_of_state": block["shared_total"] - block["shared_wi"],
+              "states": sorted(block.get("shared_states", []))}
+    received = None
+    if block.get("received_total") is not None:
+        received = {"total": block["received_total"], "wi": block.get("received_wi") or 0,
+                    "out_of_state": block["received_total"] - (block.get("received_wi") or 0),
+                    "states": sorted(block.get("received_states", []))}
+    return {
+        "portal_url": block["portal_url"],
+        "cameras": block.get("cameras"),
+        "searches_30d": block.get("searches_30d"),
+        "retention_days": block.get("retention_days"),
+        "vehicles_captured_30d": vehicles,
+        "hotlist_hits_30d": hits,
+        "shared_with_count": block["shared_total"],
+        "prohibited_uses": block.get("prohibited_uses"),
+        "public_search_audit": bool(block.get("public_search_audit")),
+        "updated": block["read_on"],
+        "stale_days": stale_days,
+        "hit_rate": hit_rate,
+        "reach": {"shared": shared, "received": received},
+        "hand_read": True,
+    }
+
+
 def load_overlay() -> dict:
     overlay = json.loads((DATA / "status_overlay.json").read_text(encoding="utf-8"))
     for key, entry in overlay.items():
@@ -518,6 +581,8 @@ def load_overlay() -> dict:
             raise RuntimeError(f"Overlay '{key}': source must be a URL")
         if "as_of" not in entry or "name" not in entry:
             raise RuntimeError(f"Overlay '{key}': 'name' and 'as_of' are required")
+        if "portal" in entry:
+            validate_overlay_portal(key, entry["portal"])
     return overlay
 
 
@@ -540,7 +605,7 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         a["portal"] = {k: p[k] for k in ("portal_url", "cameras", "searches_30d", "retention_days",
                                          "vehicles_captured_30d", "hotlist_hits_30d",
                                          "shared_with_count", "prohibited_uses", "public_search_audit",
-                                         "updated", "stale_days", "hit_rate", "reach")}
+                                         "updated", "stale_days", "hit_rate", "reach", "hand_read")}
         a["in_network"] = True
         a["status"] = {"value": "active", "derived": True, "as_of": None, "source": p["portal_url"],
                        "note": "Publishes a live Flock transparency portal"}
@@ -568,6 +633,9 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
             a["county"] = o["county"]
         a["status"] = {"value": o["status"], "derived": False, "as_of": o["as_of"],
                        "source": o["source"], "note": o.get("note")}
+        if o.get("portal") and a["portal"] is None:
+            a["portal"] = portal_from_overlay(o["portal"])
+            a["in_network"] = True
 
     # WisDOT highway right-of-way permits: official per-agency camera counts.
     # Documents ALPR use even for agencies absent from every other source, but
@@ -647,7 +715,9 @@ def main() -> None:
     wisdot = load_wisdot()
     population = load_population()
     agencies, unmatched_operators = build_agencies(portals, edges, atlas, overlay, city_county, wisdot, cameras)
-    stale = [p["name"] for p in portals if p["stale_days"] is not None and p["stale_days"] > STALE_DAYS]
+    hand_read = [a["name"] for a in agencies if a["portal"] and a["portal"].get("hand_read")]
+    stale = [a["name"] for a in agencies
+             if a["portal"] and a["portal"]["stale_days"] is not None and a["portal"]["stale_days"] > STALE_DAYS]
     unresolved = sum(1 for a in agencies if a["county"] is None)
     with_wisdot = sum(1 for a in agencies if a["wisdot"])
     counties = build_counties(agencies, wisdot, population, generated)
@@ -658,6 +728,7 @@ def main() -> None:
     print(f"      {sum(a['osm_cameras'] for a in agencies)} mapped cameras attributed to roster agencies "
           f"via OSM operator tags; {len(unmatched_operators)} operators unmatched")
     print(f"      {len(stale)} portal(s) frozen more than {STALE_DAYS} days: {', '.join(stale) or 'none'}")
+    print(f"      {len(hand_read)} hand-read portal(s) not indexed by Eyes On Flock: {', '.join(hand_read) or 'none'}")
     permits_by_year: dict[str, int] = {}
     for c in wisdot["cameras"]:
         y = (c["date_approved"] or "")[:4]
@@ -674,7 +745,8 @@ def main() -> None:
         "camera_count": cameras["count"],
         "flock_camera_count": cameras["flock_count"],
         "agency_count": len(agencies),
-        "portal_count": len(portals),
+        "portal_count": len(portals) + len(hand_read),
+        "hand_read_portal_count": len(hand_read),
         "curated_count": len(overlay),
         "wisdot_camera_count": wisdot["camera_count"],
         "wisdot_agency_count": with_wisdot,
