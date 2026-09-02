@@ -152,6 +152,8 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
                     {a.status.value === "unknown" ? "unverified" : a.status.value}
                   </span>
                   {!a.status.derived && a.status.as_of && <span className="asof"> {a.status.as_of}</span>}
+                  {(a.status.value === "dropped" && a.portal) || isStale(a) ? (
+                  <span className="flags">
                   {a.status.value === "dropped" && a.portal && (
                     <span
                       className="flag"
@@ -168,6 +170,8 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
                       frozen {a.portal.stale_days}d
                     </span>
                   )}
+                  </span>
+                  ) : null}
                 </td>
                 <td className="cell-num">{fmt(a.portal?.cameras)}</td>
                 <td className="cell-num">{fmt(a.wisdot?.cameras)}</td>

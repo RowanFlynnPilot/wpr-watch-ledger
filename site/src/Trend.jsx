@@ -29,10 +29,25 @@ function Chart({ series, label }) {
           <title>{`${day(p.date)}: ${fmt(p.value)} (${p.portals} portals)`}</title>
         </circle>
       ))}
+      <text className="trend-val start" x={x(first.date)} y={y(first.value) - 6} textAnchor="start">{fmt(first.value)}</text>
       <text className="trend-axis" x={padL} y={H - 6}>{day(first.date)}</text>
       <text className="trend-axis" x={W - padR} y={H - 6} textAnchor="end">{day(last.date)}</text>
       <text className="trend-val" x={x(last.date)} y={y(last.value) - 6} textAnchor="end">{fmt(last.value)}</text>
     </svg>
+  );
+}
+
+function Change({ series, unit }) {
+  const first = series[0], last = series[series.length - 1];
+  const delta = last.value - first.value;
+  const pct = first.value ? (100 * delta) / first.value : 0;
+  const cls = delta > 0 ? "up" : delta < 0 ? "down" : "";
+  return (
+    <p className="trend-change">
+      <span className={cls}>{delta > 0 ? "▲" : delta < 0 ? "▼" : "="} {fmt(Math.abs(delta))} {unit}</span>{" "}
+      ({pct > 0 ? "+" : ""}{pct.toFixed(1)}%) since {day(first.date)}
+      {first.portals !== last.portals && ` · ${first.portals} → ${last.portals} portals reporting`}
+    </p>
   );
 }
 
@@ -60,12 +75,14 @@ export default function Trend({ history, agencies }) {
       </p>
       <div className="trend-grid">
         <div className="trend-card">
-          <h3>Vehicle sightings, trailing 30 days</h3>
+          <h3>Sightings, trailing 30 days</h3>
           <Chart series={series("vehicles_captured_30d")} label="Vehicle sightings" />
+          <Change series={series("vehicles_captured_30d")} unit="sightings" />
         </div>
         <div className="trend-card">
-          <h3>Police searches, trailing 30 days</h3>
+          <h3>Searches, trailing 30 days</h3>
           <Chart series={series("searches_30d")} label="Police searches" />
+          <Change series={series("searches_30d")} unit="searches" />
         </div>
         {movers.length > 0 && (
           <div className="trend-card">

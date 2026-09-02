@@ -14,7 +14,7 @@ const GROUPS = [
   },
   {
     label: "Municipal & county government",
-    test: (n, c) => /^(city|town|village) of /.test(n) || /county hwy|highway/.test(n) || BARE_MUNIS.has(c),
+    test: (n, c) => /^(city|town|village) of /.test(n) || /\b(co\.?|county) hwy|highway/.test(n) || BARE_MUNIS.has(c),
   },
   {
     label: "Law-enforcement support & state agencies",

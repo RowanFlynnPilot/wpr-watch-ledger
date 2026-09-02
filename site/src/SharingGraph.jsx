@@ -25,6 +25,7 @@ export default function SharingGraph({ agencies, edges }) {
         canonical: p.canonical,
         name: p.name,
         partners: (edges[p.canonical] || []).length,
+        dropped: p.status.value === "dropped",
         x: cx + R * cos,
         y: cy + R * sin,
         labelX: cx + (R + 13) * cos,
@@ -85,9 +86,9 @@ export default function SharingGraph({ agencies, edges }) {
                 cx={nd.x}
                 cy={nd.y}
                 r={3 + Math.sqrt(nd.partners) * 0.55}
-                className={`sg-node${nodeActive(nd.i) ? "" : " dim"}`}
+                className={`sg-node${nd.dropped ? " dropped" : ""}${nodeActive(nd.i) ? "" : " dim"}`}
               >
-                <title>{`${nd.name} — ${nd.partners} Wisconsin partners`}</title>
+                <title>{`${nd.name} — ${nd.partners} Wisconsin partners${nd.dropped ? " · announced dropping Flock" : ""}`}</title>
               </circle>
               <text
                 x={nd.labelX}
@@ -103,9 +104,9 @@ export default function SharingGraph({ agencies, edges }) {
       </div>
       <p className="gap-caption">
         Each dot is a portal agency, sized by how many Wisconsin partners it lists. A teal
-        line means both agencies name each other; a gray line is one-way. {links.length}{" "}
-        connections among the {portals.length}, {mutualCount} mutual. Hover or tap a dot to
-        isolate its connections.
+        line means both agencies name each other; a gray line is one-way; a rust ring marks an agency that has announced dropping Flock.{" "}
+        {links.length} connections among the {portals.length}, {mutualCount} mutual. Hover or
+        tap a dot to isolate its connections.
       </p>
     </>
   );
