@@ -522,7 +522,7 @@ def validate_overlay_portal(key: str, block: dict) -> None:
     extra = set(block) - OVERLAY_PORTAL_KEYS
     if extra:
         raise RuntimeError(f"Overlay '{key}' portal: unknown keys {sorted(extra)}")
-    for k in ("portal_url", "read_on", "shared_total", "shared_wi"):
+    for k in ("portal_url", "read_on"):
         if k not in block:
             raise RuntimeError(f"Overlay '{key}' portal: '{k}' is required")
     if not block["portal_url"].startswith("https://transparency.flocksafety.com/"):
@@ -544,9 +544,11 @@ def portal_from_overlay(block: dict) -> dict:
     stale_days = (today - datetime.strptime(block["read_on"], "%Y-%m-%d").date()).days
     vehicles, hits = block.get("vehicles_captured_30d"), block.get("hotlist_hits_30d")
     hit_rate = round(100 * hits / vehicles, 2) if vehicles and hits is not None else None
-    shared = {"total": block["shared_total"], "wi": block["shared_wi"],
-              "out_of_state": block["shared_total"] - block["shared_wi"],
-              "states": sorted(block.get("shared_states", []))}
+    shared = None
+    if block.get("shared_total") is not None:
+        shared = {"total": block["shared_total"], "wi": block.get("shared_wi") or 0,
+                  "out_of_state": block["shared_total"] - (block.get("shared_wi") or 0),
+                  "states": sorted(block.get("shared_states", []))}
     received = None
     if block.get("received_total") is not None:
         received = {"total": block["received_total"], "wi": block.get("received_wi") or 0,
@@ -559,7 +561,7 @@ def portal_from_overlay(block: dict) -> dict:
         "retention_days": block.get("retention_days"),
         "vehicles_captured_30d": vehicles,
         "hotlist_hits_30d": hits,
-        "shared_with_count": block["shared_total"],
+        "shared_with_count": block.get("shared_total"),
         "prohibited_uses": block.get("prohibited_uses"),
         "public_search_audit": bool(block.get("public_search_audit")),
         "updated": block["read_on"],

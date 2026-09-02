@@ -14,7 +14,7 @@ export default function Reach({ agencies }) {
   if (disclosing.length === 0) return null;
   const max = disclosing[0].portal.reach.received.total;
   const top = disclosing[0];
-  const outboundOutOfState = withPortal.filter((a) => a.portal.reach && a.portal.reach.shared.out_of_state > 0);
+  const outboundOutOfState = withPortal.filter((a) => a.portal.reach?.shared && a.portal.reach.shared.out_of_state > 0);
   const states = new Set();
   for (const a of disclosing) for (const s of a.portal.reach.received.states) states.add(s);
 

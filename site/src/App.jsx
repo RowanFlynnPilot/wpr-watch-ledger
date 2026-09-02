@@ -277,6 +277,12 @@ export default function App() {
           Agencies that publish a transparency portal also disclose which other agencies can
           search their camera data. These are the Wisconsin partners each portal currently
           lists — out-of-state partners are not shown.
+          {meta.hand_read_portal_count > 0 && (
+            <>
+              {" "}The {meta.hand_read_portal_count} hand-read portals publish their lists on
+              Flock's site but are not itemized here; their partner counts appear in the roster.
+            </>
+          )}
         </p>
         <SharingList agencies={agencies} edges={edges} />
         <h3 className="inner-circle-title">The inner circle</h3>

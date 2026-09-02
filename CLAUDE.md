@@ -45,9 +45,10 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   2026-09-01). A person opens transparency.flocksafety.com/<slug> in a browser and copies
   the figures; `read_on` is the date they did so and drives staleness exactly like an
   EOF portal's `data_last_updated`, so a hand-read portal drops out of the statewide
-  totals after STALE_DAYS unless re-read. Required: portal_url, read_on, shared_total,
-  shared_wi. Optional ints: cameras, searches_30d, vehicles_captured_30d,
-  hotlist_hits_30d, retention_days, received_total, received_wi; lists shared_states /
+  totals after STALE_DAYS unless re-read. Required: portal_url, read_on. Optional ints:
+  cameras (LPR count), searches_30d, vehicles_captured_30d, hotlist_hits_30d,
+  retention_days, shared_total, shared_wi, received_total, received_wi (null = the
+  portal does not publish that figure); lists shared_states /
   received_states (out-of-state codes); public_search_audit, prohibited_uses.
   EOF wins the moment it indexes the agency. The pipeline never fetches these itself
   (Cloudflare challenge; see constraints) — they are editorial, like status.

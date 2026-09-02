@@ -1,11 +1,11 @@
 {
-  "generated": "2026-09-02T02:50:07Z",
+  "generated": "2026-09-02T03:04:36Z",
   "camera_count": 2100,
   "flock_camera_count": 1605,
   "agency_count": 280,
-  "portal_count": 24,
-  "hand_read_portal_count": 2,
-  "curated_count": 14,
+  "portal_count": 30,
+  "hand_read_portal_count": 8,
+  "curated_count": 20,
   "wisdot_camera_count": 759,
   "wisdot_agency_count": 186,
   "wisdot_permits_by_year": {
