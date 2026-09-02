@@ -20,10 +20,16 @@ export default function CameraMap({ cameras, wisdotCameras }) {
     mapRef.current = map;
     map.fitBounds(WI_BOUNDS);
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      maxZoom: 19,
-    }).addTo(map);
+    // Esri's Light Gray Canvas: keyless. CARTO's raster basemaps began demanding an
+    // API key in 2026 (tiles render an "API KEY REQUIRED" watermark without one) and
+    // are being retired, so they are no longer an option for a static embed.
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution: 'Tiles &copy; <a href="https://www.esri.com">Esri</a> &mdash; Esri, DeLorme, NAVTEQ',
+        maxZoom: 16,
+      }
+    ).addTo(map);
 
     const renderer = L.canvas({ padding: 0.4 });
     for (const c of cameras) {
