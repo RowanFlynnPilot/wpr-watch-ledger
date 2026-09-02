@@ -12,7 +12,7 @@ const COLUMNS = [
   { key: "mapped", label: "Mapped", title: "Cameras volunteers have tagged with this operator on OpenStreetMap", get: (a) => a.osm_cameras || -1, numeric: true },
   { key: "searches", label: "Searches / 30d", get: (a) => a.portal?.searches_30d ?? -1, numeric: true },
   { key: "hit", label: "Hit rate", title: "Hot-list hits as a percentage of vehicles sighted, per the portal", get: rate, numeric: true },
-  { key: "reach", label: "Can search", title: "Agencies nationwide whose searches can reach this agency's cameras (only some portals disclose this)", get: (a) => a.portal?.reach?.received?.total ?? -1, numeric: true },
+  { key: "reach", label: "Searchable by", title: "Agencies nationwide whose searches can reach this agency's cameras (only some portals disclose this)", get: (a) => a.portal?.reach?.received?.total ?? -1, numeric: true },
   { key: "shared", label: "Shares with", get: (a) => a.portal?.shared_with_count ?? -1, numeric: true },
 ];
 

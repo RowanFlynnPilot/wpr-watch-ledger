@@ -75,8 +75,9 @@ export default function App() {
   ).toLocaleDateString("en-US", { year: "numeric", month: "long", timeZone: "UTC" });
   const marathon = agencies.filter((a) => a.county === "Marathon County");
   const mappedAttributed = agencies.reduce((n, a) => n + (a.osm_cameras || 0), 0);
+  // UTC, so the masthead date always agrees with the snapshot dates in the charts.
   const updated = new Date(meta.generated).toLocaleDateString("en-US", {
-    year: "numeric", month: "long", day: "numeric",
+    year: "numeric", month: "long", day: "numeric", timeZone: "UTC",
   });
 
   const tickClass = (a) =>
@@ -123,7 +124,7 @@ export default function App() {
         <div className="stat">
           <span className="stat-num">{fmt(inNetwork.length)}</span>
           <span className="stat-label">agencies in the Flock sharing network</span>
-          <span className="stat-sub">only {fmt(withPortal.length)} publish usage data</span>
+          <span className="stat-sub">only {fmt(withPortal.length)} publish usage data · {fmt(withAudit.length)} a search log</span>
         </div>
         <div className="stat stat-dropped">
           <span className="stat-num">{fmt(dropped.length)}</span>

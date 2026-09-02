@@ -71,7 +71,8 @@ export default function Trend({ history, agencies }) {
       <h2>Week by week</h2>
       <p className="trend-dek">
         The ledger has snapshotted every Wisconsin portal weekly since {day(first.date)}. Each
-        point is the statewide total as published that week; hover for the portal count behind it.
+        point is the statewide total as the portals published it that week, so a new portal
+        appearing moves the line as much as any change in police activity.
       </p>
       <div className="trend-grid">
         <div className="trend-card">

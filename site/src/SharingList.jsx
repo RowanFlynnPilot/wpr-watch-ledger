@@ -13,7 +13,10 @@ export default function SharingList({ agencies, edges }) {
         return (
           <details key={a.canonical} className="sharing-row">
             <summary>
-              <span className="sharing-name">{a.name}</span>
+              <span className="sharing-name">
+                {a.name}
+                {a.status.value === "dropped" && <span className="badge badge-dropped">dropped</span>}
+              </span>
               <span className="sharing-count">
                 {partners.length === 0
                   ? "no Wisconsin partners listed"

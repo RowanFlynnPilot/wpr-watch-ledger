@@ -660,3 +660,5 @@ tbody tr:hover td { background: var(--cream); }
 .permit-label { margin-top: 0.3rem; }
 
 .who-else-note { font-size: 0.78rem; color: var(--ink-soft); margin: 0.6rem 0 0; }
+
+.sharing-name .badge { margin-left: 0.5rem; vertical-align: middle; }

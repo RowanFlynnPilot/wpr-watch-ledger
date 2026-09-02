@@ -5,7 +5,8 @@ const COLS = [
   { key: "population", label: "Population", get: (r) => r.population, numeric: true },
   { key: "agencies", label: "Agencies", get: (r) => r.agencies, numeric: true },
   { key: "in_network", label: "In network", get: (r) => r.in_network, numeric: true },
-  { key: "portals", label: "Portals", get: (r) => r.portals, numeric: true },
+  { key: "portals", label: "Portals", title: "Agencies publishing a Flock transparency portal", get: (r) => r.portals, numeric: true },
+  { key: "audits", label: "Audit logs", title: "Agencies also publishing a redacted log of every search", get: (r) => r.audits ?? 0, numeric: true },
   { key: "wisdot_cameras", label: "Hwy cams", title: "Cameras permitted on state-highway right-of-way (WisDOT records)", get: (r) => r.wisdot_cameras, numeric: true },
   { key: "dropped", label: "Dropped", get: (r) => r.dropped, numeric: true },
 ];
@@ -32,7 +33,7 @@ export default function CountyTable({ counties }) {
       <table className="county-table">
         <caption className="visually-hidden">
           Per-county rollup of agencies, Flock network membership, transparency portals,
-          WisDOT-permitted highway cameras, and dropped contracts
+          search audit logs, WisDOT-permitted highway cameras, and dropped contracts
         </caption>
         <thead>
           <tr>
@@ -58,6 +59,7 @@ export default function CountyTable({ counties }) {
               <td className="cell-num">{fmt(r.agencies)}</td>
               <td className="cell-num">{fmt(r.in_network)}</td>
               <td className="cell-num">{fmt(r.portals)}</td>
+              <td className="cell-num">{fmt(r.audits ?? 0)}</td>
               <td className="cell-num">{fmt(r.wisdot_cameras)}</td>
               <td className="cell-num">{fmt(r.dropped)}</td>
             </tr>

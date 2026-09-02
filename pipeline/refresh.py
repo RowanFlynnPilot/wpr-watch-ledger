@@ -232,7 +232,7 @@ def fetch_portals() -> tuple[list[dict], dict, dict, dict]:
                 continue
             inactive = "[Inactive]" in org
             key = canonicalize(org)
-            display = re.sub(r"\s+WI\b", "", org.replace("[Inactive]", "")).strip()
+            display = re.sub(r"\s*\(WI\)|\s+WI\b", "", org.replace("[Inactive]", "")).strip()
             entry = edges.setdefault(key, {"name": display,
                                            "mentions": 0, "active_mentions": 0})
             entry["mentions"] += 1
@@ -401,7 +401,7 @@ def build_counties(agencies: list[dict], wisdot: dict, population: dict, generat
     """Per-county rollup + statewide coverage. County spellings are enforced against
     DOA's official list — a new source misspelling aborts instead of leaking through."""
     rows = {name: {"name": name, "population": pop, "agencies": 0, "in_network": 0,
-                   "portals": 0, "dropped": 0, "wisdot_cameras": 0}
+                   "portals": 0, "audits": 0, "dropped": 0, "wisdot_cameras": 0}
             for name, pop in population["counties"].items()}
     unresolved = 0
     for a in agencies:
@@ -416,6 +416,8 @@ def build_counties(agencies: list[dict], wisdot: dict, population: dict, generat
             rows[c]["in_network"] += 1
         if a["portal"]:
             rows[c]["portals"] += 1
+            if a["portal"]["public_search_audit"]:
+                rows[c]["audits"] += 1
         if a["status"]["value"] == "dropped":
             rows[c]["dropped"] += 1
     unlocated_cameras = 0

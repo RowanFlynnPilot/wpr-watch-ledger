@@ -21,8 +21,10 @@ export default function Sparkline({ points, width = 64, height = 18, label }) {
   }
   if (cur.length) segments.push(cur);
   const last = valid[valid.length - 1];
+  const summary = `${valid[0].value.toLocaleString("en-US")} → ${last.value.toLocaleString("en-US")} across ${valid.length} weekly snapshots`;
   return (
-    <svg className="spark" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label}>
+    <svg className="spark" width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${label}: ${summary}`}>
+      <title>{summary}</title>
       {segments.map((s, i) => (
         <polyline key={i} className="spark-line" points={s.join(" ")} />
       ))}
