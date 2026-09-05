@@ -1,5 +1,32 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Sparkline from "./Sparkline.jsx";
+import { downloadCsv } from "./csv.js";
+
+const CSV_COLS = [
+  { label: "Agency", get: (a) => a.name },
+  { label: "County", get: (a) => a.county },
+  { label: "Status", get: (a) => (a.status.value === "unknown" ? "unverified" : a.status.value) },
+  { label: "Status as of", get: (a) => a.status.as_of },
+  { label: "In Flock network", get: (a) => (a.in_network ? "yes" : "no") },
+  { label: "Publishes portal", get: (a) => (a.portal ? "yes" : "no") },
+  { label: "Publishes audit log", get: (a) => (a.portal?.public_search_audit ? "yes" : "no") },
+  { label: "Portal cameras", get: (a) => a.portal?.cameras },
+  { label: "Portal searches 30d", get: (a) => a.portal?.searches_30d },
+  { label: "Portal vehicles 30d", get: (a) => a.portal?.vehicles_captured_30d },
+  { label: "Portal hotlist hits 30d", get: (a) => a.portal?.hotlist_hits_30d },
+  { label: "Portal hit rate %", get: (a) => a.portal?.hit_rate },
+  { label: "Portal last updated", get: (a) => a.portal?.updated },
+  { label: "Shares with", get: (a) => a.portal?.shared_with_count },
+  { label: "Searchable by", get: (a) => a.portal?.reach?.received?.total },
+  { label: "USA TODAY searches on record 2023-2026", get: (a) => a.usatoday?.searches },
+  { label: "USA TODAY high-frequency rows", get: (a) => a.usatoday?.flagged_rows },
+  { label: "WisDOT highway cameras", get: (a) => a.wisdot?.cameras },
+  { label: "Volunteer-mapped cameras", get: (a) => a.osm_cameras || null },
+  { label: "Sharing lists naming it", get: (a) => a.network_mentions || null },
+  { label: "Portal URL", get: (a) => a.portal?.portal_url },
+  { label: "Status source", get: (a) => a.status.source },
+  { label: "Status note", get: (a) => a.status.note },
+];
 
 const rate = (a) => (a.portal?.hit_rate == null ? -1 : parseFloat(a.portal.hit_rate));
 
@@ -31,7 +58,7 @@ const FILTERS = [
   { key: "silent", label: "Searches, no portal", test: (a) => a.usatoday?.searches > 0 && !a.portal },
 ];
 
-export default function AgencyTable({ agencies, searchDeltas, history, staleThreshold, externalQuery }) {
+export default function AgencyTable({ agencies, searchDeltas, history, staleThreshold, externalQuery, generated }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState({ key: null, dir: 1 });
@@ -254,7 +281,16 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
           </table>
         </div>
       </div>
-      <p className="table-count">{rows.length} of {agencies.length} agencies shown</p>
+      <div className="table-tools">
+        <button
+          type="button"
+          className="dl"
+          onClick={() => downloadCsv(`watch-ledger-agencies-${(generated || "").slice(0, 10)}${rows.length < agencies.length ? "-filtered" : ""}.csv`, rows, CSV_COLS)}
+        >
+          ↓ Download CSV{rows.length < agencies.length ? ` (${rows.length} shown)` : ""}
+        </button>
+        <span className="table-count">{rows.length} of {agencies.length} agencies shown</span>
+      </div>
     </div>
   );
 }

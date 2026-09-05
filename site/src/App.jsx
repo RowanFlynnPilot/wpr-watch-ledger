@@ -228,7 +228,7 @@ export default function App() {
           Population figures are Wisconsin DOA official estimates as of January 1, 2025; searches
           on record are USA TODAY's audit-log totals for {meta.usatoday?.coverage.first_seen.slice(0, 4)}–{meta.usatoday?.coverage.last_seen.slice(0, 4)}.
         </p>
-        <CountyTable counties={counties.counties} />
+        <CountyTable counties={counties.counties} generated={meta.generated} />
         <p className="table-count">
           {counties.unresolved_agencies} statewide or unresolved agencies and{" "}
           {counties.unlocated_cameras} cameras without a usable county are not shown.
@@ -246,7 +246,7 @@ export default function App() {
           agencies too. The sparkline is the agency's 30-day search count across every weekly
           snapshot on record.
         </p>
-        <AgencyTable agencies={agencies} searchDeltas={searchDeltas} history={history} staleThreshold={staleThreshold} externalQuery={rosterQuery} />
+        <AgencyTable agencies={agencies} searchDeltas={searchDeltas} history={history} staleThreshold={staleThreshold} externalQuery={rosterQuery} generated={meta.generated} />
       </section>
 
       <section className="sharing" aria-label="Who shares with whom">
