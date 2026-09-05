@@ -83,6 +83,11 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   do not switch back. Every chart (sparklines, week-by-week, reach bars, permit timeline,
   inner-circle graph) is plain SVG/CSS — no chart library.
   `cpdata.mjs` copies the listed `../data/*.json` files into `public/data/` on every dev/build — add any new data file to that list or the site gets index.html back as JSON.
+- `pipeline/audit.py` — 60 PASS/FAIL consistency checks over the committed data. It gates
+  both workflows: refresh.yml runs it after refresh.py and before the data commit (a bad
+  refresh never lands), deploy.yml runs it before the build. Every check recomputes from
+  the data; never assert a literal figure (168 rings, 20 sheriffs) that next week's data
+  can legitimately change.
 
 ## Name matching
 
