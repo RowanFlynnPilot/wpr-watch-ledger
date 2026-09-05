@@ -540,6 +540,25 @@ tbody tr:hover td { background: var(--cream); }
 .who-else-section { margin-bottom: 3rem; }
 .who-else-dek { max-width: 44rem; }
 .who-else { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+@media (min-width: 720px) { .who-else { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.we-count { font-family: var(--mono); font-weight: 400; color: var(--ink-soft); opacity: 0.8; margin-left: 0.3rem; }
+.we-blurb { font-size: 0.8rem; color: var(--ink-soft); margin: -0.2rem 0 0.6rem; line-height: 1.35; }
+.we-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.2rem 0.8rem; }
+.we-chips { display: inline-flex; flex-wrap: wrap; gap: 0.3rem; justify-content: flex-end; }
+.we-chip {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0.05rem 0.4rem;
+  white-space: nowrap;
+}
+.we-chip strong { color: var(--ink); font-weight: 700; }
+.we-chip.chip-usat { background: #efe9dc; }
+.we-chip.chip-portal { background: var(--teal); border-color: var(--teal-deep); color: var(--white); }
 .who-else-group { background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--teal); padding: 1rem 1.2rem; }
 .who-else-group h3 {
   font-family: var(--mono);
