@@ -963,22 +963,31 @@ tr.row-home td:first-child { font-weight: 700; }
 .method-standard { border-left: 3px solid var(--teal); padding: 0.5rem 0.9rem; background: var(--white); font-size: 0.9rem !important; color: var(--ink) !important; max-width: 46rem; }
 
 /* toolbar under the masthead */
-.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1rem; margin: -1.4rem 0 2rem; padding: 0.6rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.jump { display: flex; flex-wrap: wrap; gap: 0.25rem 0.2rem; }
+.toolbar { display: flex; flex-direction: column; gap: 0.6rem; margin: -1.4rem 0 2rem; padding: 0.7rem 0 0.6rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+/* section tabs: an even grid that fills the row, the in-view section marked */
+.jump { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 3px; }
 .jump-link {
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ink-soft);
-  background: none;
-  border: none;
-  padding: 0.25rem 0.45rem;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-bottom-width: 3px;
+  padding: 0.42rem 0.3rem;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: 2px 2px 0 0;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.jump-link:hover, .jump-link:focus-visible { color: var(--teal-deep); background: var(--white); }
+.jump-link:hover, .jump-link:focus-visible { color: var(--teal-deep); border-color: var(--teal); background: var(--cream); }
+.jump-link.current { color: var(--white); background: var(--teal-deep); border-color: var(--teal-deep); border-bottom-color: var(--rust); }
 .toolbar-actions { display: flex; gap: 0.5rem; }
+@media (max-width: 900px) { .jump { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .jump { grid-template-columns: repeat(3, minmax(0, 1fr)); } .jump-link { font-size: 0.6rem; padding: 0.4rem 0.2rem; } }
 .toolbar-note { flex-basis: 100%; margin: 0; font-family: var(--mono); font-size: 0.72rem; color: var(--teal-deep); }
 .foot-credit { font-size: 0.85rem !important; color: var(--ink-soft) !important; margin: 1.2rem 0 0.2rem; }
 .foot-credit strong { color: var(--ink); }

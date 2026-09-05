@@ -21,6 +21,25 @@ const SECTIONS = [
 
 export default function Toolbar({ title }) {
   const [note, setNote] = useState(null);
+  // Which section is in view, so its tab reads as current while the reader scrolls.
+  const [current, setCurrent] = useState(null);
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const y = window.scrollY + 140;
+      let hit = null;
+      for (const [, sel] of SECTIONS) {
+        const el = document.querySelector(sel);
+        if (el && el.getBoundingClientRect().top + window.scrollY <= y) hit = sel;
+      }
+      setCurrent(hit);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => { window.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, []);
   const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
   const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
@@ -50,9 +69,16 @@ export default function Toolbar({ title }) {
 
   return (
     <nav className="toolbar" aria-label="Page tools">
-      <div className="jump" role="list">
+      <div className="jump" role="tablist" aria-label="Sections">
         {SECTIONS.map(([label, sel]) => (
-          <button type="button" className="jump-link" key={sel} onClick={() => jump(sel)} role="listitem">
+          <button
+            type="button"
+            className={`jump-link${current === sel ? " current" : ""}`}
+            key={sel}
+            onClick={() => jump(sel)}
+            role="tab"
+            aria-selected={current === sel}
+          >
             {label}
           </button>
         ))}
