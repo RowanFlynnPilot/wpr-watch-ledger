@@ -35,14 +35,14 @@ the page. Exits non-zero on any failure.
 
 ## Embed in WordPress
 
-The site posts its rendered height to the embedding page (`{source: "wpr-watch-ledger",
-height}`) whenever content changes, so the iframe can size itself — no hardcoded
-min-height. Paste both the iframe and the listener into a Custom HTML block:
+Paste both parts into ONE **Custom HTML** block (not a paragraph block, which converts the
+quotes and breaks the markup). Use the block's HTML view, not the visual preview.
 
 ```html
-<iframe id="watch-ledger" src="https://YOUR-GH-USERNAME.github.io/wpr-watch-ledger/"
+<iframe id="watch-ledger" src="https://rowanflynnpilot.github.io/wpr-watch-ledger/"
         style="width:100%;border:none;height:1200px" title="The Watch Ledger"
-        loading="lazy"></iframe>
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        allow="geolocation; clipboard-write; web-share"></iframe>
 <script>
 window.addEventListener("message", function (e) {
   if (!e.data || e.data.source !== "wpr-watch-ledger") return;
@@ -55,7 +55,33 @@ window.addEventListener("message", function (e) {
 </script>
 ```
 
-The `height:1200px` is only the placeholder before the first message arrives.
+What each part does, and what breaks without it:
+
+- The site posts its rendered height to the embedding page (`{source: "wpr-watch-ledger",
+  height}`) whenever content changes; the listener sizes the iframe to match, so there is no
+  inner scrollbar and no clipped bottom. `height:1200px` is only the placeholder before the
+  first message arrives.
+- `allow="geolocation; clipboard-write; web-share"`: browsers block those three inside a
+  cross-origin iframe unless the parent grants them. Without it, the map's "Near me" button,
+  the Bookmark button's link copy, and Share silently fail.
+- `referrerpolicy="no-referrer-when-downgrade"`: lets the tool see the article's full address
+  so the Bookmark button copies the article, not the newsroom homepage.
+- GitHub Pages sends no X-Frame-Options or frame-ancestors header, so any site may frame it.
+
+**If WordPress strips the `<script>`** (WordPress.com plans without custom code, a security
+plugin, or an author role without `unfiltered_html`): the iframe stays at the placeholder
+height and scrolls inside itself. Use this script-free fallback instead and set the height to
+taste; the tool's map ignores the scroll wheel so it will not fight the page:
+
+```html
+<iframe src="https://rowanflynnpilot.github.io/wpr-watch-ledger/"
+        style="width:100%;border:none;height:90vh;min-height:800px" title="The Watch Ledger"
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        allow="geolocation; clipboard-write; web-share"></iframe>
+```
+
+AMP pages strip both iframes and scripts; if the site serves AMP to mobile readers, either
+disable AMP for the article or use `<amp-iframe>` with a fixed height.
 
 ## Editorial workflow
 

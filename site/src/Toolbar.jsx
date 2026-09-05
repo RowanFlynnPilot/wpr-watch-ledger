@@ -51,8 +51,13 @@ export default function Toolbar({ title }) {
 
   const pageUrl = () => {
     // Inside the WordPress iframe, the parent page is the address readers should keep.
-    try { return window.top !== window ? document.referrer || window.location.href : window.location.href; }
-    catch { return window.location.href; }
+    try {
+      if (window.top === window) return window.location.href;
+      // A bare origin (default referrer policy) is the newsroom homepage, not the article;
+      // only trust the referrer when it carries a path.
+      const r = document.referrer ? new URL(document.referrer) : null;
+      return r && r.pathname && r.pathname !== "/" ? r.href : window.location.href;
+    } catch { return window.location.href; }
   };
 
   const bookmark = async () => {
