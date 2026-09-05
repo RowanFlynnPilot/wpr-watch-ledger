@@ -843,3 +843,23 @@ tr.row-home td:first-child { font-weight: 700; }
   cursor: pointer;
 }
 .dl:hover { background: var(--teal-deep); color: var(--white); border-color: var(--teal-deep); }
+
+/* roster tools */
+.table-tools-top { justify-content: space-between; margin: 0 0 0.6rem; }
+.table-tools-right { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.dl-quiet { border-color: var(--line); color: var(--ink-soft); }
+.dl-quiet:hover { background: var(--cream); color: var(--ink); border-color: var(--ink-soft); }
+.link-btn {
+  font: inherit;
+  font-family: var(--mono);
+  color: var(--teal-deep);
+  background: none;
+  border: none;
+  padding: 0 0 0 0.6rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.roster .cell-name { min-width: 12rem; line-height: 1.3; }
+.roster th, .roster td { padding: 0.5rem 0.7rem; }
+.roster tbody td { vertical-align: middle; }
+@media (max-width: 560px) { .roster .cell-name { min-width: 9rem; } }
