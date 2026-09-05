@@ -205,7 +205,7 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
           <label className="legend-item legend-toggle">
             <input type="checkbox" checked={show.other} onChange={() => toggle("other")} />
             <span className="legend-dot legend-other" aria-hidden="true" />
-            Other vendors <span className="legend-n">{fmt(cameras.length - flockCount)}</span>
+            Other or unknown vendor <span className="legend-n">{fmt(cameras.length - flockCount)}</span>
           </label>
           <label className="legend-item legend-toggle">
             <input type="checkbox" checked={show.wisdot} onChange={() => toggle("wisdot")} />

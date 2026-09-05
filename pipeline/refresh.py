@@ -214,7 +214,10 @@ def fetch_portals() -> tuple[list[dict], dict, dict, dict]:
             "retention_days": p.get("data_retention"),
             "vehicles_captured_30d": p.get("vehicles_captured"),
             "hotlist_hits_30d": p.get("hotlist_hits"),
-            "shared_with_count": p.get("organization_count"),
+            # The counted list (Flock's demo/deactivated placeholders removed) when the portal
+            # publishes one, so "shares with" and the reach bars agree; EOF's count otherwise.
+            "shared_with_count": (classify_orgs(p.get("organizations_shared_with"))["total"]
+                                  if p.get("organizations_shared_with") else p.get("organization_count")),
             "prohibited_uses": p.get("prohibited_uses"),
             "public_search_audit": bool(p.get("public_search_audit")),
             "hand_read": False,
@@ -263,6 +266,14 @@ def fetch_portals() -> tuple[list[dict], dict, dict, dict]:
     return wi_portals, edges, sharing, national
 
 
+# Hand-checked corrections for Atlas of Surveillance agency names whose typo would
+# otherwise create a second roster row beside the real agency.
+ATLAS_NAME_ALIASES = {
+    "Mequon Police Departmet": "Mequon Police Department",
+    "Croix County Sheriff's Office": "St. Croix County Sheriff's Office",
+}
+
+
 def fetch_atlas() -> list[dict]:
     r = requests.get(ATLAS_URL, headers=UA, timeout=180)
     r.raise_for_status()
@@ -276,9 +287,10 @@ def fetch_atlas() -> list[dict]:
         if "plate" not in row.get("Technology", "").lower():
             continue
         links = [row[k].strip() for k in ("Link 1", "Link 2", "Link 3") if row.get(k, "").strip()]
+        agency = ATLAS_NAME_ALIASES.get(row["Agency"].strip(), row["Agency"].strip())
         out.append({
-            "name": row["Agency"].strip(),
-            "canonical": canonicalize(row["Agency"]),
+            "name": agency,
+            "canonical": canonicalize(agency),
             "county": row.get("County", "").strip() or None,
             "vendor": row.get("Vendor", "").strip() or None,
             "summary": row.get("Summary", "").strip() or None,

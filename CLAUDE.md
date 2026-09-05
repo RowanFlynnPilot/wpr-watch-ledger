@@ -76,6 +76,8 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   EOF wins the moment it indexes the agency. The pipeline never fetches these itself
   (Cloudflare challenge; see constraints) — they are editorial, like status.
 - `site/` — React 18 + Leaflet (raw, no react-leaflet), hand-rolled table, no UI libs.
+  ATLAS_NAME_ALIASES in refresh.py corrects Atlas typos that would otherwise create a
+  second roster row ("Mequon Police Departmet", "Croix County Sheriff's Office").
   Basemap is Esri World Light Gray Canvas (keyless). CARTO's raster basemaps started
   demanding an API key in 2026 (tiles render "API KEY REQUIRED") and are being retired;
   do not switch back. Every chart (sparklines, week-by-week, reach bars, permit timeline,
