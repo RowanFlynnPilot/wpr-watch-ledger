@@ -660,6 +660,13 @@ tbody tr:hover td.cell-usat { background: #e9e2d2; }
 .trend-axis { font-family: var(--mono); font-size: 10px; fill: var(--ink-soft); }
 .trend-val { font-family: var(--mono); font-size: 11px; font-weight: 700; fill: var(--ink); }
 .trend-val.start { font-weight: 400; fill: var(--ink-soft); }
+.kpi { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.2rem 0.6rem; margin: 0.35rem 0 0; }
+.kpi-num { font-family: var(--mono); font-weight: 700; font-size: 1.3rem; letter-spacing: -0.02em; color: var(--teal-deep); line-height: 1.1; }
+.kpi-big .kpi-num { font-size: 1.9rem; color: var(--ink); }
+.kpi-label { font-size: 0.78rem; color: var(--ink-soft); }
+.kpi .spark { margin-left: auto; align-self: center; }
+.kpi + .trend-change { margin-top: 0.25rem; padding-bottom: 0.7rem; border-bottom: 1px dashed var(--line); margin-bottom: 0.55rem; }
+.kpi + .trend-change:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
 .trend-change { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-soft); margin: 0.5rem 0 0; }
 .trend-change .up { color: var(--rust); }
 .trend-change .down { color: var(--teal-deep); }

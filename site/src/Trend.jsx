@@ -1,4 +1,11 @@
 import React from "react";
+import Sparkline from "./Sparkline.jsx";
+
+// Until the ledger holds a quarter of weekly snapshots, a line chart invites the
+// reader to see a trend in six points. Below that span each figure is a KPI tile
+// with its latest value, its change since the first snapshot, and a sparkline for
+// shape only; the line charts take over on their own once the span is long enough.
+const CHART_AFTER_WEEKS = 12;
 
 // Week by week: statewide portal totals across every weekly snapshot on record,
 // plus the agencies whose 30-day search counts moved most since the first one.
@@ -51,6 +58,20 @@ function Change({ series, unit, portals = true }) {
   );
 }
 
+function Figure({ series, label, unit, portals = true, big = false }) {
+  const last = series[series.length - 1];
+  return (
+    <>
+      <div className={`kpi${big ? " kpi-big" : ""}`}>
+        <span className="kpi-num">{fmt(last.value)}</span>
+        <span className="kpi-label">{label}</span>
+        <Sparkline points={series} width={110} height={26} label={`${label}, weekly`} />
+      </div>
+      <Change series={series} unit={unit} portals={portals} />
+    </>
+  );
+}
+
 export default function Trend({ history, agencies }) {
   const snaps = history.snapshots;
   if (snaps.length < 2) return null;
@@ -80,26 +101,32 @@ export default function Trend({ history, agencies }) {
         The ledger has snapshotted every Wisconsin portal weekly since {day(first.date)}. The
         statewide total moves whenever a new portal appears as much as when police activity
         changes, so each figure is also shown as an average per reporting portal.
+        {weeks < CHART_AFTER_WEEKS && ` Line charts replace these figures once ${CHART_AFTER_WEEKS} weeks of snapshots exist.`}
       </p>
       <div className="trend-grid">
-        <div className="trend-card">
-          <h3>Sightings, trailing 30 days</h3>
-          <p className="trend-sub">Statewide total, all reporting portals</p>
-          <Chart series={series("vehicles_captured_30d")} label="Vehicle sightings, statewide total" />
-          <Change series={series("vehicles_captured_30d")} unit="sightings" />
-          <p className="trend-sub">Average per reporting portal</p>
-          <Chart series={perPortal("vehicles_captured_30d")} label="Vehicle sightings per portal" />
-          <Change series={perPortal("vehicles_captured_30d")} unit="per portal" portals={false} />
-        </div>
-        <div className="trend-card">
-          <h3>Searches, trailing 30 days</h3>
-          <p className="trend-sub">Statewide total, all reporting portals</p>
-          <Chart series={series("searches_30d")} label="Police searches, statewide total" />
-          <Change series={series("searches_30d")} unit="searches" />
-          <p className="trend-sub">Average per reporting portal</p>
-          <Chart series={perPortal("searches_30d")} label="Police searches per portal" />
-          <Change series={perPortal("searches_30d")} unit="per portal" portals={false} />
-        </div>
+        {[
+          { key: "vehicles_captured_30d", title: "Sightings, trailing 30 days", unit: "sightings", label: "Vehicle sightings" },
+          { key: "searches_30d", title: "Searches, trailing 30 days", unit: "searches", label: "Police searches" },
+        ].map((m) => (
+          <div className="trend-card" key={m.key}>
+            <h3>{m.title}</h3>
+            {weeks >= CHART_AFTER_WEEKS ? (
+              <>
+                <p className="trend-sub">Statewide total, all reporting portals</p>
+                <Chart series={series(m.key)} label={`${m.label}, statewide total`} />
+                <Change series={series(m.key)} unit={m.unit} />
+                <p className="trend-sub">Average per reporting portal</p>
+                <Chart series={perPortal(m.key)} label={`${m.label} per portal`} />
+                <Change series={perPortal(m.key)} unit="per portal" portals={false} />
+              </>
+            ) : (
+              <>
+                <Figure series={series(m.key)} label={`statewide, ${series(m.key).slice(-1)[0].portals} portals reporting`} unit={m.unit} big />
+                <Figure series={perPortal(m.key)} label="average per reporting portal" unit="per portal" portals={false} />
+              </>
+            )}
+          </div>
+        ))}
         {movers.length > 0 && (
           <div className="trend-card">
             <h3>Biggest search movers, {weeks} week{weeks === 1 ? "" : "s"}</h3>
