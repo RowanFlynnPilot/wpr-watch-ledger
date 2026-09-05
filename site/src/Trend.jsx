@@ -8,7 +8,7 @@ const fmt = (n) => n.toLocaleString("en-US");
 const day = (d) => new Date(d + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 
 function Chart({ series, label }) {
-  const W = 320, H = 110, padL = 6, padR = 6, padT = 10, padB = 22;
+  const W = 320, H = 96, padL = 6, padR = 6, padT = 12, padB = 20;
   const t0 = new Date(series[0].date).getTime();
   const t1 = new Date(series[series.length - 1].date).getTime();
   const span = Math.max(1, t1 - t0);
@@ -37,7 +37,7 @@ function Chart({ series, label }) {
   );
 }
 
-function Change({ series, unit }) {
+function Change({ series, unit, portals = true }) {
   const first = series[0], last = series[series.length - 1];
   const delta = last.value - first.value;
   const pct = first.value ? (100 * delta) / first.value : 0;
@@ -46,7 +46,7 @@ function Change({ series, unit }) {
     <p className="trend-change">
       <span className={cls}>{delta > 0 ? "▲" : delta < 0 ? "▼" : "="} {fmt(Math.abs(delta))} {unit}</span>{" "}
       ({pct > 0 ? "+" : ""}{pct.toFixed(1)}%) since {day(first.date)}
-      {first.portals !== last.portals && ` · ${first.portals} → ${last.portals} portals reporting`}
+      {portals && first.portals !== last.portals && ` · ${first.portals} → ${last.portals} portals reporting`}
     </p>
   );
 }
@@ -56,6 +56,13 @@ export default function Trend({ history, agencies }) {
   if (snaps.length < 2) return null;
   const total = (snap, key) => Object.values(snap.portals).reduce((n, p) => n + (p[key] || 0), 0);
   const series = (key) => snaps.map((s) => ({ date: s.date, value: total(s, key), portals: Object.keys(s.portals).length }));
+  // Per reporting portal, so a week when new portals appear is not read as a surge in
+  // surveillance. Divides by the portals in that week's snapshot that carry the figure.
+  const perPortal = (key) =>
+    snaps.map((s) => {
+      const vals = Object.values(s.portals).map((p) => p[key]).filter((v) => v != null);
+      return { date: s.date, value: vals.length ? Math.round(vals.reduce((n, v) => n + v, 0) / vals.length) : 0, portals: vals.length };
+    });
   const byCanonical = new Map(agencies.map((a) => [a.canonical, a.name]));
   const first = snaps[0], last = snaps[snaps.length - 1];
   const movers = Object.keys(last.portals)
@@ -70,20 +77,28 @@ export default function Trend({ history, agencies }) {
     <section className="trend" aria-label="Week by week">
       <h2>Week by week</h2>
       <p className="trend-dek">
-        The ledger has snapshotted every Wisconsin portal weekly since {day(first.date)}. Each
-        point is the statewide total as the portals published it that week, so a new portal
-        appearing moves the line as much as any change in police activity.
+        The ledger has snapshotted every Wisconsin portal weekly since {day(first.date)}. The
+        statewide total moves whenever a new portal appears as much as when police activity
+        changes, so each figure is also shown as an average per reporting portal.
       </p>
       <div className="trend-grid">
         <div className="trend-card">
           <h3>Sightings, trailing 30 days</h3>
-          <Chart series={series("vehicles_captured_30d")} label="Vehicle sightings" />
+          <p className="trend-sub">Statewide total, all reporting portals</p>
+          <Chart series={series("vehicles_captured_30d")} label="Vehicle sightings, statewide total" />
           <Change series={series("vehicles_captured_30d")} unit="sightings" />
+          <p className="trend-sub">Average per reporting portal</p>
+          <Chart series={perPortal("vehicles_captured_30d")} label="Vehicle sightings per portal" />
+          <Change series={perPortal("vehicles_captured_30d")} unit="per portal" portals={false} />
         </div>
         <div className="trend-card">
           <h3>Searches, trailing 30 days</h3>
-          <Chart series={series("searches_30d")} label="Police searches" />
+          <p className="trend-sub">Statewide total, all reporting portals</p>
+          <Chart series={series("searches_30d")} label="Police searches, statewide total" />
           <Change series={series("searches_30d")} unit="searches" />
+          <p className="trend-sub">Average per reporting portal</p>
+          <Chart series={perPortal("searches_30d")} label="Police searches per portal" />
+          <Change series={perPortal("searches_30d")} unit="per portal" portals={false} />
         </div>
         {movers.length > 0 && (
           <div className="trend-card">

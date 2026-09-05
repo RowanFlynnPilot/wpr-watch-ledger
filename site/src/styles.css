@@ -637,6 +637,9 @@ tbody tr:hover td { background: var(--cream); }
   font-weight: 400;
 }
 .trend-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.trend-sub { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-soft); margin: 0.9rem 0 0.15rem; }
+.trend-sub:first-of-type { margin-top: 0; }
+.trend-change { margin-bottom: 0; }
 .trend-area { fill: var(--teal); opacity: 0.12; }
 .trend-path { fill: none; stroke: var(--teal-deep); stroke-width: 2; stroke-linejoin: round; }
 .trend-pt { fill: var(--white); stroke: var(--teal-deep); stroke-width: 1.5; }
