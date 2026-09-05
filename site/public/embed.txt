@@ -1,0 +1,51 @@
+THE WATCH LEDGER - EMBED CODE
+Copy from this page, not from an email: Gmail rewrites links into google.com redirects.
+
+============================================================
+OPTION A - editor with separate HTML and JavaScript tabs
+(no <script> tag anywhere; this avoids the "not a valid JSON response" save error)
+============================================================
+
+--- HTML tab ---
+
+<iframe id="watch-ledger" src="https://rowanflynnpilot.github.io/wpr-watch-ledger/" style="width:100%;border:none;height:1200px" title="The Watch Ledger" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allow="geolocation; clipboard-write; web-share"></iframe>
+
+--- JavaScript tab ---
+
+window.addEventListener("message", function (e) {
+  if (!e.data || e.data.source !== "wpr-watch-ledger") return;
+  var frame = document.getElementById("watch-ledger");
+  if (!frame || e.origin !== new URL(frame.src).origin) return;
+  if (typeof e.data.height === "number" && e.data.height > 0) {
+    frame.style.height = Math.ceil(e.data.height) + "px";
+  }
+});
+
+============================================================
+OPTION B - single Custom HTML block (only if the editor has no JavaScript tab)
+============================================================
+
+<iframe id="watch-ledger" src="https://rowanflynnpilot.github.io/wpr-watch-ledger/" style="width:100%;border:none;height:1200px" title="The Watch Ledger" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allow="geolocation; clipboard-write; web-share"></iframe>
+<script>
+window.addEventListener("message", function (e) {
+  if (!e.data || e.data.source !== "wpr-watch-ledger") return;
+  var frame = document.getElementById("watch-ledger");
+  if (!frame || e.origin !== new URL(frame.src).origin) return;
+  if (typeof e.data.height === "number" && e.data.height > 0) {
+    frame.style.height = Math.ceil(e.data.height) + "px";
+  }
+});
+</script>
+
+============================================================
+OPTION C - iframe only, no script at all (if the save still fails)
+The frame scrolls inside itself; set the height to taste.
+============================================================
+
+<iframe src="https://rowanflynnpilot.github.io/wpr-watch-ledger/" style="width:100%;border:none;height:90vh;min-height:800px" title="The Watch Ledger" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allow="geolocation; clipboard-write; web-share"></iframe>
+
+============================================================
+CHECK BEFORE SAVING
+============================================================
+The src must read exactly  https://rowanflynnpilot.github.io/wpr-watch-ledger/
+If it starts with google.com/url, the link was copied from an email; replace it.
