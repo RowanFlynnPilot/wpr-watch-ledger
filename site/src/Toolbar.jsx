@@ -84,6 +84,9 @@ export default function Toolbar({ title }) {
         ))}
       </div>
       <div className="toolbar-actions">
+        <a className="dl dl-plate" href="https://data.usatoday.com/projects/flock-search/" target="_blank" rel="noreferrer" title="USA TODAY's search of Flock audit logs: see whether your plate was searched, and by whom">
+          Check your plate ↗
+        </a>
         <button type="button" className="dl" onClick={bookmark} title="Copy the link and show the bookmark shortcut">
           ☆ Bookmark
         </button>

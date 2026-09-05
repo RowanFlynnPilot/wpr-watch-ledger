@@ -1061,3 +1061,17 @@ tr.row-home td:first-child { font-weight: 700; }
   a[href^="http"]::after { content: ""; }
   .tip { display: none !important; }
 }
+
+/* check-your-plate */
+.dl-plate { background: var(--teal-deep); color: var(--white); border-color: var(--teal-deep); text-decoration: none; display: inline-block; }
+.dl-plate:hover { background: var(--teal); border-color: var(--teal); }
+.plate-check {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.8rem 1.5rem;
+  margin: 0 0 1rem; padding: 0.9rem 1.1rem;
+  background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--teal-deep);
+}
+.plate-check > div:first-child { flex: 1 1 24rem; }
+.plate-check-title { font-family: var(--display); font-weight: 600; font-size: 1.05rem; margin: 0 0 0.25rem; }
+.plate-check-body { font-size: 0.86rem; color: var(--ink-soft); margin: 0; max-width: 40rem; }
+.plate-check-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+@media print { .plate-check-links, .dl-plate { display: none !important; } }

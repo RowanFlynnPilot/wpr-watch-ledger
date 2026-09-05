@@ -43,6 +43,21 @@ export default function SilentSearchers({ agencies, usat }) {
           </>
         )}
       </p>
+      <aside className="plate-check">
+        <div>
+          <p className="plate-check-title">Has your plate been searched?</p>
+          <p className="plate-check-body">
+            The same audit logs behind this section are searchable by plate. Type yours in on
+            USA TODAY's tool to see whether it appears, how many times, and which agencies ran
+            the searches; Have I Been Flocked holds a larger archive of the same records. Both
+            run on their own sites. This page never sees what you type.
+          </p>
+        </div>
+        <div className="plate-check-links">
+          <a className="dl dl-plate" href="https://data.usatoday.com/projects/flock-search/" target="_blank" rel="noreferrer">USA TODAY plate search ↗</a>
+          <a className="dl" href="https://haveibeenflocked.com/" target="_blank" rel="noreferrer">Have I Been Flocked ↗</a>
+        </div>
+      </aside>
       <div className="silent-key" aria-hidden="true">
         <span className="silent-key-item"><span className="silent-swatch silent-yes" /> Publishes no transparency portal</span>
         <span className="silent-key-item"><span className="silent-swatch silent-no" /> Publishes a portal</span>
