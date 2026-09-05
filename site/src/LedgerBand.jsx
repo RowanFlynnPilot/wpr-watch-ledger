@@ -93,9 +93,10 @@ export default function LedgerBand({ sightings, perDay, searches, hits, publishe
         .
       </p>
       <p className="ledger-kicker">
-        That is the past 30 days from just the <strong>{publisherCount}</strong> Wisconsin
-        agencies that publish usage data. The other <strong>{silentCount}</strong> agencies in
-        the sharing network disclose nothing, so the true totals are higher.
+        That is the past 30 days from the <strong>{publisherCount}</strong> Wisconsin portals
+        whose figures are current{stale.length > 0 ? ` (of the ${publisherCount + stale.length} that publish one)` : ""}.
+        The other <strong>{silentCount}</strong> agencies in the sharing network disclose
+        nothing, so the true totals are higher.
         {stale.length > 0 && (
           <>
             {" "}Left out: {stale.length === 1 ? "one portal" : `${stale.length} portals`} (
