@@ -863,3 +863,20 @@ tr.row-home td:first-child { font-weight: 700; }
 .roster th, .roster td { padding: 0.5rem 0.7rem; }
 .roster tbody td { vertical-align: middle; }
 @media (max-width: 560px) { .roster .cell-name { min-width: 9rem; } }
+
+/* inner circle picker */
+.graph-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; margin: 0 0 0.6rem; }
+.graph-pick { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.72rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+.graph-pick select {
+  font-family: var(--body);
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.5rem;
+  max-width: 24rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.sg-center.hint { font-size: 8.5px; fill: var(--teal-deep); }
+.sharing-graph.pinned .sg-ring { stroke: var(--teal); stroke-dasharray: none; stroke-opacity: 0.5; }

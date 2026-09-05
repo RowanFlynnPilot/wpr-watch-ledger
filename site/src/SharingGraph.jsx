@@ -62,7 +62,13 @@ export default function SharingGraph({ agencies, edges }) {
     return { nodes, links, mutualCount: links.filter((l) => l.mutual).length };
   }, [agencies, edges]);
 
-  const [hover, setHover] = useState(null);
+  // Hover previews; a click pins. A pinned agency survives the mouse leaving,
+  // and releases on a second click, a click on the background, or the picker.
+  const [hovered_, setHovered] = useState(null);
+  const [pinned, setPinned] = useState(null);
+  const hover = pinned ?? hovered_;
+  const setHover = setHovered;
+  const byName = [...nodes].sort((a, b) => a.name.localeCompare(b.name));
   const adjacent =
     hover == null
       ? null
@@ -73,12 +79,37 @@ export default function SharingGraph({ agencies, edges }) {
 
   return (
     <>
+      <div className="graph-tools">
+        <label className="graph-pick">
+          <span>Focus on</span>
+          <select
+            value={pinned == null ? "" : nodes[pinned].canonical}
+            onChange={(e) => {
+              const nd = nodes.find((n) => n.canonical === e.target.value);
+              setPinned(nd ? nd.i : null);
+            }}
+          >
+            <option value="">All {portals.length} portal agencies</option>
+            {byName.map((nd) => (
+              <option key={nd.canonical} value={nd.canonical}>
+                {nd.name}{nd.dropped ? " (dropped)" : ""} · {nd.partners} partners
+              </option>
+            ))}
+          </select>
+        </label>
+        {pinned != null && (
+          <button type="button" className="dl dl-quiet" onClick={() => setPinned(null)}>
+            ✕ Show all
+          </button>
+        )}
+      </div>
       <div className="graph-scroll">
         <svg
           viewBox={`0 0 ${W} ${H}`}
-          className="sharing-graph"
+          className={`sharing-graph${pinned != null ? " pinned" : ""}`}
           role="img"
           aria-label={`Sharing between the ${portals.length} portal agencies: ${links.length} connections, ${mutualCount} of them mutual`}
+          onClick={(e) => { if (e.target.tagName === "svg" || e.target.classList.contains("sg-ring") || e.target.classList.contains("sg-link")) setPinned(null); }}
         >
           <circle cx={CX} cy={CY} r={R} className="sg-ring" />
           {links.map((l) => (
@@ -93,7 +124,8 @@ export default function SharingGraph({ agencies, edges }) {
               key={nd.canonical}
               onMouseEnter={() => setHover(nd.i)}
               onMouseLeave={() => setHover(null)}
-              onClick={() => setHover(hover === nd.i ? null : nd.i)}
+              onClick={(e) => { e.stopPropagation(); setPinned(pinned === nd.i ? null : nd.i); }}
+              style={{ cursor: "pointer" }}
             >
               <circle
                 cx={nd.x}
@@ -125,13 +157,20 @@ export default function SharingGraph({ agencies, edges }) {
               ? `${hovered.partners} Wisconsin partners · ${links.filter((l) => l.a === hover || l.b === hover).length} inside the circle`
               : `${links.length} connections · ${mutualCount} mutual`}
           </text>
+          {pinned != null && (
+            <text x={CX} y={CY + 26} textAnchor="middle" className="sg-center sub hint">
+              pinned · click again or tap the background to show all
+            </text>
+          )}
         </svg>
       </div>
       <p className="gap-caption">
         Each dot is a portal agency, sized by how many Wisconsin partners it lists. A teal
         line means both agencies name each other; a gray line is one-way; a rust ring marks an
         agency that has announced dropping Flock. {links.length} connections among the{" "}
-        {portals.length}, {mutualCount} mutual. Hover or tap a dot to isolate its connections.
+        {portals.length}, {mutualCount} mutual. Hover a dot to preview its connections; click
+        it, or pick it from the list above, to keep it selected. Click it a second time, click
+        the background, or choose "Show all" to return to the full circle.
       </p>
     </>
   );
