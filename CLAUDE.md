@@ -44,6 +44,11 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   NEVER put these cumulative counts in the same column as, or add them to, the portals'
   30-day session figures. Attribute USA TODAY. Flock withdrew the audit view in Dec 2025,
   so this does not refresh; re-snapshot only if USA TODAY republishes.
+- `data/ice_287g.json` — COMMITTED SNAPSHOT of the Wisconsin rows of ICE's 287(g)
+  participating-agencies spreadsheet (ice.gov/identify-and-arrest/287g -> file-download
+  208912; one row per signed agreement; 20 sheriff's offices as of 2026-09-05). Validated at
+  build; joined by canonical name into `agency.ice_287g` (agreements, models, first_signed)
+  and counted per county. Does not touch in_network. Re-download when ICE updates the list.
 - `data/wi_counties.json` — COMMITTED SNAPSHOT of Wisconsin county boundaries (Census
   cartographic boundary files via plotly/datasets, Douglas-Peucker simplified to 0.0015°,
   names normalized to the DOA list). Validated at build (72 MultiPolygon features). Each

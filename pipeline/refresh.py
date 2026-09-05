@@ -455,7 +455,7 @@ def build_counties(agencies: list[dict], wisdot: dict, population: dict, generat
     """Per-county rollup + statewide coverage. County spellings are enforced against
     DOA's official list — a new source misspelling aborts instead of leaking through."""
     rows = {name: {"name": name, "population": pop, "agencies": 0, "in_network": 0,
-                   "portals": 0, "audits": 0, "dropped": 0, "wisdot_cameras": 0, "usat_searches": 0}
+                   "portals": 0, "audits": 0, "dropped": 0, "wisdot_cameras": 0, "usat_searches": 0, "ice_287g": 0}
             for name, pop in population["counties"].items()}
     unresolved = 0
     for a in agencies:
@@ -476,6 +476,8 @@ def build_counties(agencies: list[dict], wisdot: dict, population: dict, generat
             rows[c]["dropped"] += 1
         if a["usatoday"]:
             rows[c]["usat_searches"] += a["usatoday"]["searches"]
+        if a["ice_287g"]:
+            rows[c]["ice_287g"] += 1
     unlocated_cameras = 0
     for cam in wisdot["cameras"]:
         c = f"{cam['county']} County"
@@ -600,6 +602,34 @@ def load_usatoday() -> dict:
     return doc
 
 
+# ---------------------------------------------------------------- ice 287(g)
+
+ICE_SUPPORT_TYPES = {"Jail Enforcement Model", "Task Force Model", "Warrant Service Officer"}
+
+
+def load_ice_287g() -> dict:
+    """Committed snapshot of ICE's 287(g) participating-agencies list, Wisconsin rows.
+    One row per signed agreement. Static like the other snapshots; re-download the
+    spreadsheet from ice.gov when the list changes."""
+    path = DATA / "ice_287g.json"
+    if not path.exists():
+        raise RuntimeError("data/ice_287g.json is missing; the ICE 287(g) snapshot is required.")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    for k in ("source", "url", "retrieved", "agreements"):
+        if k not in doc:
+            raise RuntimeError(f"ice_287g.json missing '{k}'")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", doc["retrieved"]):
+        raise RuntimeError("ice_287g.json retrieved must be YYYY-MM-DD")
+    for a in doc["agreements"]:
+        if set(a.keys()) != {"agency", "county", "support_type", "signed", "moa"}:
+            raise RuntimeError(f"ice_287g.json bad row keys: {a}")
+        if a["support_type"] not in ICE_SUPPORT_TYPES:
+            raise RuntimeError(f"ice_287g.json unknown support type: {a['support_type']!r}")
+        if a["signed"] and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", a["signed"]):
+            raise RuntimeError(f"ice_287g.json bad signed date: {a}")
+    return doc
+
+
 # ---------------------------------------------------------------- overlay + merge
 
 OVERLAY_PORTAL_INT_KEYS = {"cameras", "searches_30d", "vehicles_captured_30d", "hotlist_hits_30d",
@@ -683,7 +713,7 @@ def load_overlay() -> dict:
 
 
 def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict,
-                   city_county: dict, wisdot: dict, cameras: dict, usat: dict) -> tuple[list[dict], list[dict]]:
+                   city_county: dict, wisdot: dict, cameras: dict, usat: dict, ice: dict) -> tuple[list[dict], list[dict]]:
     """Returns (roster, OSM operators that matched no roster agency)."""
     agencies: dict[str, dict] = {}
 
@@ -691,7 +721,7 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         return agencies.setdefault(key, {
             "name": name, "canonical": key, "county": None, "type": None,
             "in_network": False, "network_mentions": 0,
-            "portal": None, "atlas": None, "wisdot": None, "osm_cameras": 0, "usatoday": None,
+            "portal": None, "atlas": None, "wisdot": None, "osm_cameras": 0, "usatoday": None, "ice_287g": None,
             "status": {"value": "unknown", "derived": True, "as_of": None, "source": None, "note": None},
         })
 
@@ -791,6 +821,21 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
                                "note": f"Ran {e['searches']:,} Flock searches in audit logs obtained by USA TODAY "
                                        f"({cov['first_seen']} to {cov['last_seen']})"}
 
+    # ICE 287(g) agreements: joined by canonical name. An agency on ICE's list is a
+    # documented fact about the agency whether or not it is in the Flock network,
+    # so unmatched rows create a roster entry without touching in_network.
+    for row in ice["agreements"]:
+        key = canonicalize(row["agency"])
+        a = get(key, row["agency"])
+        if a["ice_287g"] is None:
+            a["ice_287g"] = {"agreements": [], "first_signed": None, "models": []}
+        a["ice_287g"]["agreements"].append({"support_type": row["support_type"], "signed": row["signed"], "moa": row["moa"]})
+        a["ice_287g"]["agreements"].sort(key=lambda x: x["signed"] or "")
+        a["ice_287g"]["first_signed"] = a["ice_287g"]["agreements"][0]["signed"]
+        a["ice_287g"]["models"] = sorted({x["support_type"] for x in a["ice_287g"]["agreements"]})
+        if a["county"] is None and row["county"]:
+            a["county"] = COUNTY_FIXUPS.get(row["county"], row["county"])
+
     # OSM operator tags: volunteers sometimes record who runs a camera. Matched to the
     # roster by canonical name (a bare municipality resolves to its PD, a bare county
     # to its SO). Vendors are ignored; anything unmatched is reported, never guessed.
@@ -855,7 +900,12 @@ def main() -> None:
     wisdot = load_wisdot()
     population = load_population()
     usat = load_usatoday()
-    agencies, unmatched_operators = build_agencies(portals, edges, atlas, overlay, city_county, wisdot, cameras, usat)
+    ice = load_ice_287g()
+    agencies, unmatched_operators = build_agencies(portals, edges, atlas, overlay, city_county, wisdot, cameras, usat, ice)
+    with_ice = [a for a in agencies if a["ice_287g"]]
+    print(f"      ICE 287(g): {len(with_ice)} agencies ({len(ice['agreements'])} agreements); "
+          f"{sum(1 for a in with_ice if a['in_network'])} in the Flock network, "
+          f"{sum(1 for a in with_ice if a['portal'])} with a portal")
     with_usat = [a for a in agencies if a["usatoday"]]
     print(f"      USA TODAY records: {len(with_usat)} agencies, {sum(a['usatoday']['searches'] for a in with_usat):,} searches "
           f"({usat['coverage']['first_seen']} to {usat['coverage']['last_seen']}); "
@@ -898,6 +948,8 @@ def main() -> None:
         "wisdot_permits_by_year": dict(sorted(permits_by_year.items())),
         "stale_days_threshold": STALE_DAYS,
         "usatoday": {"retrieved": usat["retrieved"], "url": usat["url"], "coverage": usat["coverage"], "notes": usat["notes"]},
+        "ice_287g": {"retrieved": ice["retrieved"], "url": ice["url"], "agencies": len(with_ice), "agreements": len(ice["agreements"]),
+                     "in_network": sum(1 for a in with_ice if a["in_network"]), "national_rows": ice.get("national_rows")},
         "stale_portal_count": len(stale),
         "national": national,
         "attribution": {
@@ -906,6 +958,7 @@ def main() -> None:
             "atlas": "Agency records from EFF's Atlas of Surveillance (atlasofsurveillance.org)",
             "wisdot": "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)",
             "usatoday": "Search records from Flock usage audit logs obtained under public-records laws and analyzed by USA TODAY (data.usatoday.com/projects/flock-search)",
+            "ice_287g": "ICE 287(g) agreements from U.S. Immigration and Customs Enforcement's participating-agencies list (ice.gov/identify-and-arrest/287g)",
         },
     }
 

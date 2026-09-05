@@ -20,6 +20,8 @@ const CSV_COLS = [
   { label: "Searchable by", get: (a) => a.portal?.reach?.received?.total },
   { label: "USA TODAY searches on record 2023-2026", get: (a) => a.usatoday?.searches },
   { label: "USA TODAY high-frequency rows", get: (a) => a.usatoday?.flagged_rows },
+  { label: "ICE 287(g) models", get: (a) => a.ice_287g?.models.join("; ") },
+  { label: "ICE 287(g) first signed", get: (a) => a.ice_287g?.first_signed },
   { label: "WisDOT highway cameras", get: (a) => a.wisdot?.cameras },
   { label: "Volunteer-mapped cameras", get: (a) => a.osm_cameras || null },
   { label: "Sharing lists naming it", get: (a) => a.network_mentions || null },
@@ -56,7 +58,13 @@ const FILTERS = [
   { key: "dropped", label: "Dropped", test: (a) => a.status.value === "dropped" },
   { key: "unverified", label: "Unverified", test: (a) => a.status.value === "unknown" },
   { key: "silent", label: "Searches, no portal", test: (a) => a.usatoday?.searches > 0 && !a.portal },
+  { key: "ice", label: "ICE 287(g)", test: (a) => !!a.ice_287g },
 ];
+
+const iceTitle = (a) =>
+  `ICE 287(g) agreement${a.ice_287g.agreements.length === 1 ? "" : "s"}: ${a.ice_287g.agreements
+    .map((x) => `${x.support_type}${x.signed ? ` signed ${x.signed}` : ""}`)
+    .join("; ")} (ICE participating-agencies list)`;
 
 export default function AgencyTable({ agencies, searchDeltas, history, staleThreshold, externalQuery, generated }) {
   const [query, setQuery] = useState("");
@@ -215,6 +223,7 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
                     {a.status.value === "unknown" ? "unverified" : a.status.value}
                   </span>
                   {!a.status.derived && a.status.as_of && <span className="asof"> {a.status.as_of}</span>}
+                  {a.ice_287g && <span className="flag flag-ice" title={iceTitle(a)}>ICE 287(g)</span>}
                   {(a.status.value === "dropped" && a.portal) || isStale(a) ? (
                   <span className="flags">
                   {a.status.value === "dropped" && a.portal && (

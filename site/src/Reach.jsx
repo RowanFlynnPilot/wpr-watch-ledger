@@ -64,6 +64,7 @@ export default function Reach({ agencies }) {
                 <span className="reach-name">
                   {a.name}
                   {a.status.value === "dropped" && <span className="badge badge-dropped">dropped</span>}
+                  {a.ice_287g && <span className="flag flag-ice" title={`ICE 287(g): ${a.ice_287g.models.join(" + ")}`}>287(g)</span>}
                 </span>
                 <span
                   className="reach-bar"

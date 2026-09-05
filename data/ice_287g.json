@@ -1,0 +1,175 @@
+{
+ "source": "U.S. Immigration and Customs Enforcement, 287(g) Participating Agencies (ice.gov/identify-and-arrest/287g), Wisconsin rows",
+ "url": "https://www.ice.gov/identify-and-arrest/287g",
+ "file_url": "https://www.ice.gov/file-download/download/public/208912",
+ "retrieved": "2026-09-05",
+ "national_rows": 2472,
+ "notes": [
+  "One row per signed agreement; an agency with two rows holds two models (e.g. Warrant Service Officer plus Jail Enforcement Model).",
+  "Support types: Jail Enforcement Model (identify and process removable aliens in the jail), Task Force Model (limited immigration authority during routine duties), Warrant Service Officer (serve ICE administrative warrants in the jail).",
+  "Agency names as ICE lists them; joined to the roster by canonical name."
+ ],
+ "agreements": [
+  {
+   "agency": "Brown County Sheriff's Office",
+   "county": "Brown County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2020-10-16",
+   "moa": "link"
+  },
+  {
+   "agency": "Calumet County Sheriff's Office",
+   "county": "Calumet County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2025-07-31",
+   "moa": "link"
+  },
+  {
+   "agency": "Dunn County Sheriff's Office",
+   "county": "Dunn County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2026-02-10",
+   "moa": "link"
+  },
+  {
+   "agency": "Fond du Lac County Sheriff's Office",
+   "county": "Fond du Lac County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2020-06-05",
+   "moa": "link"
+  },
+  {
+   "agency": "Green Lake County Sheriff's Office",
+   "county": "Green Lake County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2026-02-17",
+   "moa": "link"
+  },
+  {
+   "agency": "Kenosha County Sheriff's Office",
+   "county": "Kenosha County",
+   "support_type": "Jail Enforcement Model",
+   "signed": "2026-01-07",
+   "moa": "link"
+  },
+  {
+   "agency": "Kewaunee County Sheriff's Office",
+   "county": "Kewaunee County",
+   "support_type": "Jail Enforcement Model",
+   "signed": "2025-09-22",
+   "moa": "link"
+  },
+  {
+   "agency": "Kewaunee County Sheriff's Office",
+   "county": "Kewaunee County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2025-06-11",
+   "moa": "link"
+  },
+  {
+   "agency": "Langlade County Sheriff's Office",
+   "county": "Langlade County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2026-04-13",
+   "moa": "link"
+  },
+  {
+   "agency": "Manitowoc County Sheriff's Office",
+   "county": "Manitowoc County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2020-06-05",
+   "moa": "link"
+  },
+  {
+   "agency": "Marathon County Sheriff's Office",
+   "county": "Marathon County",
+   "support_type": "Jail Enforcement Model",
+   "signed": "2025-11-04",
+   "moa": "link"
+  },
+  {
+   "agency": "Marquette County Sheriff's Office",
+   "county": "Marquette County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2020-05-21",
+   "moa": "link"
+  },
+  {
+   "agency": "Outagamie County Sheriff's Office",
+   "county": "Outagamie County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2025-05-08",
+   "moa": "link"
+  },
+  {
+   "agency": "Sauk County Sheriff's Office",
+   "county": "Sauk County",
+   "support_type": "Jail Enforcement Model",
+   "signed": "2026-02-10",
+   "moa": "link pending"
+  },
+  {
+   "agency": "Sauk County Sheriff's Office",
+   "county": "Sauk County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2025-12-18",
+   "moa": "link"
+  },
+  {
+   "agency": "Sheboygan County Sheriff's Office",
+   "county": "Sheboygan County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2020-02-27",
+   "moa": "link"
+  },
+  {
+   "agency": "Walworth County Sheriff's Office",
+   "county": "Walworth County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2026-02-17",
+   "moa": "link pending"
+  },
+  {
+   "agency": "Washington County Sheriff's Office",
+   "county": "Washington County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2025-03-03",
+   "moa": "link"
+  },
+  {
+   "agency": "Waukesha County Sheriff's Department",
+   "county": "Waukesha County",
+   "support_type": "Jail Enforcement Model",
+   "signed": "2020-06-10",
+   "moa": "link"
+  },
+  {
+   "agency": "Waukesha County Sheriff's Office",
+   "county": "Waukesha County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2025-05-13",
+   "moa": "link"
+  },
+  {
+   "agency": "Waushara County Sheriff's Office",
+   "county": "Waushara County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2020-06-08",
+   "moa": "link"
+  },
+  {
+   "agency": "Winnebago County Sheriff's Office",
+   "county": "Winnebago County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2025-03-03",
+   "moa": "link"
+  },
+  {
+   "agency": "Wood County Sheriff's Office",
+   "county": "Wood County",
+   "support_type": "Warrant Service Officer",
+   "signed": "2025-03-17",
+   "moa": "link"
+  }
+ ]
+}

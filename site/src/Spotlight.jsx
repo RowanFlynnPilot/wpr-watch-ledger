@@ -47,6 +47,12 @@ function Card({ a, usat }) {
         <Stat num={a.osm_cameras || null} label="cameras mapped by volunteers" title="OpenStreetMap cameras tagged with this operator" />
         <Stat num={a.network_mentions || null} label="sharing lists naming it" title="Other agencies' Flock sharing lists that name this agency" />
       </div>
+      {a.ice_287g && (
+        <p className="card-ice">
+          <strong>ICE 287(g):</strong> {a.ice_287g.agreements.map((x) => `${x.support_type}${x.signed ? `, signed ${x.signed}` : ""}`).join("; ")}.
+          Per ICE's participating-agencies list.
+        </p>
+      )}
       {a.status.note && <p className="card-note">{a.status.note}</p>}
       {flagged && (
         <p className="card-flag">

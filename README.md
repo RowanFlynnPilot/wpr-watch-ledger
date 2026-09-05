@@ -59,6 +59,9 @@ See CLAUDE.md for the row schema. Every row requires a source URL and an as-of d
 - Search records from Flock usage audit logs obtained under public-records laws and analyzed
   by USA TODAY (data.usatoday.com/projects/flock-search). `data/usatoday_flock_search.json`
   is a committed snapshot of the Wisconsin slice.
+- ICE 287(g) agreements from U.S. Immigration and Customs Enforcement's participating-agencies
+  list (ice.gov/identify-and-arrest/287g). `data/ice_287g.json` is a committed snapshot of the
+  Wisconsin rows.
 - State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin
   Open Records Law and mapped by Deflock Dane (deflockdane.org). `data/wisdot_permits.json`
   is a committed snapshot — refresh it when WisDOT releases new records, not on the cron.

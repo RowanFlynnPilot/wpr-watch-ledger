@@ -10,6 +10,8 @@ const TOP = 20;
 
 export default function SilentSearchers({ agencies, usat }) {
   const withRecords = agencies.filter((a) => a.usatoday && a.usatoday.searches > 0);
+  const ice = withRecords.filter((a) => a.ice_287g);
+  const iceSearches = ice.reduce((n, a) => n + a.usatoday.searches, 0);
   if (withRecords.length === 0) return null;
   const ranked = [...withRecords].sort((x, y) => y.usatoday.searches - x.usatoday.searches);
   const top = ranked.slice(0, TOP);
@@ -34,6 +36,12 @@ export default function SilentSearchers({ agencies, usat }) {
         searches were run by agencies that publish no portal at all. Of the {TOP} heaviest
         users, <strong>{topSilent}</strong> disclose nothing; <strong>{lead.name}</strong> alone
         ran {fmt(lead.usatoday.searches)}.
+        {ice.length > 0 && (
+          <>
+            {" "}<strong>{ice.length}</strong> of the agencies in these records are sheriff's offices
+            with ICE 287(g) agreements; between them they ran {fmt(iceSearches)} searches.
+          </>
+        )}
       </p>
       <div className="silent-key" aria-hidden="true">
         <span className="silent-key-item"><span className="silent-swatch silent-yes" /> Publishes no transparency portal</span>
@@ -46,6 +54,7 @@ export default function SilentSearchers({ agencies, usat }) {
             <span className="silent-name">
               {a.name}
               {a.status.value === "dropped" && <span className="badge badge-dropped">dropped</span>}
+              {a.ice_287g && <span className="flag flag-ice" title={`ICE 287(g): ${a.ice_287g.models.join(" + ")}`}>287(g)</span>}
             </span>
             <div>
               <span

@@ -1029,3 +1029,35 @@ tr.row-home td:first-child { font-weight: 700; }
 .cp-n { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-soft); }
 .cp-empty { font-size: 0.85rem; color: var(--ink-soft); padding: 0.4rem 0.2rem; }
 .cp-foot { font-family: var(--mono); font-size: 0.64rem; color: var(--ink-soft); margin: 0.4rem 0 0; }
+
+/* ICE 287(g) flag */
+.flag-ice { border-style: solid; border-color: var(--ink); color: var(--ink); background: var(--white); }
+.tip-ice { font-family: var(--mono); font-size: 0.7rem; color: var(--ink); border-left: 3px solid var(--ink); padding: 0.15rem 0.5rem; margin: 0 0 0.45rem; background: var(--cream); }
+.card-ice { font-size: 0.84rem; margin: 0 0 0.7rem; padding: 0.45rem 0.75rem; border-left: 3px solid var(--ink); background: var(--cream); }
+.silent-name .flag, .reach-name .flag { margin-left: 0.4rem; vertical-align: middle; }
+
+/* sharing list tools */
+.sharing-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-bottom: 0.6rem; }
+.sharing-tools .table-search { margin-bottom: 0; }
+.partner-hit { background: rgba(58, 134, 124, 0.14); font-weight: 600; }
+
+/* print: a clean, complete record on paper or PDF */
+@media print {
+  body { background: #fff; color: #000; font-size: 11pt; }
+  .page { max-width: none; padding: 0; }
+  .toolbar, .map-card, .cp, .table-tools, .table-tools-top, .table-hint, .dl, .link-btn, .graph-tools, .foot-brand .brand-badge { display: none !important; }
+  .camera-map { height: 420px; }
+  .table-scroll, .roster .table-scroll, .county-rollup .table-scroll { max-height: none; overflow: visible; border: none; }
+  table { min-width: 0; font-size: 9pt; }
+  th, td { padding: 0.25rem 0.4rem; }
+  th:first-child, td:first-child { position: static; box-shadow: none; }
+  .ledger-line { background: #2c6b62 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .tick, .badge, .reach-wi, .reach-out, .silent-bar > span, .permit-bar, .bar-fill, .we-chip, .flag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .sharing-row { break-inside: avoid; }
+  .sharing-row summary { list-style: none; }
+  details:not([open]) > *:not(summary) { display: none; }
+  section, footer { break-inside: auto; }
+  h2 { break-after: avoid; }
+  a[href^="http"]::after { content: ""; }
+  .tip { display: none !important; }
+}

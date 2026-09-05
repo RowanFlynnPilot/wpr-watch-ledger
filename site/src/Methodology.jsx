@@ -26,7 +26,7 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
     <footer className="methodology">
       <h2>Methodology &amp; sources</h2>
       <p className="method-dek">
-        Six datasets, none of them the ledger's own. Each is named, linked and dated here, and
+        Seven datasets, none of them the ledger's own. Each is named, linked and dated here, and
         every merged file behind this page is published in full.
       </p>
 
@@ -71,6 +71,15 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
           Sourced records of Wisconsin agencies documented using plate readers, with the formal
           agency names the roster prefers.
         </Source>
+        {meta.ice_287g && (
+          <Source eyebrow="ICE cooperation" name="ICE 287(g) participating agencies" href={meta.ice_287g.url} cadence={`Snapshot ${meta.ice_287g.retrieved} · re-downloaded when ICE updates the list`}>
+            ICE's own list of agencies with 287(g) agreements: {meta.ice_287g.agencies} Wisconsin sheriff's
+            offices holding {meta.ice_287g.agreements} agreements, {meta.ice_287g.in_network} of them in the Flock
+            network. Shown as a flag on the roster, the reach list and the silent searchers. A 287(g)
+            agreement says nothing about plate readers by itself; it matters here because other agencies'
+            sharing lists can put their cameras within reach of an agency that also works with ICE.
+          </Source>
+        )}
         <Source eyebrow="Population" name="Wisconsin Department of Administration estimates" href="https://doa.wi.gov/Pages/LocalGovtsGrants/Population_Estimates.aspx" cadence={`Official estimates as of ${counties.population_as_of}`}>
           County and municipal populations behind the coverage figure and the per-1,000-residents
           column. County spellings are validated against this list on every refresh.

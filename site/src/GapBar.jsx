@@ -98,6 +98,9 @@ export default function GapBar({ agencies, onPick }) {
               </>
             )}
           </dl>
+          {active.a.ice_287g && (
+            <div className="tip-ice">ICE 287(g): {active.a.ice_287g.models.join(" + ")}{active.a.ice_287g.first_signed ? `, since ${active.a.ice_287g.first_signed.slice(0, 4)}` : ""}</div>
+          )}
           {active.a.status.note && <div className="tip-note">{active.a.status.note.length > 140 ? active.a.status.note.slice(0, 137) + "…" : active.a.status.note}</div>}
           <div className="tip-hint">Click to find in the roster</div>
         </div>
