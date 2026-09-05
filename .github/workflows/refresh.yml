@@ -46,6 +46,9 @@ jobs:
             python pipeline/refresh.py
           }
 
+      - name: Audit refreshed data (blocks the commit on any failure)
+        run: python pipeline/audit.py
+
       - name: Commit refreshed data
         run: |
           git config user.name "watch-ledger-bot"
