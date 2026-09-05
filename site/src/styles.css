@@ -104,7 +104,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 /* stat strip */
 .stat-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
@@ -143,6 +143,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   margin-bottom: 0.45rem;
 }
 .stat-dropped .stat-num { color: var(--rust); }
+/* four tiles: a full row on wide screens, a 2 x 2 block at article width — never 3 + 1 */
+@media (max-width: 960px) {
+  .stat-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
 /* the 30-day ledger — statewide volume band, dressed as actual ledger paper:
    faint ruled lines and the traditional rust margin rule */
