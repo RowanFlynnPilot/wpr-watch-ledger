@@ -90,7 +90,9 @@ maps suffixes (Police Department -> pd, Sheriffs Office/bare Sheriff -> so), and
 leading "City of"/"Village of" (never "Town of": Town of Delavan PD and City of Delavan PD
 are different departments).
 "Marathon County Sheriff's Office" == "Marathon County WI SO" == "Marathon Co Sheriff".
-Display-name precedence: overlay > Atlas (formal) > portal/edge shorthand.
+Display-name precedence: overlay > Atlas (formal) > portal/edge shorthand, then `pretty_name()`
+applies one house style to every non-overlay name (Co -> County, trailing SO/PD/Hwy expanded,
+"Town Of" -> "Town of", curly apostrophes straightened). Overlay names only get the apostrophe fix.
 
 ## Design system (WPR)
 

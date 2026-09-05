@@ -714,6 +714,22 @@ def load_overlay() -> dict:
     return overlay
 
 
+def pretty_name(name: str, curated: bool = False) -> str:
+    """One house style for display names. Sources abbreviate differently ("Lafayette Co SO",
+    "Oconto County SO", "Sharon PD", curly apostrophes); keys are untouched, and overlay
+    names are curated so they only get the apostrophe fix."""
+    n = name.replace("\u2019", "'").replace("\u2018", "'")
+    n = re.sub(r"\s+", " ", n).strip()
+    if curated:
+        return n
+    n = re.sub(r"\bTown Of\b", "Town of", n)
+    n = re.sub(r"\bCo\.?(?= (?:SO|Hwy|Sheriff)\b)", "County", n)
+    n = re.sub(r"\bSO$", "Sheriff's Office", n)
+    n = re.sub(r"\bPD$", "Police Department", n)
+    n = re.sub(r"\bHwy$", "Highway Department", n)
+    return n
+
+
 def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict,
                    city_county: dict, wisdot: dict, cameras: dict, usat: dict, ice: dict) -> tuple[list[dict], list[dict]]:
     """Returns (roster, OSM operators that matched no roster agency)."""
@@ -864,6 +880,12 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
             a["county"] = f"{a['wisdot']['counties'][0]} County"
         if a["county"] in COUNTY_FIXUPS:
             a["county"] = COUNTY_FIXUPS[a["county"]]
+
+    # One house style for display names: sources abbreviate differently ("Lafayette Co SO",
+    # "Oconto County SO", "Sharon PD", curly apostrophes). Keys are untouched; overlay names
+    # are curated and only get the apostrophe fix.
+    for key, a in agencies.items():
+        a["name"] = pretty_name(a["name"], curated=key in overlay)
 
     result = sorted(agencies.values(), key=lambda a: ((a["portal"] is None), -(a["portal"]["cameras"] or 0) if a["portal"] else 0, a["name"]))
     if len(result) < 100:
