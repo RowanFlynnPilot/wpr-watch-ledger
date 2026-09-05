@@ -35,10 +35,10 @@ const COLUMNS = [
   { key: "county", label: "County", get: (a) => a.county || "" },
   { key: "status", label: "Status", get: (a) => a.status.value },
   { key: "cameras", label: "Cameras", title: "Cameras the agency reports on its own transparency portal", get: (a) => a.portal?.cameras ?? -1, numeric: true },
-  { key: "hwy", label: "Hwy cams", secondary: true, title: "Cameras permitted on state-highway right-of-way (WisDOT records)", get: (a) => a.wisdot?.cameras ?? -1, numeric: true },
-  { key: "mapped", label: "Mapped", secondary: true, title: "Cameras volunteers have tagged with this operator on OpenStreetMap", get: (a) => a.osm_cameras || -1, numeric: true },
   { key: "searches", label: "Searches, 30d", title: "Search sessions in the last 30 days, per the agency's transparency portal", get: (a) => a.portal?.searches_30d ?? -1, numeric: true },
   { key: "usat", label: "Searches on record", title: "Individual searches in Flock audit logs obtained by USA TODAY, cumulative Jan 2023 to Apr 2026. Not comparable to the 30-day portal figure.", get: (a) => a.usatoday?.searches ?? -1, numeric: true },
+  { key: "hwy", label: "Hwy cams", secondary: true, title: "Cameras permitted on state-highway right-of-way (WisDOT records)", get: (a) => a.wisdot?.cameras ?? -1, numeric: true },
+  { key: "mapped", label: "Mapped", secondary: true, title: "Cameras volunteers have tagged with this operator on OpenStreetMap", get: (a) => a.osm_cameras || -1, numeric: true },
   { key: "hit", label: "Hit rate", secondary: true, title: "Hot-list hits as a percentage of vehicles sighted, per the portal", get: rate, numeric: true },
   { key: "reach", label: "Searchable by", secondary: true, title: "Agencies nationwide whose searches can reach this agency's cameras (only some portals disclose this)", get: (a) => a.portal?.reach?.received?.total ?? -1, numeric: true },
   { key: "shared", label: "Shares with", secondary: true, get: (a) => a.portal?.shared_with_count ?? -1, numeric: true },
@@ -237,8 +237,6 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
                   ) : null}
                 </td>
                 <td className="cell-num">{fmt(a.portal?.cameras)}</td>
-                {!compact && <td className="cell-num">{fmt(a.wisdot?.cameras)}</td>}
-                {!compact && <td className="cell-num">{fmtZero(a.osm_cameras)}</td>}
                 <td className="cell-num cell-searches">
                   {fmt(a.portal?.searches_30d)}
                   {searchDeltas != null && searchDeltas[a.canonical] != null && searchDeltas[a.canonical] !== 0 && (
@@ -266,6 +264,8 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
                     </span>
                   )}
                 </td>
+                {!compact && <td className="cell-num">{fmt(a.wisdot?.cameras)}</td>}
+                {!compact && <td className="cell-num">{fmtZero(a.osm_cameras)}</td>}
                 {!compact && <td className="cell-num">{a.portal?.hit_rate == null ? "—" : `${a.portal.hit_rate}%`}</td>}
                 {!compact && <td className="cell-num">{fmt(a.portal?.reach?.received?.total)}</td>}
                 {!compact && <td className="cell-num">{fmt(a.portal?.shared_with_count)}</td>}
