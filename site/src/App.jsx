@@ -11,6 +11,7 @@ import Reach from "./Reach.jsx";
 import PermitTimeline from "./PermitTimeline.jsx";
 import SilentSearchers from "./SilentSearchers.jsx";
 import GapBar from "./GapBar.jsx";
+import Spotlight from "./Spotlight.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -218,39 +219,7 @@ export default function App() {
         )}
       </section>
 
-      <section className="spotlight" aria-label="Marathon County">
-        <h2>Marathon County</h2>
-        <div className="spotlight-cards">
-          {marathon.map((a) => (
-            <article key={a.canonical} className="card">
-              <h3>{a.name}</h3>
-              <p className="card-status">
-                <span className={`badge badge-${a.status.value}`}>{a.status.value}</span>
-                {a.status.as_of && <span className="asof"> as of {a.status.as_of}</span>}
-              </p>
-              {a.status.note && <p className="card-note">{a.status.note}</p>}
-              <p className="card-facts">
-                {a.portal
-                  ? `Publishes a transparency portal${a.portal.hand_read ? " (not indexed by Eyes On Flock)" : ""} · ${fmt(a.portal.cameras)} cameras · ${fmt(a.portal.searches_30d)} searches in 30 days · shares with ${fmt(a.portal.shared_with_count)} agencies`
-                  : "Does not publish a Flock transparency portal"}
-                {a.wisdot && ` · ${fmt(a.wisdot.cameras)} highway cameras permitted`}
-                {a.osm_cameras > 0 && ` · ${fmt(a.osm_cameras)} cameras mapped by volunteers`}
-                {a.network_mentions > 0 && ` · named in ${a.network_mentions} other agencies' sharing lists`}
-              </p>
-              {a.usatoday && (
-                <p className="card-facts card-usat">
-                  USA TODAY records: {fmt(a.usatoday.searches)} searches, {meta.usatoday.coverage.first_seen.slice(0, 4)}–{meta.usatoday.coverage.last_seen.slice(0, 4)}
-                  {a.usatoday.flagged_rows > 0 &&
-                    ` · ${a.usatoday.flagged_rows} of the nation's 5,000 highest-frequency plate searches, across ${a.usatoday.flagged_users} user${a.usatoday.flagged_users === 1 ? "" : "s"}; one plate searched ${fmt(a.usatoday.max_plate_count)} times over ${a.usatoday.flagged[0].days_active} days (stated reason: ${a.usatoday.flagged[0].reasons.slice(0, 2).join(", ").toLowerCase() || "none given"})`}
-                </p>
-              )}
-              {a.status.source && (
-                <a className="card-source" href={a.status.source} target="_blank" rel="noreferrer">Source</a>
-              )}
-            </article>
-          ))}
-        </div>
-      </section>
+      <Spotlight agencies={marathon} usat={meta.usatoday} />
 
       <section className="county-rollup" aria-label="County by county">
         <h2>County by county</h2>
