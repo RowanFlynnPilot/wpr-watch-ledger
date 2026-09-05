@@ -13,6 +13,17 @@ python pipeline/refresh.py
 cd site; npm install; npm run dev
 ```
 
+## Audit before publishing
+
+```
+python pipeline/audit.py
+```
+
+Read-only. Sixty cross-checks over `data/*.json` (meta vs files, roster integrity, history
+and edges vs portals, county rollup recomputed, USA TODAY and ICE joins, unmapped rings by
+brute force) and a printout of every headline figure the site derives, to compare against
+the page. Exits non-zero on any failure.
+
 ## Deploy
 
 1. Push to a new GitHub repo (`main` branch)
