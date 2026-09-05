@@ -928,3 +928,18 @@ tr.row-home td:first-child { font-weight: 700; }
 }
 .sg-center.hint { font-size: 8.5px; fill: var(--teal-deep); }
 .sharing-graph.pinned .sg-ring { stroke: var(--teal); stroke-dasharray: none; stroke-opacity: 0.5; }
+
+/* methodology */
+.method-dek { max-width: 44rem; font-size: 0.95rem !important; color: var(--ink) !important; margin-top: 0; }
+.src-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.2rem 0 1.4rem; }
+.src { background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--teal); padding: 0.9rem 1.1rem 0.8rem; display: flex; flex-direction: column; }
+.src-eyebrow { font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-soft); margin: 0 0 0.25rem !important; }
+.src-name { font-family: var(--display); font-weight: 600; font-size: 1.02rem; line-height: 1.25; margin: 0 0 0.35rem; }
+.src-name a { color: var(--ink); text-decoration: none; }
+.src-name a:hover { color: var(--teal-deep); text-decoration: underline; }
+.src-cadence { font-family: var(--mono); font-size: 0.66rem; color: var(--teal-deep); margin: 0 0 0.5rem !important; padding-bottom: 0.45rem; border-bottom: 1px dashed var(--line); }
+.src-body { font-size: 0.82rem !important; line-height: 1.5; margin: 0 !important; max-width: none !important; }
+.method-notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem 2rem; margin-bottom: 1.2rem; }
+.method-note h3 { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-soft); margin: 0 0 0.3rem; font-weight: 400; }
+.method-note p { margin: 0; }
+.method-standard { border-left: 3px solid var(--teal); padding: 0.5rem 0.9rem; background: var(--white); font-size: 0.9rem !important; color: var(--ink) !important; max-width: 46rem; }

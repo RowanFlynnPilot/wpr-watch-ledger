@@ -12,6 +12,7 @@ import PermitTimeline from "./PermitTimeline.jsx";
 import SilentSearchers from "./SilentSearchers.jsx";
 import GapBar from "./GapBar.jsx";
 import Spotlight from "./Spotlight.jsx";
+import Methodology from "./Methodology.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -283,69 +284,7 @@ export default function App() {
         <WhoElse agencies={agencies} operators={operators} />
       </section>
 
-      <footer className="methodology">
-        <h2>Methodology &amp; sources</h2>
-        <p>{meta.attribution.cameras}. Where volunteers tagged an operator, cameras are matched to
-          the roster by name; unmatched operators are listed as written, never guessed.</p>
-        <p>{meta.attribution.portals}. Flock stamps each portal with the date its figures last
-          changed; a portal frozen for more than {staleThreshold} days is flagged in the roster and
-          left out of the statewide 30-day totals.
-          {meta.hand_read_portal_count > 0 && (
-            <>
-              {" "}{meta.hand_read_portal_count === 1 ? "One portal" : `${meta.hand_read_portal_count} portals`} that Eyes On
-              Flock does not index ({withPortal.filter((a) => a.portal.hand_read).map((a) => a.name).join(", ")}) were
-              read by hand from Flock's site; they are marked with an asterisk in the roster and age out of the
-              totals on the same {staleThreshold}-day rule unless re-read.
-            </>
-          )} Inbound reach (who can search an agency's
-          cameras) is shown only for portals that publish that list, with Flock's own demo and
-          deactivated placeholders removed.</p>
-        <p>{meta.attribution.atlas}.</p>
-        {meta.usatoday && (
-          <p>
-            {meta.attribution.usatoday}. Wisconsin coverage: {fmt(meta.usatoday.coverage.searches)} searches by{" "}
-            {meta.usatoday.coverage.agencies} agencies and {fmt(meta.usatoday.coverage.users)} known users,{" "}
-            {meta.usatoday.coverage.first_seen} to {meta.usatoday.coverage.last_seen}; snapshot taken{" "}
-            {meta.usatoday.retrieved}. These are individual searches accumulated over the whole window,
-            not comparable to the portals' 30-day session counts, and an agency's total reflects the
-            audit logs USA TODAY was able to obtain. Flock withdrew the audit view from customers in
-            December 2025. High-frequency flags are USA TODAY's own frequency score; in their words, a
-            high score is not an accusation of wrongdoing.
-          </p>
-        )}
-        <p>
-          {meta.attribution.wisdot ||
-            "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)"}
-          . Snapshot dated {wisdot.snapshot_date}; refreshed when WisDOT releases new records.
-        </p>
-        <p>
-          Contract status for {meta.curated_count} agencies is hand-verified against published
-          reporting, linked per row. All other statuses are derived automatically: an agency is
-          marked active if it publishes a live portal, currently appears in other agencies'
-          sharing lists, or ran searches in USA TODAY's records, and unverified otherwise. Data refreshes weekly. Corrections:{" "}
-          <a href="https://wausaupilotandreview.com">contact the newsroom</a>.
-          {/* TODO(rowan): point this at the real corrections contact */}
-        </p>
-        <p>
-          This ledger holds itself to the standard it asks of police agencies: every dataset
-          behind this page — agencies, cameras, sharing edges, and weekly history snapshots —
-          is <a href="https://github.com/RowanFlynnPilot/wpr-watch-ledger/tree/main/data">public
-          and versioned on GitHub</a>, refreshed every Monday.
-        </p>
-        <a className="foot-brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">
-          <span>
-            <span className="foot-wordmark">
-              Wausau Pilot <span className="amp">&amp;</span> Review
-            </span>
-            <span className="foot-url">wausaupilotandreview.com</span>
-          </span>
-          <span
-            className="brand-badge foot-badge"
-            aria-hidden="true"
-            style={{ backgroundImage: `url(${import.meta.env.BASE_URL}wpr-badge.jpg)` }}
-          />
-        </a>
-      </footer>
+      <Methodology meta={meta} wisdot={wisdot} counties={counties} withPortal={withPortal} staleThreshold={staleThreshold} />
     </div>
   );
 }
