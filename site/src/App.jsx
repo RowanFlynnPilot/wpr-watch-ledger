@@ -14,6 +14,7 @@ import GapBar from "./GapBar.jsx";
 import Spotlight from "./Spotlight.jsx";
 import Methodology from "./Methodology.jsx";
 import Toolbar from "./Toolbar.jsx";
+import CountyPicker from "./CountyPicker.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -22,6 +23,8 @@ export default function App() {
   const [error, setError] = useState(null);
   // A tick in the gap bar was clicked: filter the roster to that agency and scroll to it.
   const [rosterQuery, setRosterQuery] = useState(null);
+  // Counties chosen in the picker above the map; empty means the whole state.
+  const [mapCounties, setMapCounties] = useState([]);
   const findInRoster = (a) => {
     setRosterQuery({ text: a.name, n: Date.now() });
     document.querySelector(".roster")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -29,17 +32,17 @@ export default function App() {
 
   useEffect(() => {
     Promise.all(
-      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits", "counties"].map((f) =>
+      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits", "counties", "wi_counties"].map((f) =>
         fetch(`${import.meta.env.BASE_URL}data/${f}.json`).then((r) => {
           if (!r.ok) throw new Error(`Failed to load ${f}.json (${r.status})`);
           return r.json();
         })
       )
     )
-      .then(([meta, cameras, agencies, history, edges, wisdot, counties]) =>
+      .then(([meta, cameras, agencies, history, edges, wisdot, counties, shapes]) =>
         setData({
           meta, cameras, agencies: agencies.agencies, operators: agencies.unmatched_operators || [],
-          history, edges: edges.edges, wisdot, counties,
+          history, edges: edges.edges, wisdot, counties, shapes,
         })
       )
       .catch((e) => setError(e.message));
@@ -48,7 +51,11 @@ export default function App() {
   if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
   if (!data) return <div className="loading">Loading the ledger…</div>;
 
-  const { meta, cameras, agencies, operators, history, edges, wisdot, counties } = data;
+  const { meta, cameras, agencies, operators, history, edges, wisdot, counties, shapes } = data;
+  const countyNames = counties.counties.map((c) => c.name).sort();
+  const countyCounts = {};
+  for (const c of cameras.cameras) if (c.county) (countyCounts[c.county] ||= { dots: 0, rings: 0 }).dots++;
+  for (const w of wisdot.cameras) { const k = w.county ? `${w.county} County` : null; if (k) (countyCounts[k] ||= { dots: 0, rings: 0 }).rings++; }
   const coveredPct = Math.round((100 * counties.covered_population) / counties.state_population);
   const staleThreshold = meta.stale_days_threshold ?? 45;
   const isStale = (a) => a.portal?.stale_days != null && a.portal.stale_days > staleThreshold;
@@ -208,7 +215,8 @@ export default function App() {
 
       <section className="map-section" aria-label="Camera map">
         <h2>Every mapped camera</h2>
-        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} />
+        <CountyPicker counties={countyNames} selected={mapCounties} onChange={setMapCounties} counts={countyCounts} />
+        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} selectedCounties={mapCounties} shapes={shapes} />
         <p className="map-caption">
           Dots are community-reported by volunteers to OpenStreetMap via the DeFlock project and
           are incomplete — the true number of cameras is higher. Rings are official: cameras

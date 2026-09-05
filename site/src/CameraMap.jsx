@@ -34,24 +34,19 @@ function findUnmapped(cameras, wisdotCameras) {
   });
 }
 
-export default function CameraMap({ cameras, wisdotCameras }) {
+export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [], shapes }) {
   const el = useRef(null);
   const mapRef = useRef(null);
   const layers = useRef({});
   const meRef = useRef(null);
+  const outlineRef = useRef(null);
   const [show, setShow] = useState({ flock: true, other: true, wisdot: true, unmappedOnly: false });
   const [view, setView] = useState("state");
-  const [county, setCounty] = useState("");
   const [locating, setLocating] = useState(false);
   const [locError, setLocError] = useState(null);
 
   const unmapped = useMemo(() => findUnmapped(cameras, wisdotCameras), [cameras, wisdotCameras]);
   const unmappedIds = useMemo(() => new Set(unmapped.map((w) => w.permit_id || `${w.lat},${w.lon}`)), [unmapped]);
-  const counties = useMemo(() => {
-    const m = new Map();
-    for (const w of wisdotCameras) if (w.county) (m.get(w.county) || m.set(w.county, []).get(w.county)).push(w);
-    return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  }, [wisdotCameras]);
   const flockCount = cameras.filter((c) => c.manufacturer === "Flock Safety").length;
 
   useEffect(() => {
@@ -87,6 +82,7 @@ export default function CameraMap({ cameras, wisdotCameras }) {
           (c.direction ? `<p class="pop-row"><span>Facing</span>${esc(c.direction)}</p>` : "") +
           `<p class="pop-link"><a href="https://www.openstreetmap.org/node/${c.id}" target="_blank" rel="noreferrer">View on OpenStreetMap ↗</a></p>`
       );
+      m.options.county = c.county || null;
       dots.push(m);
       (isFlock ? flock : other).addLayer(m);
     }
@@ -98,6 +94,7 @@ export default function CameraMap({ cameras, wisdotCameras }) {
         fillColor: "#FFFDF8", fillOpacity: 0,
       });
       m.options.unmapped = isUnmapped;
+      m.options.county = w.county ? `${w.county} County` : null;
       m.bindPopup(
         `<p class="pop-kicker">WisDOT-permitted camera${isUnmapped ? " · not yet on the volunteer map" : ""}</p>` +
           `<p class="pop-title">${esc(w.owner)}</p>` +
@@ -109,7 +106,7 @@ export default function CameraMap({ cameras, wisdotCameras }) {
       rings.push(m);
       wisdot.addLayer(m);
     }
-    layers.current = { flock, other, wisdot, rings };
+    layers.current = { flock, other, wisdot, rings, dots };
     flock.addTo(map); other.addTo(map); wisdot.addTo(map);
 
     // Marker size follows zoom: at the statewide view 759 rings and 2,100 dots
@@ -138,25 +135,34 @@ export default function CameraMap({ cameras, wisdotCameras }) {
     sync(ly.flock, show.flock);
     sync(ly.other, show.other);
     sync(ly.wisdot, show.wisdot);
+    const inSel = (m) => selectedCounties.length === 0 || selectedCounties.includes(m.options.county);
     for (const m of ly.rings) {
-      const hide = show.unmappedOnly && !m.options.unmapped;
+      const hide = (show.unmappedOnly && !m.options.unmapped) || !inSel(m);
       m.setStyle({ opacity: hide ? 0 : 1 });
-      if (hide) m.off("click");
     }
-  }, [show]);
+    for (const m of ly.dots) {
+      const hide = !inSel(m);
+      m.setStyle({ opacity: hide ? 0 : 1, fillOpacity: hide ? 0 : 0.75 });
+    }
+  }, [show, selectedCounties]);
+
+  // Selected counties: draw their outlines and fit the view to them.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !shapes) return;
+    if (outlineRef.current) { outlineRef.current.remove(); outlineRef.current = null; }
+    if (selectedCounties.length === 0) return;
+    const fc = { type: "FeatureCollection", features: shapes.features.filter((f) => selectedCounties.includes(f.properties.name)) };
+    const layer = L.geoJSON(fc, { style: { color: "#2C6B62", weight: 1.75, dashArray: "4 3", fill: true, fillColor: "#3A867C", fillOpacity: 0.05, interactive: false } }).addTo(map);
+    outlineRef.current = layer;
+    map.fitBounds(layer.getBounds().pad(0.08), { maxZoom: 12 });
+    setTimeout(() => setView("counties"), 0);
+  }, [selectedCounties, shapes]);
 
   const zoomTo = (key) => {
-    setView(key); setCounty("");
+    setView(key);
     mapRef.current?.fitBounds(key === "marathon" ? MARATHON_BOUNDS : WI_BOUNDS);
     setTimeout(() => setView(key), 0);
-  };
-  const zoomCounty = (name) => {
-    setCounty(name);
-    const rows = counties.find((c) => c[0] === name)?.[1];
-    if (!rows || !mapRef.current) return;
-    const b = L.latLngBounds(rows.map((w) => [w.lat, w.lon])).pad(0.25);
-    mapRef.current.fitBounds(b, { maxZoom: 12 });
-    setTimeout(() => setView("county"), 0);
   };
   const nearMe = () => {
     if (!navigator.geolocation) return setLocError("Location is not available in this browser.");
@@ -169,7 +175,7 @@ export default function CameraMap({ cameras, wisdotCameras }) {
         meRef.current = L.circleMarker([lat, lon], { radius: 8, color: "#B5543B", fillColor: "#B5543B", fillOpacity: 0.35, weight: 2 })
           .bindPopup('<p class="pop-title">You are here</p>').addTo(map);
         map.setView([lat, lon], 12);
-        setLocating(false); setCounty("");
+        setLocating(false);
         setTimeout(() => setView("me"), 0);
       },
       () => { setLocating(false); setLocError("Could not get your location. Check the browser's permission for this site."); },
@@ -189,12 +195,6 @@ export default function CameraMap({ cameras, wisdotCameras }) {
             {locating ? "Locating…" : "Near me"}
           </button>
         </div>
-        <select className="map-county" value={county} onChange={(e) => zoomCounty(e.target.value)} aria-label="Zoom to a county">
-          <option value="">Zoom to a county…</option>
-          {counties.map(([name, rows]) => (
-            <option key={name} value={name}>{name} · {rows.length} permitted</option>
-          ))}
-        </select>
         {locError && <p className="map-error">{locError}</p>}
         <div className="map-card-legend">
           <label className="legend-item legend-toggle">

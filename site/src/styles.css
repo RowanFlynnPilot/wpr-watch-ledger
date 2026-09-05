@@ -982,3 +982,41 @@ tr.row-home td:first-child { font-weight: 700; }
 .toolbar-note { flex-basis: 100%; margin: 0; font-family: var(--mono); font-size: 0.72rem; color: var(--teal-deep); }
 .foot-credit { font-size: 0.85rem !important; color: var(--ink-soft) !important; margin: 1.2rem 0 0.2rem; }
 .foot-credit strong { color: var(--ink); }
+
+/* county picker above the map */
+.cp { position: relative; margin: 0 0 0.6rem; }
+.cp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; }
+.cp-btn { text-transform: none; letter-spacing: 0; font-size: 0.8rem; }
+.cp-chips { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
+.cp-chip {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--white);
+  background: var(--teal-deep);
+  border: 1px solid var(--teal-deep);
+  border-radius: 2px;
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
+}
+.cp-chip:hover { background: var(--rust); border-color: var(--rust); }
+.cp-panel {
+  position: absolute;
+  z-index: 1100;
+  top: calc(100% + 6px);
+  left: 0;
+  width: min(22rem, calc(100vw - 2.5rem));
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--teal);
+  box-shadow: 0 8px 22px rgba(31, 36, 33, 0.16);
+  padding: 0.6rem;
+}
+.cp-search { width: 100%; font-family: var(--body); font-size: 0.9rem; padding: 0.4rem 0.55rem; border: 1px solid var(--line); background: var(--cream); margin-bottom: 0.4rem; }
+.cp-list { list-style: none; margin: 0; padding: 0; max-height: 16rem; overflow-y: auto; }
+.cp-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.2rem; font-size: 0.88rem; cursor: pointer; }
+.cp-item:hover { background: var(--cream); }
+.cp-item input { accent-color: var(--teal-deep); margin: 0; }
+.cp-name { flex: 1; }
+.cp-n { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-soft); }
+.cp-empty { font-size: 0.85rem; color: var(--ink-soft); padding: 0.4rem 0.2rem; }
+.cp-foot { font-family: var(--mono); font-size: 0.64rem; color: var(--ink-soft); margin: 0.4rem 0 0; }

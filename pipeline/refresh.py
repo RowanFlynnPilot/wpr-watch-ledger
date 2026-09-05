@@ -381,6 +381,57 @@ def resolve_county(canonical: str, city_county: dict) -> str | None:
     return city_county.get(muni)
 
 
+# ---------------------------------------------------------------- county boundaries
+
+def load_county_shapes() -> dict:
+    """Committed snapshot of Wisconsin county boundaries (Census cartographic
+    boundaries, simplified). Used to give each community-mapped camera a county;
+    names must match the DOA list exactly."""
+    path = DATA / "wi_counties.json"
+    if not path.exists():
+        raise RuntimeError("data/wi_counties.json is missing; the county boundary snapshot is required.")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    feats = doc.get("features")
+    if not isinstance(feats, list) or len(feats) != 72:
+        raise RuntimeError(f"wi_counties.json must hold 72 county features, got {len(feats) if isinstance(feats, list) else 'none'}")
+    for f in feats:
+        if f["geometry"]["type"] != "MultiPolygon" or not f["properties"].get("name", "").endswith(" County"):
+            raise RuntimeError(f"wi_counties.json bad feature: {f.get('properties')}")
+    return doc
+
+
+def _in_ring(lon: float, lat: float, ring: list) -> bool:
+    inside = False
+    j = len(ring) - 1
+    for i in range(len(ring)):
+        xi, yi = ring[i]
+        xj, yj = ring[j]
+        if (yi > lat) != (yj > lat) and lon < (xj - xi) * (lat - yi) / ((yj - yi) or 1e-12) + xi:
+            inside = not inside
+        j = i
+    return inside
+
+
+def county_of(lon: float, lat: float, shapes: dict, bboxes: list) -> str | None:
+    for name, (minx, miny, maxx, maxy), polys in bboxes:
+        if not (minx <= lon <= maxx and miny <= lat <= maxy):
+            continue
+        for poly in polys:
+            if _in_ring(lon, lat, poly[0]) and not any(_in_ring(lon, lat, hole) for hole in poly[1:]):
+                return name
+    return None
+
+
+def county_index(shapes: dict) -> list:
+    out = []
+    for f in shapes["features"]:
+        polys = f["geometry"]["coordinates"]
+        xs = [x for poly in polys for ring in poly for x, _ in ring]
+        ys = [y for poly in polys for ring in poly for _, y in ring]
+        out.append((f["properties"]["name"], (min(xs), min(ys), max(xs), max(ys)), polys))
+    return out
+
+
 # ---------------------------------------------------------------- population
 
 def load_population() -> dict:
@@ -793,6 +844,12 @@ def main() -> None:
     print(f"      {len(atlas)} sourced records")
 
     print("[4/5] Merging with curated status overlay + county lookup + WisDOT permits...")
+    shapes = load_county_shapes()
+    idx = county_index(shapes)
+    for c in cameras["cameras"]:
+        c["county"] = county_of(c["lon"], c["lat"], shapes, idx)
+    located = sum(1 for c in cameras["cameras"] if c["county"])
+    print(f"      {located} of {len(cameras['cameras'])} mapped cameras placed in a county by boundary")
     overlay = load_overlay()
     city_county = load_city_county()
     wisdot = load_wisdot()

@@ -44,6 +44,11 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   NEVER put these cumulative counts in the same column as, or add them to, the portals'
   30-day session figures. Attribute USA TODAY. Flock withdrew the audit view in Dec 2025,
   so this does not refresh; re-snapshot only if USA TODAY republishes.
+- `data/wi_counties.json` — COMMITTED SNAPSHOT of Wisconsin county boundaries (Census
+  cartographic boundary files via plotly/datasets, Douglas-Peucker simplified to 0.0015°,
+  names normalized to the DOA list). Validated at build (72 MultiPolygon features). Each
+  community-mapped camera gets `county` by point-in-polygon in refresh.py; the site's
+  county picker filters dots and rings by it and draws the outlines.
 - `data/wi_population.json` — COMMITTED SNAPSHOT of WI DOA official final population
   estimates (state/counties/places/towns). Joined at build into `data/counties.json`
   (per-county rollup + statewide coverage); county spellings are validated against DOA's
@@ -68,7 +73,7 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   demanding an API key in 2026 (tiles render "API KEY REQUIRED") and are being retired;
   do not switch back. Every chart (sparklines, week-by-week, reach bars, permit timeline,
   inner-circle graph) is plain SVG/CSS — no chart library.
-  `cpdata.mjs` copies `../data/*.json` into `public/data/` on every dev/build.
+  `cpdata.mjs` copies the listed `../data/*.json` files into `public/data/` on every dev/build — add any new data file to that list or the site gets index.html back as JSON.
 
 ## Name matching
 
