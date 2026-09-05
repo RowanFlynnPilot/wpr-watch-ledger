@@ -105,8 +105,8 @@ export default function App() {
         <p className="dek">
           Automated license plate readers photograph every passing vehicle and log it in databases
           searchable by police statewide. This ledger tracks every community-mapped camera in
-          Wisconsin, every agency in the Flock Safety network, and — critically — which agencies
-          let the public see how the system is used.
+          Wisconsin, every agency in the Flock Safety network, who actually runs the searches,
+          and — critically — which agencies let the public see how the system is used.
         </p>
         <p className="updated">Data refreshed {updated}</p>
       </header>

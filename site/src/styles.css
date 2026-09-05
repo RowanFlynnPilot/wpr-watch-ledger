@@ -593,6 +593,9 @@ tbody tr:hover td { background: var(--cream); }
 .flag-stale { color: var(--rust); border-color: var(--rust); }
 .flag-freq { border-style: solid; color: var(--ink); }
 .cell-usat { white-space: nowrap; }
+/* the USA TODAY column is a different measure from its neighbours: tint it */
+th.th-usat, td.cell-usat, tbody tr:nth-child(even) td.cell-usat { background: #efe9dc; }
+tbody tr:hover td.cell-usat { background: #e9e2d2; }
 .card-usat { border-top: 1px dashed var(--line); padding-top: 0.5rem; }
 
 /* the silent searchers */

@@ -130,6 +130,7 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
                 <th
                   key={c.key}
                   scope="col"
+                  className={c.key === "usat" ? "th-usat" : undefined}
                   aria-sort={sort.key === c.key ? (sort.dir === 1 ? "ascending" : "descending") : undefined}
                 >
                   <button className="th-sort" title={c.title} onClick={() => toggleSort(c.key)}>
