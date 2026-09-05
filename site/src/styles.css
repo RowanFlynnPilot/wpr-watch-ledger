@@ -943,3 +943,24 @@ tr.row-home td:first-child { font-weight: 700; }
 .method-note h3 { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-soft); margin: 0 0 0.3rem; font-weight: 400; }
 .method-note p { margin: 0; }
 .method-standard { border-left: 3px solid var(--teal); padding: 0.5rem 0.9rem; background: var(--white); font-size: 0.9rem !important; color: var(--ink) !important; max-width: 46rem; }
+
+/* toolbar under the masthead */
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1rem; margin: -1.4rem 0 2rem; padding: 0.6rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.jump { display: flex; flex-wrap: wrap; gap: 0.25rem 0.2rem; }
+.jump-link {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  padding: 0.25rem 0.45rem;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.jump-link:hover, .jump-link:focus-visible { color: var(--teal-deep); background: var(--white); }
+.toolbar-actions { display: flex; gap: 0.5rem; }
+.toolbar-note { flex-basis: 100%; margin: 0; font-family: var(--mono); font-size: 0.72rem; color: var(--teal-deep); }
+.foot-credit { font-size: 0.85rem !important; color: var(--ink-soft) !important; margin: 1.2rem 0 0.2rem; }
+.foot-credit strong { color: var(--ink); }

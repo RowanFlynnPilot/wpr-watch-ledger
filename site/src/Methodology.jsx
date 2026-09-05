@@ -106,6 +106,10 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
         versioned on GitHub</a>, refreshed every Monday. Both tables above export to CSV.
       </p>
 
+      <p className="foot-credit">
+        Reporting tool developed by <strong>Rowan Flynn</strong> for Wausau Pilot &amp; Review.
+      </p>
+
       <a className="foot-brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">
         <span>
           <span className="foot-wordmark">

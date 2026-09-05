@@ -13,6 +13,7 @@ import SilentSearchers from "./SilentSearchers.jsx";
 import GapBar from "./GapBar.jsx";
 import Spotlight from "./Spotlight.jsx";
 import Methodology from "./Methodology.jsx";
+import Toolbar from "./Toolbar.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -104,7 +105,7 @@ export default function App() {
           </span>
         </a>
         <div className="rule-double" aria-hidden="true" />
-        <p className="eyebrow">A newsroom data project</p>
+        <p className="eyebrow">A newsroom data project · developed by Rowan Flynn</p>
         <h1>The Watch Ledger</h1>
         <p className="dek">
           Automated license plate readers photograph every passing vehicle and log it in databases
@@ -114,6 +115,8 @@ export default function App() {
         </p>
         <p className="updated">Data refreshed {updated}</p>
       </header>
+
+      <Toolbar title="The Watch Ledger — Wausau Pilot & Review" />
 
       <section className="stat-strip" aria-label="Key figures">
         <div className="stat">
