@@ -2,13 +2,18 @@ import React, { useMemo, useState } from "react";
 
 // The inner circle: the portal-publishing agencies arranged on a ring, with a
 // chord wherever one names another among its Wisconsin sharing partners.
-// Hand-rolled SVG — no graph library.
+// Hand-rolled SVG — no graph library. Labels run along their spokes so the ring
+// stays legible past ~50 agencies.
 
 const short = (name) =>
   name
     .replace("University of Wisconsin-Madison Police Department", "UW-Madison PD")
+    .replace("Concordia University Wisconsin", "Concordia Univ.")
     .replace(" Police Department", " PD")
-    .replace(" Sheriff's Office", " SO");
+    .replace(" Sheriff's Office", " SO")
+    .replace("City of ", "");
+
+const W = 760, H = 640, CX = W / 2, CY = H / 2, R = 200;
 
 export default function SharingGraph({ agencies, edges }) {
   const portals = agencies.filter((a) => a.portal);
@@ -16,21 +21,21 @@ export default function SharingGraph({ agencies, edges }) {
     const inRing = new Set(portals.map((p) => p.canonical));
     const idx = new Map(portals.map((p, i) => [p.canonical, i]));
     const n = portals.length;
-    const cx = 350, cy = 250, R = 168;
     const nodes = portals.map((p, i) => {
       const ang = (2 * Math.PI * i) / n - Math.PI / 2;
-      const cos = Math.cos(ang), sin = Math.sin(ang);
+      const deg = (ang * 180) / Math.PI;
+      const partners = (edges[p.canonical] || []).length;
       return {
         i,
         canonical: p.canonical,
         name: p.name,
-        partners: (edges[p.canonical] || []).length,
+        partners,
         dropped: p.status.value === "dropped",
-        x: cx + R * cos,
-        y: cy + R * sin,
-        labelX: cx + (R + 13) * cos,
-        labelY: cy + (R + 13) * sin + (Math.abs(cos) < 0.25 ? (sin < 0 ? -3 : 9) : 3),
-        anchor: cos > 0.25 ? "start" : cos < -0.25 ? "end" : "middle",
+        x: CX + R * Math.cos(ang),
+        y: CY + R * Math.sin(ang),
+        deg,
+        flip: Math.cos(ang) < 0,
+        r: 2.5 + Math.sqrt(partners) * 0.42,
       };
     });
     const seen = new Set();
@@ -55,12 +60,13 @@ export default function SharingGraph({ agencies, edges }) {
       : new Set(links.filter((l) => l.a === hover || l.b === hover).flatMap((l) => [l.a, l.b]));
   const nodeActive = (i) => adjacent == null || adjacent.has(i) || i === hover;
   const linkActive = (l) => hover == null || l.a === hover || l.b === hover;
+  const hovered = hover == null ? null : nodes[hover];
 
   return (
     <>
       <div className="graph-scroll">
         <svg
-          viewBox="0 0 700 500"
+          viewBox={`0 0 ${W} ${H}`}
           className="sharing-graph"
           role="img"
           aria-label={`Sharing between the ${portals.length} portal agencies: ${links.length} connections, ${mutualCount} of them mutual`}
@@ -85,28 +91,40 @@ export default function SharingGraph({ agencies, edges }) {
               <circle
                 cx={nd.x}
                 cy={nd.y}
-                r={3 + Math.sqrt(nd.partners) * 0.55}
+                r={nd.r}
                 className={`sg-node${nd.dropped ? " dropped" : ""}${nodeActive(nd.i) ? "" : " dim"}`}
               >
                 <title>{`${nd.name} — ${nd.partners} Wisconsin partners${nd.dropped ? " · announced dropping Flock" : ""}`}</title>
               </circle>
-              <text
-                x={nd.labelX}
-                y={nd.labelY}
-                textAnchor={nd.anchor}
-                className={`sg-label${nodeActive(nd.i) ? "" : " dim"}`}
-              >
-                {short(nd.name)}
-              </text>
+              <g transform={`translate(${CX} ${CY}) rotate(${nd.deg})`}>
+                <text
+                  x={nd.flip ? -(R + nd.r + 6) : R + nd.r + 6}
+                  y={0}
+                  transform={nd.flip ? "rotate(180)" : undefined}
+                  textAnchor={nd.flip ? "end" : "start"}
+                  dominantBaseline="middle"
+                  className={`sg-label${nodeActive(nd.i) ? "" : " dim"}${hover === nd.i ? " hot" : ""}`}
+                >
+                  {short(nd.name)}
+                </text>
+              </g>
             </g>
           ))}
+          <text x={CX} y={CY - 8} textAnchor="middle" className="sg-center">
+            {hovered ? short(hovered.name) : `${portals.length} portal agencies`}
+          </text>
+          <text x={CX} y={CY + 10} textAnchor="middle" className="sg-center sub">
+            {hovered
+              ? `${hovered.partners} Wisconsin partners · ${links.filter((l) => l.a === hover || l.b === hover).length} inside the circle`
+              : `${links.length} connections · ${mutualCount} mutual`}
+          </text>
         </svg>
       </div>
       <p className="gap-caption">
         Each dot is a portal agency, sized by how many Wisconsin partners it lists. A teal
-        line means both agencies name each other; a gray line is one-way; a rust ring marks an agency that has announced dropping Flock.{" "}
-        {links.length} connections among the {portals.length}, {mutualCount} mutual. Hover or
-        tap a dot to isolate its connections.
+        line means both agencies name each other; a gray line is one-way; a rust ring marks an
+        agency that has announced dropping Flock. {links.length} connections among the{" "}
+        {portals.length}, {mutualCount} mutual. Hover or tap a dot to isolate its connections.
       </p>
     </>
   );

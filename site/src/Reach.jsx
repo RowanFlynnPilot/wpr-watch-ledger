@@ -12,6 +12,9 @@ export default function Reach({ agencies }) {
     .filter((a) => a.portal.reach && a.portal.reach.received)
     .sort((x, y) => y.portal.reach.received.total - x.portal.reach.received.total);
   if (disclosing.length === 0) return null;
+  const SHOW = 16;
+  const shown = disclosing.slice(0, SHOW);
+  const rest = disclosing.slice(SHOW);
   const max = disclosing[0].portal.reach.received.total;
   const top = disclosing[0];
   const outboundOutOfState = withPortal.filter((a) => a.portal.reach?.shared && a.portal.reach.shared.out_of_state > 0);
@@ -34,7 +37,7 @@ export default function Reach({ agencies }) {
         <span className="reach-key-item"><span className="reach-swatch reach-out" /> Out-of-state agencies</span>
       </div>
       <div className="reach-rows">
-        {disclosing.map((a) => {
+        {shown.map((a) => {
           const r = a.portal.reach.received;
           return (
             <div className="reach-row" key={a.canonical}>
@@ -59,6 +62,12 @@ export default function Reach({ agencies }) {
           );
         })}
       </div>
+      {rest.length > 0 && (
+        <p className="reach-rest">
+          Also disclosing, in the roster below:{" "}
+          {rest.map((a, i) => `${a.name} (${fmt(a.portal.reach.received.total)})`).join(", ")}.
+        </p>
+      )}
       <p className="gap-caption">
         The other {withPortal.length - disclosing.length} portals publish only whom they share
         with, not who can reach them. Outbound, {outboundOutOfState.length} of the{" "}
