@@ -214,7 +214,7 @@ export default function App() {
           are incomplete — the true number of cameras is higher. Rings are official: cameras
           permitted by the Wisconsin DOT on state-highway right-of-way, from records released
           under the state Open Records Law. A ring with no dot inside it is a camera the
-          volunteers haven't found yet. Volunteers tagged an operator on{" "}
+          volunteers haven't found yet. Tick the last box in the map's legend to show only those. Volunteers tagged an operator on{" "}
           {fmt(cameras.cameras.filter((c) => c.operator).length)} of the dots; {fmt(mappedAttributed)}{" "}
           of those resolve to a roster agency and show in its "Mapped" column below.
         </p>

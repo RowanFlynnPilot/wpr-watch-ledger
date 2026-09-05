@@ -347,7 +347,25 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .legend-flock { background: #3a867c; border: 1.25px solid #2c6b62; }
 .legend-other { background: #b9b9b2; border: 1.25px solid #6b6b66; }
 .legend-official { background: transparent; border: 1.75px solid var(--ink); }
-.leaflet-popup-content { font-family: var(--body); font-size: 0.85rem; }
+.leaflet-popup-content-wrapper { border-radius: 2px; background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--teal); box-shadow: 0 6px 18px rgba(31, 36, 33, 0.16); }
+.leaflet-popup-tip { background: var(--white); }
+.leaflet-popup-content { font-family: var(--body); font-size: 0.85rem; margin: 0.6rem 0.85rem 0.55rem; line-height: 1.4; }
+.leaflet-popup-content p { margin: 0 0 0.25rem; }
+.pop-kicker { font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
+.pop-title { font-family: var(--display); font-weight: 600; font-size: 1rem; line-height: 1.2; margin-bottom: 0.4rem !important; }
+.pop-row { font-size: 0.8rem; }
+.pop-row span { font-family: var(--mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); display: inline-block; min-width: 4.2rem; }
+.pop-link { font-size: 0.8rem; margin-top: 0.35rem !important; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--ink-soft); }
+.map-county { width: 100%; margin: 0 0 0.5rem; font-family: var(--body); font-size: 0.8rem; color: var(--ink); background: var(--white); border: 1px solid var(--line); padding: 0.25rem 0.35rem; }
+.map-error { margin: 0 0 0.4rem; color: var(--rust); font-size: 0.66rem; max-width: 14rem; }
+.map-card-zoom button:disabled { opacity: 0.6; cursor: wait; }
+.legend-n { color: var(--ink-soft); margin-left: 0.15rem; }
+.legend-sub { margin-left: 1rem; font-size: 0.66rem; }
+.legend-sub.off { opacity: 0.5; }
+.legend-unmapped { background: transparent; border: 1.75px solid var(--rust); }
+.leaflet-control-scale-line { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-soft); border-color: var(--ink-soft); background: rgba(255, 253, 248, 0.8); }
+@media (max-width: 560px) { .map-card { max-width: 12.5rem; padding: 0.4rem 0.5rem 0.5rem; } .map-county { font-size: 0.72rem; } }
 
 /* marathon spotlight */
 .spotlight { margin-bottom: 3rem; }
