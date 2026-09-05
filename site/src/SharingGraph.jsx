@@ -11,9 +11,18 @@ const short = (name) =>
     .replace("Concordia University Wisconsin", "Concordia Univ.")
     .replace(" Police Department", " PD")
     .replace(" Sheriff's Office", " SO")
+    .replace(" County", " Co.")
     .replace("City of ", "");
 
-const W = 760, H = 640, CX = W / 2, CY = H / 2, R = 200;
+const W = 760, H = 700, CX = W / 2, CY = H / 2, R = 205;
+
+// A chord bent gently toward the center: the two agencies stay identifiable at
+// the rim while the bundle of lines separates instead of piling through the middle.
+const chord = (a, b) => {
+  const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+  const qx = mx + (CX - mx) * 0.45, qy = my + (CY - my) * 0.45;
+  return `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${qx.toFixed(1)} ${qy.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+};
 
 export default function SharingGraph({ agencies, edges }) {
   const portals = agencies.filter((a) => a.portal);
@@ -71,14 +80,12 @@ export default function SharingGraph({ agencies, edges }) {
           role="img"
           aria-label={`Sharing between the ${portals.length} portal agencies: ${links.length} connections, ${mutualCount} of them mutual`}
         >
+          <circle cx={CX} cy={CY} r={R} className="sg-ring" />
           {links.map((l) => (
-            <line
+            <path
               key={`${l.a}:${l.b}`}
-              x1={nodes[l.a].x}
-              y1={nodes[l.a].y}
-              x2={nodes[l.b].x}
-              y2={nodes[l.b].y}
-              className={`sg-link${l.mutual ? " mutual" : ""}${linkActive(l) ? "" : " dim"}`}
+              d={chord(nodes[l.a], nodes[l.b])}
+              className={`sg-link${l.mutual ? " mutual" : ""}${linkActive(l) ? (hover != null ? " hot" : "") : " dim"}`}
             />
           ))}
           {nodes.map((nd) => (

@@ -460,11 +460,22 @@ tbody tr:hover td { background: var(--cream); }
   background: var(--white);
   border: 1px solid var(--line);
 }
-.sg-link { stroke: var(--ink-soft); stroke-opacity: 0.09; stroke-width: 0.8; }
+.sg-ring { fill: none; stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+.sg-link { fill: none; stroke: var(--ink-soft); stroke-opacity: 0.09; stroke-width: 0.8; }
 .sg-link.mutual { stroke: var(--teal); stroke-opacity: 0.28; stroke-width: 1.1; }
 .sg-link.dim { stroke-opacity: 0.02; }
-.sharing-graph:hover .sg-link:not(.dim) { stroke-opacity: 0.85; stroke-width: 1.6; }
-.sg-center { font-family: var(--display); font-size: 15px; font-weight: 600; fill: var(--ink); pointer-events: none; }
+.sg-link.hot { stroke-opacity: 0.85; stroke-width: 1.6; }
+.sg-center {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--ink);
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: var(--white);
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
 .sg-center.sub { font-family: var(--mono); font-size: 9.5px; font-weight: 400; fill: var(--ink-soft); }
 .sg-label.hot { font-weight: 700; fill: var(--teal-deep); }
 .sg-node { fill: var(--teal); stroke: var(--teal-deep); stroke-width: 1.25; cursor: pointer; }
