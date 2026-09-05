@@ -33,6 +33,17 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   deflockdane.org — attribute them). Validated at every build, fails if missing. Refreshed
   by a new records release, not the weekly run. Registry typos are corrected only via the
   hand-checked WISDOT_OWNER_ALIASES map in refresh.py; ambiguous owners stay as written.
+- `data/usatoday_flock_search.json` — COMMITTED SNAPSHOT of the Wisconsin slice of USA
+  TODAY's Flock search-records tool (data.usatoday.com/projects/flock-search): cumulative
+  audit-log searches per agency (Jan 2023 - Apr 2026, 249 agencies, 1.87M searches) plus
+  the WI rows among the 5,000 highest "frequency score" plate searches nationally. Built
+  from the page's three static files (state_summary.json, org_map.json, data/initial.json)
+  by a one-off script; validated at build (keys, totals must sum). Joined by canonical
+  name into `agency.usatoday`; USAT_ALIASES folds units (Milwaukee PD - STAC) into their
+  department. An agency with searches > 0 joins the network roster (derived active).
+  NEVER put these cumulative counts in the same column as, or add them to, the portals'
+  30-day session figures. Attribute USA TODAY. Flock withdrew the audit view in Dec 2025,
+  so this does not refresh; re-snapshot only if USA TODAY republishes.
 - `data/wi_population.json` — COMMITTED SNAPSHOT of WI DOA official final population
   estimates (state/counties/places/towns). Joined at build into `data/counties.json`
   (per-county rollup + statewide coverage); county spellings are validated against DOA's

@@ -1,10 +1,10 @@
 {
-  "generated": "2026-09-02T03:04:36Z",
+  "generated": "2026-09-05T04:15:18Z",
   "camera_count": 2100,
   "flock_camera_count": 1605,
-  "agency_count": 280,
-  "portal_count": 30,
-  "hand_read_portal_count": 8,
+  "agency_count": 297,
+  "portal_count": 52,
+  "hand_read_portal_count": 3,
   "curated_count": 20,
   "wisdot_camera_count": 759,
   "wisdot_agency_count": 186,
@@ -18,19 +18,42 @@
     "unknown": 22
   },
   "stale_days_threshold": 45,
+  "usatoday": {
+    "retrieved": "2026-09-04",
+    "url": "https://data.usatoday.com/projects/flock-search/",
+    "coverage": {
+      "state": "WI",
+      "first_seen": "2023-01-01",
+      "last_seen": "2026-04-16",
+      "searches": 1867858,
+      "agencies": 249,
+      "users": 6312,
+      "plates": 61697,
+      "records": 86031,
+      "national_searches": 75690410,
+      "national_agencies": 6337
+    },
+    "notes": [
+      "Search totals are cumulative over the coverage window and count individual audit-log searches; they are not comparable to the 30-day search-session figures on Flock transparency portals.",
+      "Coverage depends on which agencies' audit logs USA TODAY obtained; a low total can mean few searches or few records.",
+      "high_frequency holds the Wisconsin rows among the 5,000 highest 'frequency score' rows nationally (score 63-100). USA TODAY: a high score is not an accusation of wrongdoing; there may be legitimate law-enforcement reasons for frequent searches.",
+      "Flock stopped offering customers this monthly audit view in December 2025, so the window has closed."
+    ]
+  },
   "stale_portal_count": 3,
   "national": {
-    "us_portal_count": 1007,
-    "states_with_portals": 43,
-    "wi_portal_count": 22,
-    "wi_rank_by_portals": 12,
+    "us_portal_count": 1439,
+    "states_with_portals": 45,
+    "wi_portal_count": 49,
+    "wi_rank_by_portals": 8,
     "leader_state": "CA",
-    "leader_portal_count": 201
+    "leader_portal_count": 219
   },
   "attribution": {
     "cameras": "Camera locations \u00a9 OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)",
     "portals": "Transparency portal statistics aggregated by Eyes On Flock (eyesonflock.com)",
     "atlas": "Agency records from EFF's Atlas of Surveillance (atlasofsurveillance.org)",
-    "wisdot": "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)"
+    "wisdot": "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)",
+    "usatoday": "Search records from Flock usage audit logs obtained under public-records laws and analyzed by USA TODAY (data.usatoday.com/projects/flock-search)"
   }
 }

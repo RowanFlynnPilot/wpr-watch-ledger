@@ -1,0 +1,2659 @@
+{
+ "source": "USA TODAY, \"Flock Safety Records Search\": Flock usage audit logs obtained under state public-records laws, analyzed by Austin Fast, Kenny Jacoby and Jack Lemnus",
+ "url": "https://data.usatoday.com/projects/flock-search/",
+ "retrieved": "2026-09-04",
+ "files": [
+  "state_summary.json",
+  "org_map.json",
+  "data/initial.json"
+ ],
+ "coverage": {
+  "state": "WI",
+  "first_seen": "2023-01-01",
+  "last_seen": "2026-04-16",
+  "searches": 1867858,
+  "agencies": 249,
+  "users": 6312,
+  "plates": 61697,
+  "records": 86031,
+  "national_searches": 75690410,
+  "national_agencies": 6337
+ },
+ "notes": [
+  "Search totals are cumulative over the coverage window and count individual audit-log searches; they are not comparable to the 30-day search-session figures on Flock transparency portals.",
+  "Coverage depends on which agencies' audit logs USA TODAY obtained; a low total can mean few searches or few records.",
+  "high_frequency holds the Wisconsin rows among the 5,000 highest 'frequency score' rows nationally (score 63-100). USA TODAY: a high score is not an accusation of wrongdoing; there may be legitimate law-enforcement reasons for frequent searches.",
+  "Flock stopped offering customers this monthly audit view in December 2025, so the window has closed."
+ ],
+ "agencies": [
+  {
+   "org_id": 5604,
+   "name": "Milwaukee WI PD",
+   "searches": 237900
+  },
+  {
+   "org_id": 344,
+   "name": "West Allis WI PD",
+   "searches": 87674
+  },
+  {
+   "org_id": 1221,
+   "name": "Brown County WI SO",
+   "searches": 80283
+  },
+  {
+   "org_id": 6326,
+   "name": "Waukesha WI PD",
+   "searches": 75303
+  },
+  {
+   "org_id": 6141,
+   "name": "Racine WI PD",
+   "searches": 73657
+  },
+  {
+   "org_id": 2561,
+   "name": "Fond du Lac County WI SO",
+   "searches": 70053
+  },
+  {
+   "org_id": 5602,
+   "name": "Milwaukee WI PD - STAC",
+   "searches": 51396
+  },
+  {
+   "org_id": 3393,
+   "name": "Waukesha County WI SO",
+   "searches": 48775
+  },
+  {
+   "org_id": 3294,
+   "name": "Ozaukee County WI SO",
+   "searches": 47572
+  },
+  {
+   "org_id": 1970,
+   "name": "Grand Chute WI PD",
+   "searches": 44474
+  },
+  {
+   "org_id": 823,
+   "name": "Green Bay WI PD",
+   "searches": 44320
+  },
+  {
+   "org_id": 3392,
+   "name": "Washington County WI SO",
+   "searches": 44105
+  },
+  {
+   "org_id": 3395,
+   "name": "Winnebago County WI SO",
+   "searches": 41470
+  },
+  {
+   "org_id": 5078,
+   "name": "Kenosha WI PD",
+   "searches": 37907
+  },
+  {
+   "org_id": 3311,
+   "name": "Racine County WI SO",
+   "searches": 30531
+  },
+  {
+   "org_id": 4373,
+   "name": "Greenfield WI PD",
+   "searches": 27421
+  },
+  {
+   "org_id": 5710,
+   "name": "Mount Pleasant WI PD",
+   "searches": 26662
+  },
+  {
+   "org_id": 3010,
+   "name": "Kenosha County WI SO",
+   "searches": 25072
+  },
+  {
+   "org_id": 3121,
+   "name": "Marathon County WI SO",
+   "searches": 23435
+  },
+  {
+   "org_id": 4300,
+   "name": "Germantown WI PD",
+   "searches": 22366
+  },
+  {
+   "org_id": 6330,
+   "name": "Wausau WI PD",
+   "searches": 20020
+  },
+  {
+   "org_id": 6332,
+   "name": "Wauwatosa WI PD",
+   "searches": 19182
+  },
+  {
+   "org_id": 3426,
+   "name": "Oak Creek WI PD",
+   "searches": 18377
+  },
+  {
+   "org_id": 6118,
+   "name": "Pleasant Prairie WI PD",
+   "searches": 18288
+  },
+  {
+   "org_id": 3450,
+   "name": "Village of Fox Crossing WI PD",
+   "searches": 17440
+  },
+  {
+   "org_id": 4314,
+   "name": "Glendale WI PD",
+   "searches": 16369
+  },
+  {
+   "org_id": 4097,
+   "name": "Franklin WI PD",
+   "searches": 15991
+  },
+  {
+   "org_id": 2391,
+   "name": "Columbia County WI SO",
+   "searches": 15939
+  },
+  {
+   "org_id": 3888,
+   "name": "Menomonee Falls WI PD",
+   "searches": 15919
+  },
+  {
+   "org_id": 428,
+   "name": "Appleton WI PD",
+   "searches": 15753
+  },
+  {
+   "org_id": 3329,
+   "name": "Sauk County WI SO",
+   "searches": 14985
+  },
+  {
+   "org_id": 2547,
+   "name": "Dodge County WI SO",
+   "searches": 14255
+  },
+  {
+   "org_id": 3323,
+   "name": "Rock County WI SO",
+   "searches": 12733
+  },
+  {
+   "org_id": 1204,
+   "name": "Brookfield WI PD",
+   "searches": 12322
+  },
+  {
+   "org_id": 6121,
+   "name": "Stevens Point WI PD",
+   "searches": 12294
+  },
+  {
+   "org_id": 1647,
+   "name": "Calumet County WI SO",
+   "searches": 11229
+  },
+  {
+   "org_id": 5812,
+   "name": "Neenah WI PD",
+   "searches": 11140
+  },
+  {
+   "org_id": 3155,
+   "name": "Milwaukee County WI SO",
+   "searches": 11024
+  },
+  {
+   "org_id": 3697,
+   "name": "Fond Du Lac WI PD",
+   "searches": 10986
+  },
+  {
+   "org_id": 3394,
+   "name": "Waupaca County WI SO",
+   "searches": 10784
+  },
+  {
+   "org_id": 3390,
+   "name": "Walworth County WI SO",
+   "searches": 10665
+  },
+  {
+   "org_id": 961,
+   "name": "West Bend WI PD",
+   "searches": 10541
+  },
+  {
+   "org_id": 6061,
+   "name": "Oshkosh WI PD",
+   "searches": 10235
+  },
+  {
+   "org_id": 6130,
+   "name": "Sun Prairie WI PD",
+   "searches": 10213
+  },
+  {
+   "org_id": 988,
+   "name": "New Berlin WI PD",
+   "searches": 10007
+  },
+  {
+   "org_id": 3291,
+   "name": "Oneida County WI SO",
+   "searches": 9638
+  },
+  {
+   "org_id": 6119,
+   "name": "Plover WI PD",
+   "searches": 8650
+  },
+  {
+   "org_id": 2508,
+   "name": "Dane County WI SO",
+   "searches": 8455
+  },
+  {
+   "org_id": 6045,
+   "name": "Onalaska WI PD",
+   "searches": 8435
+  },
+  {
+   "org_id": 4646,
+   "name": "Hudson WI PD",
+   "searches": 7919
+  },
+  {
+   "org_id": 3449,
+   "name": "La Crosse WI PD",
+   "searches": 7872
+  },
+  {
+   "org_id": 4337,
+   "name": "Grafton WI PD",
+   "searches": 7767
+  },
+  {
+   "org_id": 3568,
+   "name": "De Pere WI PD",
+   "searches": 7664
+  },
+  {
+   "org_id": 5516,
+   "name": "Menasha WI PD",
+   "searches": 7644
+  },
+  {
+   "org_id": 3122,
+   "name": "Marinette County SO (WI)",
+   "searches": 7579
+  },
+  {
+   "org_id": 5519,
+   "name": "Mequon WI PD",
+   "searches": 6545
+  },
+  {
+   "org_id": 1633,
+   "name": "Caledonia WI PD",
+   "searches": 6498
+  },
+  {
+   "org_id": 5601,
+   "name": "South Milwaukee WI PD",
+   "searches": 6213
+  },
+  {
+   "org_id": 3387,
+   "name": "Vernon County WI SO",
+   "searches": 6012
+  },
+  {
+   "org_id": 901,
+   "name": "Beaver Dam WI PD",
+   "searches": 5597
+  },
+  {
+   "org_id": 3396,
+   "name": "Wood County WI SO",
+   "searches": 5544
+  },
+  {
+   "org_id": 3610,
+   "name": "WI Department of Justice",
+   "searches": 5198
+  },
+  {
+   "org_id": 1806,
+   "name": "Racine County WI Communications Center",
+   "searches": 5158
+  },
+  {
+   "org_id": 2662,
+   "name": "Forest County WI SO",
+   "searches": 5156
+  },
+  {
+   "org_id": 5445,
+   "name": "Manitowoc WI PD",
+   "searches": 5135
+  },
+  {
+   "org_id": 3597,
+   "name": "Lake Delton WI PD",
+   "searches": 5120
+  },
+  {
+   "org_id": 3305,
+   "name": "Portage County WI SO",
+   "searches": 5092
+  },
+  {
+   "org_id": 2564,
+   "name": "Dunn County WI SO",
+   "searches": 4878
+  },
+  {
+   "org_id": 3445,
+   "name": "Saint Croix Falls WI PD",
+   "searches": 4814
+  },
+  {
+   "org_id": 5031,
+   "name": "Janesville WI PD",
+   "searches": 4672
+  },
+  {
+   "org_id": 1222,
+   "name": "Brown Deer WI PD",
+   "searches": 4620
+  },
+  {
+   "org_id": 6224,
+   "name": "Sheboygan WI PD",
+   "searches": 4583
+  },
+  {
+   "org_id": 3188,
+   "name": "Monroe County WI SO",
+   "searches": 4457
+  },
+  {
+   "org_id": 2489,
+   "name": "St. Croix County WI SO",
+   "searches": 4205
+  },
+  {
+   "org_id": 3388,
+   "name": "Vilas County WI SO",
+   "searches": 4196
+  },
+  {
+   "org_id": 3340,
+   "name": "Sheboygan County WI SO",
+   "searches": 4106
+  },
+  {
+   "org_id": 6190,
+   "name": "Saukville WI PD",
+   "searches": 3978
+  },
+  {
+   "org_id": 2992,
+   "name": "Jefferson County WI SO",
+   "searches": 3933
+  },
+  {
+   "org_id": 6124,
+   "name": "Port Washington WI PD",
+   "searches": 3808
+  },
+  {
+   "org_id": 1660,
+   "name": "Town of Campbell WI PD",
+   "searches": 3782
+  },
+  {
+   "org_id": 790,
+   "name": "Barron County WI SO",
+   "searches": 3777
+  },
+  {
+   "org_id": 2969,
+   "name": "Iowa County WI SO",
+   "searches": 3653
+  },
+  {
+   "org_id": 4608,
+   "name": "Holmen WI PD",
+   "searches": 3643
+  },
+  {
+   "org_id": 357,
+   "name": "Altoona WI PD",
+   "searches": 3618
+  },
+  {
+   "org_id": 5065,
+   "name": "Kaukauna WI PD",
+   "searches": 3435
+  },
+  {
+   "org_id": 5603,
+   "name": "West Milwaukee WI PD",
+   "searches": 3399
+  },
+  {
+   "org_id": 6046,
+   "name": "Oneida WI PD",
+   "searches": 3265
+  },
+  {
+   "org_id": 3126,
+   "name": "Marquette County WI SO",
+   "searches": 3204
+  },
+  {
+   "org_id": 5681,
+   "name": "Monona WI PD",
+   "searches": 3143
+  },
+  {
+   "org_id": 6167,
+   "name": "Two Rivers WI PD",
+   "searches": 3112
+  },
+  {
+   "org_id": 3293,
+   "name": "Outagamie County WI SO",
+   "searches": 3095
+  },
+  {
+   "org_id": 3695,
+   "name": "RIG WI DTF",
+   "searches": 3071
+  },
+  {
+   "org_id": 3391,
+   "name": "Washburn County WI SO",
+   "searches": 3066
+  },
+  {
+   "org_id": 2800,
+   "name": "Green Lake County WI SO",
+   "searches": 3036
+  },
+  {
+   "org_id": 6334,
+   "name": "Whitewater WI PD",
+   "searches": 3011
+  },
+  {
+   "org_id": 5584,
+   "name": "Middleton WI PD",
+   "searches": 2846
+  },
+  {
+   "org_id": 1991,
+   "name": "City of Delavan WI PD",
+   "searches": 2807
+  },
+  {
+   "org_id": 6325,
+   "name": "Watertown WI PD",
+   "searches": 2799
+  },
+  {
+   "org_id": 415,
+   "name": "Antigo WI PD",
+   "searches": 2789
+  },
+  {
+   "org_id": 1798,
+   "name": "Cedarburg WI PD",
+   "searches": 2751
+  },
+  {
+   "org_id": 3809,
+   "name": "Elm Grove WI PD",
+   "searches": 2739
+  },
+  {
+   "org_id": 5742,
+   "name": "Muskego WI PD",
+   "searches": 2660
+  },
+  {
+   "org_id": 3004,
+   "name": "Juneau County WI SO",
+   "searches": 2635
+  },
+  {
+   "org_id": 2114,
+   "name": "Eau Claire County WI SO",
+   "searches": 2633
+  },
+  {
+   "org_id": 3318,
+   "name": "Richland County WI SO",
+   "searches": 2497
+  },
+  {
+   "org_id": 2790,
+   "name": "Grant County WI SO",
+   "searches": 2457
+  },
+  {
+   "org_id": 4457,
+   "name": "Hartford WI PD",
+   "searches": 2404
+  },
+  {
+   "org_id": 3927,
+   "name": "Fitchburg WI PD",
+   "searches": 2399
+  },
+  {
+   "org_id": 953,
+   "name": "Big Bend WI PD",
+   "searches": 2317
+  },
+  {
+   "org_id": 5322,
+   "name": "New London WI PD",
+   "searches": 2247
+  },
+  {
+   "org_id": 3587,
+   "name": "Delafield WI PD",
+   "searches": 2228
+  },
+  {
+   "org_id": 2197,
+   "name": "Clintonville WI PD",
+   "searches": 2149
+  },
+  {
+   "org_id": 6315,
+   "name": "Verona WI PD",
+   "searches": 2125
+  },
+  {
+   "org_id": 2485,
+   "name": "Crawford County WI SO",
+   "searches": 2045
+  },
+  {
+   "org_id": 6142,
+   "name": "Wisconsin Rapids WI PD",
+   "searches": 2045
+  },
+  {
+   "org_id": 6327,
+   "name": "Waunakee WI PD",
+   "searches": 2001
+  },
+  {
+   "org_id": 5821,
+   "name": "New Richmond WI PD",
+   "searches": 1990
+  },
+  {
+   "org_id": 832,
+   "name": "Bayfield County WI SO",
+   "searches": 1973
+  },
+  {
+   "org_id": 5932,
+   "name": "Village of Pewaukee WI PD",
+   "searches": 1946
+  },
+  {
+   "org_id": 2984,
+   "name": "Jackson County WI SO",
+   "searches": 1824
+  },
+  {
+   "org_id": 3339,
+   "name": "Shawano County WI SO",
+   "searches": 1819
+  },
+  {
+   "org_id": 831,
+   "name": "Whitefish Bay WI PD",
+   "searches": 1707
+  },
+  {
+   "org_id": 6129,
+   "name": "Sauk Prairie WI PD",
+   "searches": 1695
+  },
+  {
+   "org_id": 3370,
+   "name": "Trempealeau County WI SO",
+   "searches": 1681
+  },
+  {
+   "org_id": 4078,
+   "name": "Fox Valley Metro WI PD",
+   "searches": 1668
+  },
+  {
+   "org_id": 827,
+   "name": "Mountain Bay Metro WI PD",
+   "searches": 1659
+  },
+  {
+   "org_id": 5239,
+   "name": "Rice Lake WI PD",
+   "searches": 1630
+  },
+  {
+   "org_id": 6120,
+   "name": "Plymouth WI PD",
+   "searches": 1602
+  },
+  {
+   "org_id": 4458,
+   "name": "Hartland WI PD",
+   "searches": 1578
+  },
+  {
+   "org_id": 6284,
+   "name": "Tomah WI PD",
+   "searches": 1573
+  },
+  {
+   "org_id": 5429,
+   "name": "University of Wisconsin - Madison WI PD",
+   "searches": 1565
+  },
+  {
+   "org_id": 6125,
+   "name": "Portage WI PD",
+   "searches": 1491
+  },
+  {
+   "org_id": 3894,
+   "name": "River Falls WI PD",
+   "searches": 1441
+  },
+  {
+   "org_id": 6188,
+   "name": "West Salem WI PD",
+   "searches": 1441
+  },
+  {
+   "org_id": 3797,
+   "name": "Elkhorn WI PD",
+   "searches": 1396
+  },
+  {
+   "org_id": 6328,
+   "name": "Waupaca WI PD",
+   "searches": 1331
+  },
+  {
+   "org_id": 6223,
+   "name": "Shawano WI PD",
+   "searches": 1315
+  },
+  {
+   "org_id": 3397,
+   "name": "Lac Courte Oreilles Tribal Police WI",
+   "searches": 1300
+  },
+  {
+   "org_id": 67,
+   "name": "Adams County WI SO",
+   "searches": 1296
+  },
+  {
+   "org_id": 4595,
+   "name": "Hobart-Lawrence WI PD",
+   "searches": 1283
+  },
+  {
+   "org_id": 6234,
+   "name": "Slinger WI PD",
+   "searches": 1263
+  },
+  {
+   "org_id": 6329,
+   "name": "Waupun WI PD",
+   "searches": 1254
+  },
+  {
+   "org_id": 4368,
+   "name": "Greendale WI PD",
+   "searches": 1216
+  },
+  {
+   "org_id": 1250,
+   "name": "Buffalo County WI SO",
+   "searches": 1185
+  },
+  {
+   "org_id": 5306,
+   "name": "New Lisbon WI PD",
+   "searches": 1141
+  },
+  {
+   "org_id": 4081,
+   "name": "Saint Francis WI PD",
+   "searches": 1077
+  },
+  {
+   "org_id": 5459,
+   "name": "Marinette WI PD",
+   "searches": 1063
+  },
+  {
+   "org_id": 3593,
+   "name": "Wisconsin Dells WI PD",
+   "searches": 1062
+  },
+  {
+   "org_id": 5028,
+   "name": "Jackson WI PD",
+   "searches": 1017
+  },
+  {
+   "org_id": 6178,
+   "name": "Rome WI PD",
+   "searches": 1000
+  },
+  {
+   "org_id": 4287,
+   "name": "Lake Geneva WI PD",
+   "searches": 985
+  },
+  {
+   "org_id": 5927,
+   "name": "Oconomowoc WI PD",
+   "searches": 920
+  },
+  {
+   "org_id": 2252,
+   "name": "Florence Co. WI SO",
+   "searches": 877
+  },
+  {
+   "org_id": 6165,
+   "name": "Ripon WI PD",
+   "searches": 871
+  },
+  {
+   "org_id": 6146,
+   "name": "Reedsburg WI PD",
+   "searches": 864
+  },
+  {
+   "org_id": 1293,
+   "name": "Burnett County WI SO",
+   "searches": 861
+  },
+  {
+   "org_id": 1076,
+   "name": "Maple Bluff WI PD",
+   "searches": 838
+  },
+  {
+   "org_id": 791,
+   "name": "Barron WI PD",
+   "searches": 786
+  },
+  {
+   "org_id": 1952,
+   "name": "Prairie Du Chien WI PD",
+   "searches": 715
+  },
+  {
+   "org_id": 2490,
+   "name": "La Crosse County WI SO",
+   "searches": 676
+  },
+  {
+   "org_id": 3097,
+   "name": "Lincoln County WI SO",
+   "searches": 672
+  },
+  {
+   "org_id": 1723,
+   "name": "Wisconsin State Capitol Police (WI)",
+   "searches": 573
+  },
+  {
+   "org_id": 2289,
+   "name": "Menominee Co. WI SO",
+   "searches": 555
+  },
+  {
+   "org_id": 5600,
+   "name": "University of Wisconsin - Milwaukee WI PD",
+   "searches": 541
+  },
+  {
+   "org_id": 5486,
+   "name": "Mauston WI PD",
+   "searches": 532
+  },
+  {
+   "org_id": 1807,
+   "name": "Waukesha County WI Communications Center",
+   "searches": 516
+  },
+  {
+   "org_id": 3509,
+   "name": "Cudahy WI PD",
+   "searches": 495
+  },
+  {
+   "org_id": 3514,
+   "name": "Cumberland WI PD",
+   "searches": 495
+  },
+  {
+   "org_id": 3643,
+   "name": "Dickeyville WI PD",
+   "searches": 478
+  },
+  {
+   "org_id": 42,
+   "name": "Abbotsford WI PD",
+   "searches": 474
+  },
+  {
+   "org_id": 2128,
+   "name": "Clark County WI SO",
+   "searches": 463
+  },
+  {
+   "org_id": 4643,
+   "name": "North Hudson WI PD",
+   "searches": 458
+  },
+  {
+   "org_id": 2500,
+   "name": "Milwaukee County WI DA's Office",
+   "searches": 439
+  },
+  {
+   "org_id": 5035,
+   "name": "Jefferson WI PD",
+   "searches": 417
+  },
+  {
+   "org_id": 822,
+   "name": "University of Wisconsin - Green Bay WI PD",
+   "searches": 414
+  },
+  {
+   "org_id": 2020,
+   "name": "Genoa City WI PD",
+   "searches": 408
+  },
+  {
+   "org_id": 5237,
+   "name": "Village of Turtle Lake WI PD",
+   "searches": 394
+  },
+  {
+   "org_id": 6260,
+   "name": "Sturtevant WI PD",
+   "searches": 381
+  },
+  {
+   "org_id": 3067,
+   "name": "Lafayette County WI SO",
+   "searches": 356
+  },
+  {
+   "org_id": 6131,
+   "name": "Prescott WI PD",
+   "searches": 353
+  },
+  {
+   "org_id": 3696,
+   "name": "North Fond Du Lac WI PD",
+   "searches": 348
+  },
+  {
+   "org_id": 2471,
+   "name": "Cottage Grove WI PD",
+   "searches": 337
+  },
+  {
+   "org_id": 5813,
+   "name": "Nekoosa WI PD",
+   "searches": 331
+  },
+  {
+   "org_id": 4079,
+   "name": "Village of Fox Point WI PD",
+   "searches": 315
+  },
+  {
+   "org_id": 1291,
+   "name": "Burlington WI PD",
+   "searches": 293
+  },
+  {
+   "org_id": 2299,
+   "name": "Oconto Co WI SO",
+   "searches": 288
+  },
+  {
+   "org_id": 6335,
+   "name": "Winneconne WI PD",
+   "searches": 288
+  },
+  {
+   "org_id": 556,
+   "name": "Ashland County WI SO",
+   "searches": 265
+  },
+  {
+   "org_id": 772,
+   "name": "Baraboo WI PD",
+   "searches": 260
+  },
+  {
+   "org_id": 5931,
+   "name": "University of Wisconsin - Oshkosh PD",
+   "searches": 249
+  },
+  {
+   "org_id": 830,
+   "name": "Sturgeon Bay WI PD",
+   "searches": 242
+  },
+  {
+   "org_id": 6060,
+   "name": "Osceola WI PD",
+   "searches": 230
+  },
+  {
+   "org_id": 4629,
+   "name": "Horicon WI PD",
+   "searches": 228
+  },
+  {
+   "org_id": 5319,
+   "name": "Lodi WI PD",
+   "searches": 226
+  },
+  {
+   "org_id": 2406,
+   "name": "Columbus WI PD",
+   "searches": 209
+  },
+  {
+   "org_id": 6331,
+   "name": "Wautoma WI PD",
+   "searches": 193
+  },
+  {
+   "org_id": 564,
+   "name": "Ashwaubenon WI PD",
+   "searches": 184
+  },
+  {
+   "org_id": 6277,
+   "name": "Thiensville WI PD",
+   "searches": 175
+  },
+  {
+   "org_id": 6117,
+   "name": "Platteville WI PD",
+   "searches": 162
+  },
+  {
+   "org_id": 5517,
+   "name": "Menomonie WI PD",
+   "searches": 157
+  },
+  {
+   "org_id": 5229,
+   "name": "Lake Mills WI PD",
+   "searches": 150
+  },
+  {
+   "org_id": 6333,
+   "name": "Weyauwega WI PD",
+   "searches": 148
+  },
+  {
+   "org_id": 5086,
+   "name": "Kewaskum WI PD",
+   "searches": 137
+  },
+  {
+   "org_id": 6258,
+   "name": "Stoughton WI PD",
+   "searches": 132
+  },
+  {
+   "org_id": 3444,
+   "name": "Crivitz WI PD",
+   "searches": 130
+  },
+  {
+   "org_id": 5928,
+   "name": "Oconto WI PD",
+   "searches": 118
+  },
+  {
+   "org_id": 6111,
+   "name": "Phillips WI PD",
+   "searches": 117
+  },
+  {
+   "org_id": 6244,
+   "name": "Sparta WI PD",
+   "searches": 117
+  },
+  {
+   "org_id": 5680,
+   "name": "Mondovi WI PD",
+   "searches": 97
+  },
+  {
+   "org_id": 3446,
+   "name": "St. Croix Tribal WI PD",
+   "searches": 95
+  },
+  {
+   "org_id": 3308,
+   "name": "Price County WI SO",
+   "searches": 93
+  },
+  {
+   "org_id": 5471,
+   "name": "Marshall WI PD",
+   "searches": 89
+  },
+  {
+   "org_id": 5109,
+   "name": "Kohler WI PD",
+   "searches": 77
+  },
+  {
+   "org_id": 3543,
+   "name": "Darlington WI PD",
+   "searches": 71
+  },
+  {
+   "org_id": 2160,
+   "name": "Clear Lake WI PD",
+   "searches": 65
+  },
+  {
+   "org_id": 1955,
+   "name": "Chilton WI PD",
+   "searches": 64
+  },
+  {
+   "org_id": 942,
+   "name": "Belmont WI PD",
+   "searches": 63
+  },
+  {
+   "org_id": 561,
+   "name": "Ashland WI PD",
+   "searches": 60
+  },
+  {
+   "org_id": 5463,
+   "name": "Marion WI PD",
+   "searches": 58
+  },
+  {
+   "org_id": 3301,
+   "name": "Pepin County WI SO",
+   "searches": 52
+  },
+  {
+   "org_id": 4477,
+   "name": "Hayward WI PD",
+   "searches": 49
+  },
+  {
+   "org_id": 6222,
+   "name": "Sharon WI PD",
+   "searches": 48
+  },
+  {
+   "org_id": 6239,
+   "name": "Somerset WI PD",
+   "searches": 45
+  },
+  {
+   "org_id": 3775,
+   "name": "Port Edwards WI PD",
+   "searches": 44
+  },
+  {
+   "org_id": 69,
+   "name": "Adams WI PD",
+   "searches": 38
+  },
+  {
+   "org_id": 5489,
+   "name": "Mayville WI PD",
+   "searches": 37
+  },
+  {
+   "org_id": 1829,
+   "name": "Richland Center WI PD",
+   "searches": 37
+  },
+  {
+   "org_id": 3330,
+   "name": "Sawyer County WI SO",
+   "searches": 36
+  },
+  {
+   "org_id": 5522,
+   "name": "Merrill WI PD",
+   "searches": 34
+  },
+  {
+   "org_id": 3266,
+   "name": "Oconto County WI SO",
+   "searches": 33
+  },
+  {
+   "org_id": 6266,
+   "name": "Superior WI PD",
+   "searches": 27
+  },
+  {
+   "org_id": 5815,
+   "name": "Neshkoro WI PD",
+   "searches": 22
+  },
+  {
+   "org_id": 1909,
+   "name": "Chenequa WI PD",
+   "searches": 21
+  },
+  {
+   "org_id": 6144,
+   "name": "Redgranite WI PD",
+   "searches": 14
+  },
+  {
+   "org_id": 1187,
+   "name": "Brillion WI PD",
+   "searches": 12
+  },
+  {
+   "org_id": 6180,
+   "name": "Rosendale WI PD",
+   "searches": 12
+  },
+  {
+   "org_id": 5741,
+   "name": "Muscoda WI PD",
+   "searches": 10
+  },
+  {
+   "org_id": 4609,
+   "name": "New Holstein WI PD",
+   "searches": 8
+  },
+  {
+   "org_id": 3584,
+   "name": "Deforest WI PD",
+   "searches": 6
+  },
+  {
+   "org_id": 2314,
+   "name": "Pierce Co WI SO",
+   "searches": 6
+  },
+  {
+   "org_id": 2503,
+   "name": "Outagamie County DA's Office WI",
+   "searches": 5
+  },
+  {
+   "org_id": 836,
+   "name": "Village of Bayside WI PD",
+   "searches": 5
+  },
+  {
+   "org_id": 5016,
+   "name": "Washington Island WI PD",
+   "searches": 4
+  },
+  {
+   "org_id": 6231,
+   "name": "Shorewood WI PD",
+   "searches": 3
+  },
+  {
+   "org_id": 5046,
+   "name": "Kenosha WI Joint Services",
+   "searches": 2
+  },
+  {
+   "org_id": 6114,
+   "name": "Pittsville WI PD",
+   "searches": 2
+  },
+  {
+   "org_id": 6128,
+   "name": "Poynette WI PD",
+   "searches": 2
+  },
+  {
+   "org_id": 6170,
+   "name": "Roberts WI PD",
+   "searches": 2
+  },
+  {
+   "org_id": 1958,
+   "name": "Chippewa County WI SO",
+   "searches": 1
+  }
+ ],
+ "high_frequency": [
+  {
+   "org_id": 3311,
+   "user": "J SRN",
+   "plate": "AWP***2",
+   "count": 613,
+   "days_active": 44,
+   "first_seen": "2025-04-21",
+   "last_seen": "2025-06-23",
+   "reasons": [
+    "C",
+    "CRIME",
+    "CRIME9"
+   ],
+   "score": 95
+  },
+  {
+   "org_id": 3388,
+   "user": "L PON",
+   "plate": "ATZ***6",
+   "count": 320,
+   "days_active": 63,
+   "first_seen": "2024-08-05",
+   "last_seen": "2025-10-02",
+   "reasons": [
+    "DRUG INVESTIGATION",
+    "INVESTIGATION"
+   ],
+   "score": 91
+  },
+  {
+   "org_id": 2391,
+   "user": "C COR",
+   "plate": "EC7***5",
+   "count": 298,
+   "days_active": 62,
+   "first_seen": "2025-01-29",
+   "last_seen": "2025-06-17",
+   "reasons": [
+    "INVESTIGATION"
+   ],
+   "score": 90
+  },
+  {
+   "org_id": 6326,
+   "user": "J COO",
+   "plate": "AWW***2",
+   "count": 224,
+   "days_active": 24,
+   "first_seen": "2025-03-11",
+   "last_seen": "2025-06-21",
+   "reasons": [
+    ".",
+    "DRUGS",
+    "RT",
+    "SUS",
+    "SUSPICIOUS"
+   ],
+   "score": 81
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "AYE***3",
+   "count": 209,
+   "days_active": 73,
+   "first_seen": "2024-09-06",
+   "last_seen": "2025-03-20",
+   "reasons": [
+    "B24020253",
+    "IMAGE DOWNLOAD",
+    "THREATS"
+   ],
+   "score": 92
+  },
+  {
+   "org_id": 6119,
+   "user": "Z FAB",
+   "plate": "AWJ***6",
+   "count": 208,
+   "days_active": 18,
+   "first_seen": "2025-02-25",
+   "last_seen": "2025-07-17",
+   "reasons": [
+    "FROST 961",
+    "INVESTIGATION"
+   ],
+   "score": 72
+  },
+  {
+   "org_id": 5710,
+   "user": "L WIN",
+   "plate": "AXP***2",
+   "count": 174,
+   "days_active": 73,
+   "first_seen": "2024-12-20",
+   "last_seen": "2025-06-21",
+   "reasons": [
+    "25-2914",
+    "INVESTIGATION"
+   ],
+   "score": 86
+  },
+  {
+   "org_id": 3809,
+   "user": "J HEN",
+   "plate": "9NK***2",
+   "count": 169,
+   "days_active": 12,
+   "first_seen": "2024-09-27",
+   "last_seen": "2024-11-26",
+   "reasons": [
+    "ID THEFT",
+    "THEFT"
+   ],
+   "score": 65
+  },
+  {
+   "org_id": 5710,
+   "user": "F PAT",
+   "plate": "AXP***2",
+   "count": 155,
+   "days_active": 65,
+   "first_seen": "2024-09-09",
+   "last_seen": "2024-12-13",
+   "reasons": [
+    "INVESTIGATION"
+   ],
+   "score": 84
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "AYD***1",
+   "count": 154,
+   "days_active": 70,
+   "first_seen": "2024-09-06",
+   "last_seen": "2025-03-25",
+   "reasons": [
+    "B14020253",
+    "B24020253"
+   ],
+   "score": 90
+  },
+  {
+   "org_id": 3449,
+   "user": "K LOZ",
+   "plate": "TGM***5",
+   "count": 134,
+   "days_active": 19,
+   "first_seen": "2025-10-08",
+   "last_seen": "2025-11-01",
+   "reasons": [
+    "ID",
+    "I’D | IÂ€™D | IGÇÖD",
+    "NARCOTICS",
+    "NARCOTICS INVESTIGATION",
+    "WARRANT"
+   ],
+   "score": 72
+  },
+  {
+   "org_id": 3121,
+   "user": "D LAN",
+   "plate": "TR2**2",
+   "count": 133,
+   "days_active": 48,
+   "first_seen": "2023-09-06",
+   "last_seen": "2025-04-03",
+   "reasons": [
+    "DRUGS",
+    "LAW ENFORCEMENT"
+   ],
+   "score": 85
+  },
+  {
+   "org_id": 5322,
+   "user": "B KEA",
+   "plate": "253**J",
+   "count": 132,
+   "days_active": 31,
+   "first_seen": "2025-03-11",
+   "last_seen": "2025-08-17",
+   "reasons": [
+    "DRUGS"
+   ],
+   "score": 79
+  },
+  {
+   "org_id": 3121,
+   "user": "C SEL",
+   "plate": "AMH***8",
+   "count": 126,
+   "days_active": 53,
+   "first_seen": "2024-06-11",
+   "last_seen": "2025-05-28",
+   "reasons": [
+    "DRUG INV",
+    "DRUG INVESTIGATION",
+    "DRUG+INVESTIGATION+",
+    "INVESTIGATION+DRUG"
+   ],
+   "score": 87
+  },
+  {
+   "org_id": 3809,
+   "user": "J HEN",
+   "plate": "DG5***0",
+   "count": 119,
+   "days_active": 24,
+   "first_seen": "2024-08-06",
+   "last_seen": "2024-12-27",
+   "reasons": [
+    "ID THEFT",
+    "STOLEN",
+    "THEFT"
+   ],
+   "score": 75
+  },
+  {
+   "org_id": 5602,
+   "user": "J AYA",
+   "plate": "ATA***7",
+   "count": 119,
+   "days_active": 23,
+   "first_seen": "2025-03-26",
+   "last_seen": "2025-05-06",
+   "reasons": [
+    "I VESTIGTION",
+    "INVESTIGATION",
+    "INVESTIGATIONIGATION",
+    "INVESTIGATORS+"
+   ],
+   "score": 77
+  },
+  {
+   "org_id": 3311,
+   "user": "A SPA",
+   "plate": "UD6**8",
+   "count": 109,
+   "days_active": 19,
+   "first_seen": "2024-02-04",
+   "last_seen": "2024-03-12",
+   "reasons": [
+    "23-63991"
+   ],
+   "score": 73
+  },
+  {
+   "org_id": 4300,
+   "user": "J CLE",
+   "plate": "TYK***5",
+   "count": 106,
+   "days_active": 26,
+   "first_seen": "2024-09-09",
+   "last_seen": "2025-07-23",
+   "reasons": [
+    "DVDC",
+    "GTPD STOLEN",
+    "GTPD STOLENS",
+    "GTPD SUS",
+    "GTPD VIN SWAP",
+    "H&R",
+    "STOLEN",
+    "STOLEN GTPD",
+    "STOLEN SUS",
+    "STOLEN SUS GTPD",
+    "STOLEN+SUS",
+    "STOLEN+SUSP",
+    "STOLEN+SUSPECTS",
+    "STOLEN+SUSPECTS+",
+    "STOLENAS",
+    "STOLENS",
+    "STOLENS GTPD",
+    "STOLENSUSPECTS",
+    "SUS GTPD",
+    "SUSPECT GTPD",
+    "SUSPECTS",
+    "SUSPECTS GTPD",
+    "TRAFFIC",
+    "VIN SWA"
+   ],
+   "score": 78
+  },
+  {
+   "org_id": 3121,
+   "user": "C SEL",
+   "plate": "APY***0",
+   "count": 104,
+   "days_active": 57,
+   "first_seen": "2024-06-11",
+   "last_seen": "2025-05-12",
+   "reasons": [
+    "DRUG INV",
+    "DRUG INVESTIGATION",
+    "DRUG+INVESTIGATION+",
+    "INVESTIGATION+DRUG"
+   ],
+   "score": 87
+  },
+  {
+   "org_id": 3294,
+   "user": "T SCH",
+   "plate": "AAM***1",
+   "count": 103,
+   "days_active": 13,
+   "first_seen": "2025-10-05",
+   "last_seen": "2025-11-10",
+   "reasons": [
+    "FLEEING / ELUDING"
+   ],
+   "score": 64
+  },
+  {
+   "org_id": 3311,
+   "user": "A SPA",
+   "plate": "284***0",
+   "count": 102,
+   "days_active": 23,
+   "first_seen": "2023-10-17",
+   "last_seen": "2024-03-08",
+   "reasons": [
+    "23-46257",
+    "23-57885",
+    "23-63991"
+   ],
+   "score": 75
+  },
+  {
+   "org_id": 5710,
+   "user": "L WIN",
+   "plate": "AZE***7",
+   "count": 101,
+   "days_active": 60,
+   "first_seen": "2024-12-21",
+   "last_seen": "2025-06-21",
+   "reasons": [
+    "INVESTIGATION"
+   ],
+   "score": 86
+  },
+  {
+   "org_id": 3393,
+   "user": "J KOP",
+   "plate": "TNH***1",
+   "count": 95,
+   "days_active": 55,
+   "first_seen": "2023-12-21",
+   "last_seen": "2024-07-23",
+   "reasons": [
+    "DRUGS",
+    "ID",
+    "IMAGE DOWNLOAD"
+   ],
+   "score": 87
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "AZA***0",
+   "count": 89,
+   "days_active": 36,
+   "first_seen": "2024-11-11",
+   "last_seen": "2025-03-25",
+   "reasons": [
+    "B24020253"
+   ],
+   "score": 83
+  },
+  {
+   "org_id": 988,
+   "user": "P KAY",
+   "plate": "648**L",
+   "count": 86,
+   "days_active": 33,
+   "first_seen": "2025-03-12",
+   "last_seen": "2025-10-29",
+   "reasons": [
+    "HUMAN TRAFFICKING",
+    "MONEY LAUNDERING"
+   ],
+   "score": 81
+  },
+  {
+   "org_id": 5078,
+   "user": "R MCD",
+   "plate": "AYR***5",
+   "count": 86,
+   "days_active": 21,
+   "first_seen": "2025-09-05",
+   "last_seen": "2025-11-06",
+   "reasons": [
+    "2025-00038321",
+    "2025-00039321"
+   ],
+   "score": 74
+  },
+  {
+   "org_id": 3643,
+   "user": "D REU",
+   "plate": "AHG***5",
+   "count": 84,
+   "days_active": 31,
+   "first_seen": "2024-08-07",
+   "last_seen": "2025-10-29",
+   "reasons": [
+    "ABUSE",
+    "DRUGS",
+    "OWL",
+    "THEFT",
+    "TRO",
+    "WARRANT"
+   ],
+   "score": 80
+  },
+  {
+   "org_id": 5078,
+   "user": "E FIS",
+   "plate": "BIG**T",
+   "count": 84,
+   "days_active": 24,
+   "first_seen": "2024-08-28",
+   "last_seen": "2025-05-19",
+   "reasons": [
+    "2024-00039188",
+    "2024-00039881",
+    "2025-00001057",
+    "2025-00001866",
+    "NARCOTICS"
+   ],
+   "score": 76
+  },
+  {
+   "org_id": 6326,
+   "user": "T BAU",
+   "plate": "AME***1",
+   "count": 84,
+   "days_active": 35,
+   "first_seen": "2023-12-06",
+   "last_seen": "2025-02-25",
+   "reasons": [
+    "23-44699",
+    "23-45666",
+    "24-17385"
+   ],
+   "score": 79
+  },
+  {
+   "org_id": 3695,
+   "user": "B KEL",
+   "plate": "ASB***5",
+   "count": 82,
+   "days_active": 31,
+   "first_seen": "2024-05-08",
+   "last_seen": "2025-10-20",
+   "reasons": [
+    "ERIKA SKATTUM, ERIKA SKATTUM",
+    "RIG",
+    "RIG+"
+   ],
+   "score": 79
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "289**P",
+   "count": 81,
+   "days_active": 37,
+   "first_seen": "2024-07-15",
+   "last_seen": "2025-11-06",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 79
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "629**U",
+   "count": 80,
+   "days_active": 15,
+   "first_seen": "2025-03-15",
+   "last_seen": "2025-05-07",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 67
+  },
+  {
+   "org_id": 3393,
+   "user": "J KOP",
+   "plate": "TNH***6",
+   "count": 77,
+   "days_active": 47,
+   "first_seen": "2023-12-07",
+   "last_seen": "2024-07-23",
+   "reasons": [
+    "DRUGS",
+    "ID"
+   ],
+   "score": 84
+  },
+  {
+   "org_id": 3121,
+   "user": "C SEL",
+   "plate": "ATY***9",
+   "count": 76,
+   "days_active": 34,
+   "first_seen": "2024-05-15",
+   "last_seen": "2025-08-22",
+   "reasons": [
+    "DRUG INV",
+    "DRUG INVESTIGATION",
+    "INVESTIGATION+DRUG"
+   ],
+   "score": 81
+  },
+  {
+   "org_id": 6326,
+   "user": "T FIL",
+   "plate": "EA9***7",
+   "count": 75,
+   "days_active": 57,
+   "first_seen": "2023-11-10",
+   "last_seen": "2025-07-17",
+   "reasons": [
+    "I3-23-0075"
+   ],
+   "score": 85
+  },
+  {
+   "org_id": 3122,
+   "user": "A LEI",
+   "plate": "AYV***0",
+   "count": 74,
+   "days_active": 27,
+   "first_seen": "2025-01-17",
+   "last_seen": "2025-07-02",
+   "reasons": [
+    "DI"
+   ],
+   "score": 73
+  },
+  {
+   "org_id": 6326,
+   "user": "K BEC",
+   "plate": "AVM***0",
+   "count": 73,
+   "days_active": 25,
+   "first_seen": "2024-01-18",
+   "last_seen": "2024-04-26",
+   "reasons": [
+    "DRUG INVESIATION",
+    "DRUG INVESTIGATION",
+    "DRUG INVESTIGATION, BRUNO",
+    "DRUG INVESTIGATION, BRUNO GIACOMANTONIO",
+    "VEHICLE PURSUIT"
+   ],
+   "score": 70
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "AVG***8",
+   "count": 70,
+   "days_active": 41,
+   "first_seen": "2024-08-05",
+   "last_seen": "2025-03-17",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 83
+  },
+  {
+   "org_id": 3809,
+   "user": "J HEN",
+   "plate": "DH7***9",
+   "count": 70,
+   "days_active": 23,
+   "first_seen": "2024-08-08",
+   "last_seen": "2024-12-27",
+   "reasons": [
+    "ID THEFT",
+    "STOLEN",
+    "THEFT"
+   ],
+   "score": 71
+  },
+  {
+   "org_id": 5602,
+   "user": "J AYA",
+   "plate": "AJU***3",
+   "count": 70,
+   "days_active": 21,
+   "first_seen": "2025-03-26",
+   "last_seen": "2025-05-06",
+   "reasons": [
+    "INVESTIGATION",
+    "INVESTIGATIONIGATION",
+    "INVESTIGATORS+"
+   ],
+   "score": 73
+  },
+  {
+   "org_id": 3393,
+   "user": "J KOP",
+   "plate": "RFM***8",
+   "count": 69,
+   "days_active": 45,
+   "first_seen": "2023-12-01",
+   "last_seen": "2024-07-23",
+   "reasons": [
+    "DRUGS",
+    "ID",
+    "IMAGE DOWNLOAD"
+   ],
+   "score": 83
+  },
+  {
+   "org_id": 3155,
+   "user": "T ROS",
+   "plate": "AXD***6",
+   "count": 66,
+   "days_active": 21,
+   "first_seen": "2024-07-12",
+   "last_seen": "2024-09-13",
+   "reasons": [
+    "FUGITIVE",
+    "FUGITVE",
+    "IMAGE DOWNLOAD"
+   ],
+   "score": 73
+  },
+  {
+   "org_id": 5078,
+   "user": "E FIS",
+   "plate": "ATR***4",
+   "count": 65,
+   "days_active": 21,
+   "first_seen": "2024-08-28",
+   "last_seen": "2025-05-19",
+   "reasons": [
+    "2024-00039188",
+    "2025-00001866",
+    "NARCOTICS"
+   ],
+   "score": 72
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "AYB***1",
+   "count": 64,
+   "days_active": 19,
+   "first_seen": "2025-06-09",
+   "last_seen": "2025-11-08",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 69
+  },
+  {
+   "org_id": 2564,
+   "user": "C MOU",
+   "plate": "XE1***2",
+   "count": 60,
+   "days_active": 22,
+   "first_seen": "2024-11-04",
+   "last_seen": "2025-04-22",
+   "reasons": [
+    "FRAU",
+    "SUSP",
+    "THEF",
+    "THEFT",
+    "TRAF"
+   ],
+   "score": 73
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "ASH***9",
+   "count": 60,
+   "days_active": 25,
+   "first_seen": "2024-10-27",
+   "last_seen": "2025-08-17",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 75
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "AXS***8",
+   "count": 59,
+   "days_active": 34,
+   "first_seen": "2024-09-06",
+   "last_seen": "2025-03-07",
+   "reasons": [
+    "B24020253"
+   ],
+   "score": 80
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "AXS***5",
+   "count": 59,
+   "days_active": 30,
+   "first_seen": "2025-04-11",
+   "last_seen": "2025-10-30",
+   "reasons": [
+    "B24026017",
+    "DRUG",
+    "DRUGS",
+    "IMAGE DOWNLOAD",
+    "SUSP",
+    "SUSPICOUS"
+   ],
+   "score": 78
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "AZW***0",
+   "count": 57,
+   "days_active": 18,
+   "first_seen": "2025-07-29",
+   "last_seen": "2025-11-09",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 69
+  },
+  {
+   "org_id": 6326,
+   "user": "T FIL",
+   "plate": "Q19***0",
+   "count": 56,
+   "days_active": 49,
+   "first_seen": "2023-10-30",
+   "last_seen": "2025-07-17",
+   "reasons": [
+    "I3-23-0075",
+    "IMAGE DOWNLOAD"
+   ],
+   "score": 83
+  },
+  {
+   "org_id": 5078,
+   "user": "E FIS",
+   "plate": "ARH***2",
+   "count": 55,
+   "days_active": 21,
+   "first_seen": "2024-03-07",
+   "last_seen": "2025-05-19",
+   "reasons": [
+    "2024-00039188",
+    "2024-5059",
+    "2025-00001866",
+    "NARCOTICS"
+   ],
+   "score": 71
+  },
+  {
+   "org_id": 5602,
+   "user": "J AYA",
+   "plate": "177**V",
+   "count": 55,
+   "days_active": 18,
+   "first_seen": "2025-03-26",
+   "last_seen": "2025-05-06",
+   "reasons": [
+    "I VESTIGTION",
+    "INVESTIGATION",
+    "INVESTIGATIONIGATION"
+   ],
+   "score": 69
+  },
+  {
+   "org_id": 3122,
+   "user": "A LEI",
+   "plate": "ASV***5",
+   "count": 54,
+   "days_active": 21,
+   "first_seen": "2025-05-23",
+   "last_seen": "2025-10-24",
+   "reasons": [
+    "DI",
+    "IMAGE DOWNLOAD"
+   ],
+   "score": 69
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "879**D",
+   "count": 54,
+   "days_active": 30,
+   "first_seen": "2024-07-19",
+   "last_seen": "2024-09-25",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 74
+  },
+  {
+   "org_id": 3340,
+   "user": "T WUE",
+   "plate": "DH3***4",
+   "count": 54,
+   "days_active": 19,
+   "first_seen": "2025-06-26",
+   "last_seen": "2025-09-18",
+   "reasons": [
+    "ICAC CASE"
+   ],
+   "score": 70
+  },
+  {
+   "org_id": 5710,
+   "user": "L WIN",
+   "plate": "ANF***1",
+   "count": 53,
+   "days_active": 32,
+   "first_seen": "2024-12-22",
+   "last_seen": "2025-04-06",
+   "reasons": [
+    "INVESTIGATION"
+   ],
+   "score": 76
+  },
+  {
+   "org_id": 6045,
+   "user": "T SUT",
+   "plate": "AKV***9",
+   "count": 52,
+   "days_active": 15,
+   "first_seen": "2024-06-12",
+   "last_seen": "2024-08-13",
+   "reasons": [
+    "INVESTIGATION"
+   ],
+   "score": 64
+  },
+  {
+   "org_id": 6326,
+   "user": "C KEN",
+   "plate": "AVH***6",
+   "count": 52,
+   "days_active": 22,
+   "first_seen": "2024-11-20",
+   "last_seen": "2025-03-20",
+   "reasons": [
+    "961",
+    "961 INVEST",
+    "961 INVEST."
+   ],
+   "score": 68
+  },
+  {
+   "org_id": 3122,
+   "user": "A LEI",
+   "plate": "AXR***9",
+   "count": 49,
+   "days_active": 36,
+   "first_seen": "2024-10-15",
+   "last_seen": "2025-04-13",
+   "reasons": [
+    "DI",
+    "DRUG"
+   ],
+   "score": 80
+  },
+  {
+   "org_id": 3329,
+   "user": "T CLA",
+   "plate": "AXF***2",
+   "count": 48,
+   "days_active": 19,
+   "first_seen": "2024-10-21",
+   "last_seen": "2025-02-04",
+   "reasons": [
+    "INVESTIGATION"
+   ],
+   "score": 69
+  },
+  {
+   "org_id": 3391,
+   "user": "I HAL",
+   "plate": "AUW***4",
+   "count": 48,
+   "days_active": 17,
+   "first_seen": "2025-04-27",
+   "last_seen": "2025-06-27",
+   "reasons": [
+    "INVESTIGATION",
+    "LOCATION"
+   ],
+   "score": 64
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "AHB***4",
+   "count": 47,
+   "days_active": 24,
+   "first_seen": "2024-09-06",
+   "last_seen": "2024-11-26",
+   "reasons": [
+    "B24020253"
+   ],
+   "score": 74
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "AXA***9",
+   "count": 47,
+   "days_active": 23,
+   "first_seen": "2025-06-19",
+   "last_seen": "2025-09-26",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 67
+  },
+  {
+   "org_id": 3311,
+   "user": "D VAN",
+   "plate": "PH7**0",
+   "count": 47,
+   "days_active": 26,
+   "first_seen": "2025-05-09",
+   "last_seen": "2025-10-28",
+   "reasons": [
+    "DRUG INVESTIGATION"
+   ],
+   "score": 75
+  },
+  {
+   "org_id": 2564,
+   "user": "C MOU",
+   "plate": "AXA***4",
+   "count": 46,
+   "days_active": 16,
+   "first_seen": "2024-11-04",
+   "last_seen": "2025-04-13",
+   "reasons": [
+    "SUSP",
+    "SUSP VEHICLE POSSIBLE OPERATOR BEHO/THEFT HISTORY",
+    "THEF",
+    "THEFT",
+    "TRAF"
+   ],
+   "score": 65
+  },
+  {
+   "org_id": 6326,
+   "user": "C MOS",
+   "plate": "AVT***0",
+   "count": 44,
+   "days_active": 17,
+   "first_seen": "2024-05-03",
+   "last_seen": "2024-06-12",
+   "reasons": [
+    "NARCOTICS"
+   ],
+   "score": 66
+  },
+  {
+   "org_id": 1970,
+   "user": "J MAN",
+   "plate": "182**B",
+   "count": 43,
+   "days_active": 19,
+   "first_seen": "2024-01-11",
+   "last_seen": "2025-05-29",
+   "reasons": [
+    "961",
+    "99",
+    "INVESTIGATION",
+    "WANTED"
+   ],
+   "score": 66
+  },
+  {
+   "org_id": 3121,
+   "user": "B STR",
+   "plate": "TR2**2",
+   "count": 42,
+   "days_active": 26,
+   "first_seen": "2024-02-13",
+   "last_seen": "2025-01-22",
+   "reasons": [
+    "BAIL JUMPING",
+    "DRUGS",
+    "STOLEN"
+   ],
+   "score": 67
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "AXT***2",
+   "count": 42,
+   "days_active": 22,
+   "first_seen": "2024-12-08",
+   "last_seen": "2025-08-31",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 71
+  },
+  {
+   "org_id": 2564,
+   "user": "C MOU",
+   "plate": "XE1***1",
+   "count": 41,
+   "days_active": 28,
+   "first_seen": "2024-11-01",
+   "last_seen": "2025-05-30",
+   "reasons": [
+    "DOME",
+    "FRAU",
+    "SUSP",
+    "THEF",
+    "THEFT"
+   ],
+   "score": 75
+  },
+  {
+   "org_id": 3311,
+   "user": "D VAN",
+   "plate": "ANG***3",
+   "count": 41,
+   "days_active": 26,
+   "first_seen": "2025-07-08",
+   "last_seen": "2025-09-22",
+   "reasons": [
+    "DRUG INVESTIGATION",
+    "DRUGS"
+   ],
+   "score": 74
+  },
+  {
+   "org_id": 5602,
+   "user": "T STO",
+   "plate": "BAJ***0",
+   "count": 41,
+   "days_active": 19,
+   "first_seen": "2025-08-11",
+   "last_seen": "2025-09-15",
+   "reasons": [
+    "FELONY FRAUD",
+    "FRAUD",
+    "FRUAD",
+    "THEFT",
+    "THEFT INVESTIGATION"
+   ],
+   "score": 67
+  },
+  {
+   "org_id": 3323,
+   "user": "B DOU",
+   "plate": "XE4***3",
+   "count": 40,
+   "days_active": 20,
+   "first_seen": "2025-04-24",
+   "last_seen": "2025-08-11",
+   "reasons": [
+    "AUTO THEFT",
+    "AUTO THEFT INV.",
+    "AUTO THEFT INVESTIGATION"
+   ],
+   "score": 68
+  },
+  {
+   "org_id": 3121,
+   "user": "C SEL",
+   "plate": "AZF***0",
+   "count": 39,
+   "days_active": 20,
+   "first_seen": "2024-12-03",
+   "last_seen": "2025-05-23",
+   "reasons": [
+    "DRUG INVESTIGATIN",
+    "DRUG INVESTIGATION",
+    "INVESTIGATION+DRUG"
+   ],
+   "score": 69
+  },
+  {
+   "org_id": 3391,
+   "user": "J TRU",
+   "plate": "VC3**2",
+   "count": 39,
+   "days_active": 22,
+   "first_seen": "2025-09-14",
+   "last_seen": "2025-11-05",
+   "reasons": [
+    "INVESTIGATION"
+   ],
+   "score": 67
+  },
+  {
+   "org_id": 1221,
+   "user": "W ZAC",
+   "plate": "ATZ***9",
+   "count": 38,
+   "days_active": 19,
+   "first_seen": "2024-02-02",
+   "last_seen": "2024-04-02",
+   "reasons": [
+    "24-058",
+    "D. SMITH",
+    "INTEL",
+    "SMITH"
+   ],
+   "score": 66
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "AJY***3",
+   "count": 38,
+   "days_active": 21,
+   "first_seen": "2025-02-02",
+   "last_seen": "2025-06-09",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 67
+  },
+  {
+   "org_id": 3121,
+   "user": "D LAN",
+   "plate": "ANF***6",
+   "count": 36,
+   "days_active": 25,
+   "first_seen": "2023-12-18",
+   "last_seen": "2025-03-12",
+   "reasons": [
+    "DRUGS",
+    "WHITE JEEP 12044LE"
+   ],
+   "score": 72
+  },
+  {
+   "org_id": 6326,
+   "user": "M PAV",
+   "plate": "LDF***4",
+   "count": 36,
+   "days_active": 26,
+   "first_seen": "2024-03-04",
+   "last_seen": "2024-07-08",
+   "reasons": [
+    "RETAIL THEFT",
+    "THEFT"
+   ],
+   "score": 71
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "APX***4",
+   "count": 35,
+   "days_active": 20,
+   "first_seen": "2024-10-14",
+   "last_seen": "2025-03-17",
+   "reasons": [
+    "B24020253"
+   ],
+   "score": 69
+  },
+  {
+   "org_id": 3121,
+   "user": "B STR",
+   "plate": "AYF***4",
+   "count": 35,
+   "days_active": 23,
+   "first_seen": "2024-09-16",
+   "last_seen": "2025-03-07",
+   "reasons": [
+    "DRUGS"
+   ],
+   "score": 66
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "AVD***3",
+   "count": 35,
+   "days_active": 29,
+   "first_seen": "2024-07-21",
+   "last_seen": "2025-11-04",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 69
+  },
+  {
+   "org_id": 5322,
+   "user": "B KEA",
+   "plate": "AUP***1",
+   "count": 34,
+   "days_active": 16,
+   "first_seen": "2025-07-31",
+   "last_seen": "2025-09-26",
+   "reasons": [
+    "DRUGS",
+    "WARRANT"
+   ],
+   "score": 64
+  },
+  {
+   "org_id": 6141,
+   "user": "M DIE",
+   "plate": "AUU***2",
+   "count": 34,
+   "days_active": 16,
+   "first_seen": "2025-05-19",
+   "last_seen": "2025-06-24",
+   "reasons": [
+    "AUU",
+    "I",
+    "IIIIVD",
+    "INVESTIGATION",
+    "INVHG",
+    "L"
+   ],
+   "score": 64
+  },
+  {
+   "org_id": 3695,
+   "user": "B KEL",
+   "plate": "AVL***0",
+   "count": 33,
+   "days_active": 20,
+   "first_seen": "2024-04-29",
+   "last_seen": "2025-11-07",
+   "reasons": [
+    "RIG"
+   ],
+   "score": 66
+  },
+  {
+   "org_id": 3311,
+   "user": "A SPA",
+   "plate": "RW1**4",
+   "count": 31,
+   "days_active": 19,
+   "first_seen": "2024-05-10",
+   "last_seen": "2024-08-30",
+   "reasons": [
+    "24-11807",
+    "IMAGE DOWNLOAD",
+    "WIND POINT POLICE PURSUIT"
+   ],
+   "score": 67
+  },
+  {
+   "org_id": 2391,
+   "user": "C COR",
+   "plate": "ASC***7",
+   "count": 30,
+   "days_active": 20,
+   "first_seen": "2025-02-02",
+   "last_seen": "2025-06-02",
+   "reasons": [
+    "INVESTIGATION"
+   ],
+   "score": 65
+  },
+  {
+   "org_id": 6334,
+   "user": "IRA MAR",
+   "plate": "ARD***0",
+   "count": 29,
+   "days_active": 21,
+   "first_seen": "2024-07-25",
+   "last_seen": "2024-11-26",
+   "reasons": [
+    "24-032276",
+    "CRIMINAL INVESTIGATION"
+   ],
+   "score": 66
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "APX***5",
+   "count": 28,
+   "days_active": 23,
+   "first_seen": "2024-09-06",
+   "last_seen": "2025-03-11",
+   "reasons": [
+    "B24020253"
+   ],
+   "score": 70
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "ART***8",
+   "count": 28,
+   "days_active": 23,
+   "first_seen": "2024-08-05",
+   "last_seen": "2025-11-10",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 68
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "ATL***6",
+   "count": 27,
+   "days_active": 18,
+   "first_seen": "2025-04-22",
+   "last_seen": "2025-10-24",
+   "reasons": [
+    "B24026017",
+    "DRUG"
+   ],
+   "score": 65
+  },
+  {
+   "org_id": 3291,
+   "user": "C LEH",
+   "plate": "AYS***2",
+   "count": 26,
+   "days_active": 21,
+   "first_seen": "2024-11-10",
+   "last_seen": "2025-03-03",
+   "reasons": [
+    "SEARCH"
+   ],
+   "score": 65
+  },
+  {
+   "org_id": 1970,
+   "user": "J MAN",
+   "plate": "AWM***5",
+   "count": 24,
+   "days_active": 21,
+   "first_seen": "2024-04-08",
+   "last_seen": "2025-10-03",
+   "reasons": [
+    "961",
+    "99",
+    "INVESTIGATION"
+   ],
+   "score": 68
+  },
+  {
+   "org_id": 1204,
+   "user": "A WHI",
+   "plate": "AXB***2",
+   "count": 22,
+   "days_active": 18,
+   "first_seen": "2024-09-11",
+   "last_seen": "2024-12-02",
+   "reasons": [
+    "B24020253"
+   ],
+   "score": 64
+  },
+  {
+   "org_id": 6326,
+   "user": "T FIL",
+   "plate": "EQ6***3",
+   "count": 22,
+   "days_active": 19,
+   "first_seen": "2024-04-09",
+   "last_seen": "2025-03-13",
+   "reasons": [
+    "I3-23-0075"
+   ],
+   "score": 65
+  }
+ ]
+}

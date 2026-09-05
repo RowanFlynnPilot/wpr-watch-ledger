@@ -18,7 +18,7 @@ const GROUPS = [
   },
   {
     label: "Law-enforcement support & state agencies",
-    test: (n) => /communications|joint services|department of justice/.test(n),
+    test: (n) => /communications|joint services|department of justice|da'?s office|district attorney|dtf|task force/.test(n),
   },
 ];
 
@@ -30,6 +30,7 @@ function facts(a) {
     parts.push(`named in ${fmt(a.network_mentions)} ${a.network_mentions === 1 ? "agency's" : "agencies'"} Flock sharing lists`);
   if (a.wisdot) parts.push(`${fmt(a.wisdot.cameras)} camera${a.wisdot.cameras === 1 ? "" : "s"} permitted on state highways`);
   if (a.osm_cameras > 0) parts.push(`${fmt(a.osm_cameras)} mapped camera${a.osm_cameras === 1 ? "" : "s"} tagged by volunteers`);
+  if (a.usatoday?.searches > 0) parts.push(`${fmt(a.usatoday.searches)} searches on record with USA TODAY`);
   if (a.atlas) parts.push("documented in the Atlas of Surveillance");
   return parts.join(" · ");
 }

@@ -56,6 +56,9 @@ See CLAUDE.md for the row schema. Every row requires a source URL and an as-of d
 - Camera locations © OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)
 - Transparency portal statistics aggregated by Eyes On Flock (eyesonflock.com)
 - Agency records from EFF's Atlas of Surveillance (atlasofsurveillance.org)
+- Search records from Flock usage audit logs obtained under public-records laws and analyzed
+  by USA TODAY (data.usatoday.com/projects/flock-search). `data/usatoday_flock_search.json`
+  is a committed snapshot of the Wisconsin slice.
 - State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin
   Open Records Law and mapped by Deflock Dane (deflockdane.org). `data/wisdot_permits.json`
   is a committed snapshot — refresh it when WisDOT releases new records, not on the cron.

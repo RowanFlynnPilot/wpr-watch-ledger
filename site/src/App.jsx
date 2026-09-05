@@ -9,6 +9,7 @@ import LedgerBand from "./LedgerBand.jsx";
 import Trend from "./Trend.jsx";
 import Reach from "./Reach.jsx";
 import PermitTimeline from "./PermitTimeline.jsx";
+import SilentSearchers from "./SilentSearchers.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -203,6 +204,8 @@ export default function App() {
         )}
       </section>
 
+      {meta.usatoday && <SilentSearchers agencies={agencies} usat={meta.usatoday} />}
+
       <section className="map-section" aria-label="Camera map">
         <h2>Every mapped camera</h2>
         <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} />
@@ -239,6 +242,13 @@ export default function App() {
                 {a.osm_cameras > 0 && ` · ${fmt(a.osm_cameras)} cameras mapped by volunteers`}
                 {a.network_mentions > 0 && ` · named in ${a.network_mentions} other agencies' sharing lists`}
               </p>
+              {a.usatoday && (
+                <p className="card-facts card-usat">
+                  USA TODAY records: {fmt(a.usatoday.searches)} searches, {meta.usatoday.coverage.first_seen.slice(0, 4)}–{meta.usatoday.coverage.last_seen.slice(0, 4)}
+                  {a.usatoday.flagged_rows > 0 &&
+                    ` · ${a.usatoday.flagged_rows} of the nation's 5,000 highest-frequency plate searches, across ${a.usatoday.flagged_users} user${a.usatoday.flagged_users === 1 ? "" : "s"}; one plate searched ${fmt(a.usatoday.max_plate_count)} times over ${a.usatoday.flagged[0].days_active} days (stated reason: ${a.usatoday.flagged[0].reasons.slice(0, 2).join(", ").toLowerCase() || "none given"})`}
+                </p>
+              )}
               {a.status.source && (
                 <a className="card-source" href={a.status.source} target="_blank" rel="noreferrer">Source</a>
               )}
@@ -250,8 +260,9 @@ export default function App() {
       <section className="county-rollup" aria-label="County by county">
         <h2>County by county</h2>
         <p className="county-dek">
-          Where the cameras, the agencies, and the transparency are — and aren't. Population
-          figures are Wisconsin DOA official estimates as of January 1, 2025.
+          Where the cameras, the agencies, the searches, and the transparency are — and aren't.
+          Population figures are Wisconsin DOA official estimates as of January 1, 2025; searches
+          on record are USA TODAY's audit-log totals for {meta.usatoday?.coverage.first_seen.slice(0, 4)}–{meta.usatoday?.coverage.last_seen.slice(0, 4)}.
         </p>
         <CountyTable counties={counties.counties} />
         <p className="table-count">
@@ -263,10 +274,13 @@ export default function App() {
       <section className="roster" aria-label="Agency roster">
         <h2>The agency roster</h2>
         <p className="roster-dek">
-          Every Wisconsin agency documented using ALPRs or appearing in the Flock network's
-          data-sharing lists. Camera, search, hit-rate and reach figures come from each agency's
-          own transparency portal; a dash means the agency publishes nothing. The sparkline is
-          the agency's 30-day search count across every weekly snapshot on record.
+          Every Wisconsin agency documented using ALPRs, appearing in the Flock network's
+          data-sharing lists, or running searches in USA TODAY's audit-log records. Camera,
+          30-day search, hit-rate and reach figures come from each agency's own transparency
+          portal; a dash means the agency publishes nothing. "Searches on record" is USA TODAY's
+          cumulative count from Flock audit logs, a different measure that covers the silent
+          agencies too. The sparkline is the agency's 30-day search count across every weekly
+          snapshot on record.
         </p>
         <AgencyTable agencies={agencies} searchDeltas={searchDeltas} history={history} staleThreshold={staleThreshold} />
       </section>
@@ -323,6 +337,18 @@ export default function App() {
           cameras) is shown only for portals that publish that list, with Flock's own demo and
           deactivated placeholders removed.</p>
         <p>{meta.attribution.atlas}.</p>
+        {meta.usatoday && (
+          <p>
+            {meta.attribution.usatoday}. Wisconsin coverage: {fmt(meta.usatoday.coverage.searches)} searches by{" "}
+            {meta.usatoday.coverage.agencies} agencies and {fmt(meta.usatoday.coverage.users)} known users,{" "}
+            {meta.usatoday.coverage.first_seen} to {meta.usatoday.coverage.last_seen}; snapshot taken{" "}
+            {meta.usatoday.retrieved}. These are individual searches accumulated over the whole window,
+            not comparable to the portals' 30-day session counts, and an agency's total reflects the
+            audit logs USA TODAY was able to obtain. Flock withdrew the audit view from customers in
+            December 2025. High-frequency flags are USA TODAY's own frequency score; in their words, a
+            high score is not an accusation of wrongdoing.
+          </p>
+        )}
         <p>
           {meta.attribution.wisdot ||
             "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)"}
@@ -331,8 +357,8 @@ export default function App() {
         <p>
           Contract status for {meta.curated_count} agencies is hand-verified against published
           reporting, linked per row. All other statuses are derived automatically: an agency is
-          marked active if it publishes a live portal or currently appears in other agencies'
-          sharing lists, and unverified otherwise. Data refreshes weekly. Corrections:{" "}
+          marked active if it publishes a live portal, currently appears in other agencies'
+          sharing lists, or ran searches in USA TODAY's records, and unverified otherwise. Data refreshes weekly. Corrections:{" "}
           <a href="https://wausaupilotandreview.com">contact the newsroom</a>.
           {/* TODO(rowan): point this at the real corrections contact */}
         </p>

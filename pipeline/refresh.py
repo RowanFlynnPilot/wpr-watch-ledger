@@ -10,6 +10,8 @@ Sources:
   2. Eyes On Flock aggregate (eyesonflock.com/api/v1/data)      -> transparency portal stats
   3. EFF Atlas of Surveillance CSV                              -> sourced agency records
   + data/status_overlay.json (hand-curated contract status; overlay always wins)
+  + data/usatoday_flock_search.json (committed snapshot of USA TODAY's audit-log
+    search totals per Wisconsin agency, Jan 2023 - Apr 2026)
 """
 
 import csv
@@ -402,7 +404,7 @@ def build_counties(agencies: list[dict], wisdot: dict, population: dict, generat
     """Per-county rollup + statewide coverage. County spellings are enforced against
     DOA's official list — a new source misspelling aborts instead of leaking through."""
     rows = {name: {"name": name, "population": pop, "agencies": 0, "in_network": 0,
-                   "portals": 0, "audits": 0, "dropped": 0, "wisdot_cameras": 0}
+                   "portals": 0, "audits": 0, "dropped": 0, "wisdot_cameras": 0, "usat_searches": 0}
             for name, pop in population["counties"].items()}
     unresolved = 0
     for a in agencies:
@@ -421,6 +423,8 @@ def build_counties(agencies: list[dict], wisdot: dict, population: dict, generat
                 rows[c]["audits"] += 1
         if a["status"]["value"] == "dropped":
             rows[c]["dropped"] += 1
+        if a["usatoday"]:
+            rows[c]["usat_searches"] += a["usatoday"]["searches"]
     unlocated_cameras = 0
     for cam in wisdot["cameras"]:
         c = f"{cam['county']} County"
@@ -503,6 +507,45 @@ def load_wisdot() -> dict:
             raise RuntimeError(f"wisdot_permits.json camera outside Wisconsin: {c['lat']},{c['lon']} ({c['owner']})")
         if not c["owner"]:
             raise RuntimeError("wisdot_permits.json camera with empty owner")
+    return doc
+
+
+# ---------------------------------------------------------------- usa today search records
+
+USAT_KEYS = {"source", "url", "retrieved", "files", "coverage", "notes", "agencies", "high_frequency"}
+USAT_COVERAGE_INTS = {"searches", "agencies", "users", "plates", "records", "national_searches", "national_agencies"}
+# Units of a department whose searches belong with the department in the roster.
+USAT_ALIASES = {"Milwaukee WI PD - STAC": "Milwaukee WI PD"}
+
+
+def load_usatoday() -> dict:
+    """Committed snapshot of USA TODAY's Flock search-records tool, Wisconsin slice:
+    cumulative audit-log searches per agency plus the state's rows among the 5,000
+    highest-frequency plate searches nationally. Static like the WisDOT permits."""
+    path = DATA / "usatoday_flock_search.json"
+    if not path.exists():
+        raise RuntimeError("data/usatoday_flock_search.json is missing; the USA TODAY search-records snapshot is required.")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    if set(doc.keys()) != USAT_KEYS:
+        raise RuntimeError(f"usatoday_flock_search.json keys drifted: {set(doc.keys()) ^ USAT_KEYS}")
+    cov = doc["coverage"]
+    for k in USAT_COVERAGE_INTS:
+        if not isinstance(cov.get(k), int) or cov[k] <= 0:
+            raise RuntimeError(f"usatoday_flock_search.json coverage.{k} must be a positive int")
+    for k in ("first_seen", "last_seen"):
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", cov.get(k, "")):
+            raise RuntimeError(f"usatoday_flock_search.json coverage.{k} must be YYYY-MM-DD")
+    if len(doc["agencies"]) < 200:
+        raise RuntimeError(f"usatoday_flock_search.json has only {len(doc['agencies'])} agencies; expected 240+. Truncated?")
+    for a in doc["agencies"]:
+        if set(a.keys()) != {"org_id", "name", "searches"} or not isinstance(a["searches"], int) or a["searches"] < 0:
+            raise RuntimeError(f"usatoday_flock_search.json bad agency row: {a}")
+    if sum(a["searches"] for a in doc["agencies"]) != cov["searches"]:
+        raise RuntimeError("usatoday_flock_search.json agency totals do not sum to coverage.searches")
+    ids = {a["org_id"] for a in doc["agencies"]}
+    for r in doc["high_frequency"]:
+        if r["org_id"] not in ids or not isinstance(r["count"], int) or not isinstance(r["score"], int):
+            raise RuntimeError(f"usatoday_flock_search.json bad high_frequency row: {r}")
     return doc
 
 
@@ -589,7 +632,7 @@ def load_overlay() -> dict:
 
 
 def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict,
-                   city_county: dict, wisdot: dict, cameras: dict) -> tuple[list[dict], list[dict]]:
+                   city_county: dict, wisdot: dict, cameras: dict, usat: dict) -> tuple[list[dict], list[dict]]:
     """Returns (roster, OSM operators that matched no roster agency)."""
     agencies: dict[str, dict] = {}
 
@@ -597,13 +640,18 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         return agencies.setdefault(key, {
             "name": name, "canonical": key, "county": None, "type": None,
             "in_network": False, "network_mentions": 0,
-            "portal": None, "atlas": None, "wisdot": None, "osm_cameras": 0,
+            "portal": None, "atlas": None, "wisdot": None, "osm_cameras": 0, "usatoday": None,
             "status": {"value": "unknown", "derived": True, "as_of": None, "source": None, "note": None},
         })
 
     for p in portals:
         a = get(p["canonical"], p["name"])
-        a["county"], a["type"] = p["county"], p["type"]
+        # EOF started shipping bare county names ("Winnebago") in 2026-09; DOA's list is
+        # "<Name> County", so normalize before the county rollup validates it.
+        county = p["county"]
+        if county and not county.endswith(" County"):
+            county = f"{county} County"
+        a["county"], a["type"] = COUNTY_FIXUPS.get(county, county), p["type"]
         a["portal"] = {k: p[k] for k in ("portal_url", "cameras", "searches_30d", "retention_days",
                                          "vehicles_captured_30d", "hotlist_hits_30d",
                                          "shared_with_count", "prohibited_uses", "public_search_audit",
@@ -658,6 +706,39 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         a = get(key, w["name"])
         a["wisdot"] = {"cameras": w["cameras"], "permits": sorted(w["permits"]),
                        "counties": sorted(w["counties"])}
+
+    # USA TODAY audit-log records: cumulative searches per agency over the coverage
+    # window. An agency that ran searches is a Flock customer whatever the sharing
+    # lists say, so it joins the network roster; overlay status still wins.
+    cov = usat["coverage"]
+    by_key: dict[str, dict] = {}
+    id_key: dict[int, str] = {}
+    for rec in usat["agencies"]:
+        name = USAT_ALIASES.get(rec["name"], rec["name"])
+        key = canonicalize(name)
+        id_key[rec["org_id"]] = key
+        e = by_key.setdefault(key, {"name": re.sub(r"\s*\(WI\)|\s+WI\b", "", name).strip(),
+                                    "searches": 0, "org_ids": [], "flagged": [], "users": set()})
+        e["searches"] += rec["searches"]
+        e["org_ids"].append(rec["org_id"])
+    for r in usat["high_frequency"]:
+        e = by_key[id_key[r["org_id"]]]
+        e["flagged"].append({"count": r["count"], "days_active": r["days_active"],
+                             "first_seen": r["first_seen"], "last_seen": r["last_seen"],
+                             "reasons": r["reasons"], "score": r["score"]})
+        e["users"].add(r["user"])
+    for key, e in by_key.items():
+        a = get(key, e["name"])
+        a["usatoday"] = {"searches": e["searches"], "org_ids": sorted(e["org_ids"]),
+                         "flagged_rows": len(e["flagged"]), "flagged_users": len(e["users"]),
+                         "max_plate_count": max((f["count"] for f in e["flagged"]), default=0),
+                         "flagged": sorted(e["flagged"], key=lambda f: -f["count"])}
+        if e["searches"] > 0:
+            a["in_network"] = True
+            if a["status"]["value"] == "unknown":
+                a["status"] = {"value": "active", "derived": True, "as_of": None, "source": usat["url"],
+                               "note": f"Ran {e['searches']:,} Flock searches in audit logs obtained by USA TODAY "
+                                       f"({cov['first_seen']} to {cov['last_seen']})"}
 
     # OSM operator tags: volunteers sometimes record who runs a camera. Matched to the
     # roster by canonical name (a bare municipality resolves to its PD, a bare county
@@ -716,7 +797,12 @@ def main() -> None:
     city_county = load_city_county()
     wisdot = load_wisdot()
     population = load_population()
-    agencies, unmatched_operators = build_agencies(portals, edges, atlas, overlay, city_county, wisdot, cameras)
+    usat = load_usatoday()
+    agencies, unmatched_operators = build_agencies(portals, edges, atlas, overlay, city_county, wisdot, cameras, usat)
+    with_usat = [a for a in agencies if a["usatoday"]]
+    print(f"      USA TODAY records: {len(with_usat)} agencies, {sum(a['usatoday']['searches'] for a in with_usat):,} searches "
+          f"({usat['coverage']['first_seen']} to {usat['coverage']['last_seen']}); "
+          f"{sum(1 for a in with_usat if not a['portal'] and a['usatoday']['searches'] > 0)} of them publish no portal")
     hand_read = [a["name"] for a in agencies if a["portal"] and a["portal"].get("hand_read")]
     stale = [a["name"] for a in agencies
              if a["portal"] and a["portal"]["stale_days"] is not None and a["portal"]["stale_days"] > STALE_DAYS]
@@ -754,6 +840,7 @@ def main() -> None:
         "wisdot_agency_count": with_wisdot,
         "wisdot_permits_by_year": dict(sorted(permits_by_year.items())),
         "stale_days_threshold": STALE_DAYS,
+        "usatoday": {"retrieved": usat["retrieved"], "url": usat["url"], "coverage": usat["coverage"], "notes": usat["notes"]},
         "stale_portal_count": len(stale),
         "national": national,
         "attribution": {
@@ -761,6 +848,7 @@ def main() -> None:
             "portals": "Transparency portal statistics aggregated by Eyes On Flock (eyesonflock.com)",
             "atlas": "Agency records from EFF's Atlas of Surveillance (atlasofsurveillance.org)",
             "wisdot": "State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin Open Records Law and mapped by Deflock Dane (deflockdane.org)",
+            "usatoday": "Search records from Flock usage audit logs obtained under public-records laws and analyzed by USA TODAY (data.usatoday.com/projects/flock-search)",
         },
     }
 

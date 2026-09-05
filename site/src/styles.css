@@ -587,6 +587,31 @@ tbody tr:hover td { background: var(--cream); }
   vertical-align: middle;
 }
 .flag-stale { color: var(--rust); border-color: var(--rust); }
+.flag-freq { border-style: solid; color: var(--ink); }
+.cell-usat { white-space: nowrap; }
+.card-usat { border-top: 1px dashed var(--line); padding-top: 0.5rem; }
+
+/* the silent searchers */
+.silent { margin-bottom: 3rem; }
+.silent-dek { max-width: 44rem; }
+.silent-rows { display: flex; flex-direction: column; gap: 0.5rem; background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--rust); padding: 1rem 1.2rem; }
+.silent-row { display: grid; grid-template-columns: 1.6rem minmax(9rem, 15rem) 1fr; gap: 0.7rem; align-items: center; font-size: 0.88rem; }
+.silent-rank { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-soft); text-align: right; }
+.silent-name { line-height: 1.25; }
+.silent-name .badge { margin-left: 0.4rem; }
+.silent-bar { display: block; height: 14px; background: var(--cream); border: 1px solid var(--line); position: relative; }
+.silent-bar > span { display: block; height: 100%; background: var(--rust); opacity: 0.85; }
+.silent-bar.has-portal > span { background: var(--teal); }
+.silent-fact { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); display: block; margin-top: 0.2rem; }
+.silent-key { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--mono); font-size: 0.74rem; color: var(--ink-soft); margin-bottom: 0.6rem; }
+.silent-key-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+.silent-swatch { display: inline-block; width: 14px; height: 10px; border: 1px solid var(--line); }
+.silent-swatch.silent-yes { background: var(--rust); }
+.silent-swatch.silent-no { background: var(--teal); }
+@media (max-width: 560px) {
+  .silent-row { grid-template-columns: 1.6rem 1fr; }
+  .silent-row > div:last-child { grid-column: 2; }
+}
 .src-audit { font-weight: 700; }
 .cell-searches { white-space: nowrap; }
 .spark { vertical-align: middle; margin-left: 0.45rem; overflow: visible; }

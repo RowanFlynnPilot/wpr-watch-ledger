@@ -7,6 +7,7 @@ const COLS = [
   { key: "in_network", label: "In network", get: (r) => r.in_network, numeric: true },
   { key: "portals", label: "Portals", title: "Agencies publishing a Flock transparency portal", get: (r) => r.portals, numeric: true },
   { key: "audits", label: "Audit logs", title: "Agencies also publishing a redacted log of every search", get: (r) => r.audits ?? 0, numeric: true },
+  { key: "usat", label: "Searches on record", title: "Flock searches by the county's agencies in audit logs obtained by USA TODAY, Jan 2023 to Apr 2026", get: (r) => r.usat_searches ?? 0, numeric: true },
   { key: "wisdot_cameras", label: "Hwy cams", title: "Cameras permitted on state-highway right-of-way (WisDOT records)", get: (r) => r.wisdot_cameras, numeric: true },
   { key: "dropped", label: "Dropped", get: (r) => r.dropped, numeric: true },
 ];
@@ -60,6 +61,7 @@ export default function CountyTable({ counties }) {
               <td className="cell-num">{fmt(r.in_network)}</td>
               <td className="cell-num">{fmt(r.portals)}</td>
               <td className="cell-num">{fmt(r.audits ?? 0)}</td>
+              <td className="cell-num">{fmt(r.usat_searches ?? 0)}</td>
               <td className="cell-num">{fmt(r.wisdot_cameras)}</td>
               <td className="cell-num">{fmt(r.dropped)}</td>
             </tr>
