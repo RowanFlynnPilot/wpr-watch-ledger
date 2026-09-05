@@ -65,7 +65,9 @@ function Figure({ series, label, unit, portals = true, big = false }) {
       <div className={`kpi${big ? " kpi-big" : ""}`}>
         <span className="kpi-num">{fmt(last.value)}</span>
         <span className="kpi-label">{label}</span>
-        <Sparkline points={series} width={110} height={26} label={`${label}, weekly`} />
+      </div>
+      <div className="kpi-spark">
+        <Sparkline points={series} width={200} height={30} label={`${label}, weekly`} />
       </div>
       <Change series={series} unit={unit} portals={portals} />
     </>
