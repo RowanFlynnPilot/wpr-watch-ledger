@@ -738,16 +738,45 @@ tbody tr:hover td.cell-usat { background: #e9e2d2; }
 .reach-key { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--mono); font-size: 0.74rem; color: var(--ink-soft); margin-bottom: 0.6rem; }
 .reach-key-item { display: inline-flex; align-items: center; gap: 0.4rem; }
 .reach-swatch { display: inline-block; width: 14px; height: 10px; border: 1px solid var(--line); }
-.reach-rows { display: flex; flex-direction: column; gap: 0.7rem; background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--teal); padding: 1rem 1.2rem; }
-.reach-row { display: grid; grid-template-columns: minmax(9rem, 15rem) 1fr; gap: 0.9rem; align-items: center; font-size: 0.88rem; }
+.reach-rows { display: flex; flex-direction: column; gap: 0; background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--teal); padding: 0.6rem 1.2rem 0.8rem; }
+.reach-row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 14rem) 1fr auto;
+  gap: 0.9rem;
+  align-items: center;
+  font-size: 0.88rem;
+  width: 100%;
+  text-align: left;
+  font-family: var(--body);
+  color: var(--ink);
+  background: none;
+  border: none;
+  border-top: 1px dashed var(--line);
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+.reach-row:hover, .reach-row.open { background: var(--cream); }
+.reach-row.reach-home .reach-name { font-weight: 700; }
+.reach-row.reach-home .reach-name::after { content: " \25CF"; color: var(--teal); font-size: 0.6rem; vertical-align: middle; }
+.reach-head { border-top: none; padding: 0 0 0.2rem; cursor: default; font-family: var(--mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+.reach-head:hover { background: none; }
+.reach-figs { display: grid; grid-template-columns: 4rem 4.6rem 3.4rem; gap: 0.5rem; font-family: var(--mono); font-size: 0.78rem; text-align: right; color: var(--ink); }
+.reach-figs span:nth-child(2) { color: var(--ink-soft); }
+.reach-states { display: flex; flex-wrap: wrap; gap: 0.3rem; padding: 0.2rem 0 0.7rem; font-size: 0.78rem; color: var(--ink-soft); }
+.state-chip { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.04em; color: var(--ink); background: var(--cream); border: 1px solid var(--line); padding: 0.05rem 0.4rem; border-radius: 2px; }
 .reach-name .badge { margin-left: 0.4rem; }
 .reach-bar { display: flex; height: 14px; background: var(--cream); border: 1px solid var(--line); overflow: hidden; }
 .reach-wi { background: var(--teal); display: block; }
-.reach-out { background: repeating-linear-gradient(135deg, var(--ink-soft) 0 3px, transparent 3px 6px); display: block; }
+.reach-out { background: var(--ink-soft); opacity: 0.45; display: block; }
 .reach-rest { font-size: 0.82rem; color: var(--ink-soft); margin: 0.6rem 0 0.4rem; max-width: 46rem; }
-.reach-fact { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); display: block; margin-top: 0.2rem; }
-@media (max-width: 560px) {
-  .reach-row { grid-template-columns: 1fr; gap: 0.25rem; }
+.reach-bar { display: flex; }
+@media (max-width: 640px) {
+  .reach-row { grid-template-columns: 1fr; gap: 0.3rem; }
+  .reach-figs { text-align: left; grid-template-columns: repeat(3, auto); justify-content: start; gap: 1rem; }
+  .reach-head { display: none; }
+  .reach-figs span:nth-child(1)::after { content: " can search"; color: var(--ink-soft); }
+  .reach-figs span:nth-child(2)::after { content: " out of state"; }
+  .reach-figs span:nth-child(3)::after { content: " states"; color: var(--ink-soft); }
 }
 
 /* permit timeline */

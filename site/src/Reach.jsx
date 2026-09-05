@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+
+const STATE_NAMES = { AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California", CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming", DC: "District of Columbia" };
+const HOME = "Marathon County";
 
 // How far the data travels: the portals that disclose which agencies can search
 // THEIR cameras (the inbound list), split Wisconsin vs out-of-state. Most portals
@@ -7,6 +10,7 @@ import React from "react";
 const fmt = (n) => n.toLocaleString("en-US");
 
 export default function Reach({ agencies }) {
+  const [open, setOpen] = useState(null);
   const withPortal = agencies.filter((a) => a.portal);
   const disclosing = withPortal
     .filter((a) => a.portal.reach && a.portal.reach.received)
@@ -37,28 +41,54 @@ export default function Reach({ agencies }) {
         <span className="reach-key-item"><span className="reach-swatch reach-out" /> Out-of-state agencies</span>
       </div>
       <div className="reach-rows">
+        <div className="reach-row reach-head" aria-hidden="true">
+          <span />
+          <span />
+          <span className="reach-figs">
+            <span>can search</span><span>out of state</span><span>states</span>
+          </span>
+        </div>
         {shown.map((a) => {
           const r = a.portal.reach.received;
+          const isOpen = open === a.canonical;
+          const outStates = r.states.filter((s) => s !== "WI");
           return (
-            <div className="reach-row" key={a.canonical}>
-              <span className="reach-name">
-                {a.name}
-                {a.status.value === "dropped" && <span className="badge badge-dropped">dropped</span>}
-              </span>
-              <div>
-                <div
+            <React.Fragment key={a.canonical}>
+              <button
+                type="button"
+                className={`reach-row${a.county === HOME ? " reach-home" : ""}${isOpen ? " open" : ""}`}
+                onClick={() => setOpen(isOpen ? null : a.canonical)}
+                aria-expanded={isOpen}
+                title={isOpen ? "Hide the states" : `Show the ${outStates.length} states`}
+              >
+                <span className="reach-name">
+                  {a.name}
+                  {a.status.value === "dropped" && <span className="badge badge-dropped">dropped</span>}
+                </span>
+                <span
                   className="reach-bar"
                   role="img"
-                  aria-label={`${a.name}: searchable by ${fmt(r.total)} agencies, ${fmt(r.out_of_state)} out of state, in ${r.states.length} states`}
+                  aria-label={`${a.name}: searchable by ${fmt(r.total)} agencies, ${fmt(r.out_of_state)} out of state, in ${outStates.length} states`}
                 >
                   <span className="reach-wi" style={{ width: `${(100 * r.wi) / max}%` }} />
                   <span className="reach-out" style={{ width: `${(100 * r.out_of_state) / max}%` }} />
-                </div>
-                <span className="reach-fact">
-                  {fmt(r.total)} agencies can search · {fmt(r.out_of_state)} out of state · {r.states.length} states
                 </span>
-              </div>
-            </div>
+                <span className="reach-figs">
+                  <span>{fmt(r.total)}</span>
+                  <span>{fmt(r.out_of_state)}</span>
+                  <span>{outStates.length}</span>
+                </span>
+              </button>
+              {isOpen && (
+                <div className="reach-states">
+                  {outStates.length === 0
+                    ? "Every agency on the inbound list is in Wisconsin."
+                    : outStates.map((s) => (
+                        <span className="state-chip" key={s} title={STATE_NAMES[s] || s}>{s}</span>
+                      ))}
+                </div>
+              )}
+            </React.Fragment>
           );
         })}
       </div>
