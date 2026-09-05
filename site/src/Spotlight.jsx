@@ -38,7 +38,7 @@ function Card({ a, usat }) {
         {p?.hand_read && " · read by hand, not indexed by Eyes On Flock"}
       </p>
       <div className="cstats">
-        <Stat num={p?.cameras} label="cameras" title="Cameras reported on the agency's portal" />
+        <Stat num={p?.cameras} label="cameras on its portal" title="Total cameras reported on the agency's portal, plate readers plus any other Flock cameras" />
         <Stat num={p?.searches_30d} label="searches, 30 days" title="Search sessions in the last 30 days, per the portal" />
         <Stat num={p?.shared_with_count} label="agencies it shares with" title="Agencies granted access to this agency's cameras" />
         <Stat num={p?.reach?.received?.total} label="agencies that can search it" title="Agencies whose searches can reach these cameras" />

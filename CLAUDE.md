@@ -15,6 +15,8 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   2. Eyes On Flock (`eyesonflock.com/api/v1/data`, undocumented community API):
      WI transparency portals + WI agency roster DERIVED from every portal's
      `organizations_shared_with` lists nationwide -> portal stats + network edges.
+     EOF `total_cameras` is Flock's TOTAL camera count (LPR plus any other Flock
+     cameras, e.g. Delafield 9 total / 7 LPR); label it "cameras on the portal", never "ALPRs".
      Also carried through per portal: `updated`/`stale_days` (from `data_last_updated`;
      a portal frozen > STALE_DAYS=45 is flagged and excluded from statewide 30-day
      totals on the site), `hit_rate`, and `reach` (shared/received lists split WI vs
