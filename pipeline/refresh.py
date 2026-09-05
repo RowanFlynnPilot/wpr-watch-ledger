@@ -60,6 +60,8 @@ VENDOR_OPERATORS = {"flock safety", "flock", "motorola solutions", "genetec", "l
 # Corrections only — joint or ambiguous tags stay exactly as volunteers wrote them.
 OSM_OPERATOR_ALIASES = {
     "Bayfield County Sherrif's Dept": "Bayfield County Sheriff's Office",
+    "Fibd Du Lac County": "Fond du Lac County",   # bare county -> its sheriff, per the join rule
+    "froedtert": "Froedtert Health",
 }
 
 
