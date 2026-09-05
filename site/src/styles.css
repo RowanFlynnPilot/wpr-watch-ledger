@@ -240,14 +240,66 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .gap-key-item { display: inline-flex; align-items: center; gap: 0.45rem; }
 .key-swatch { width: 6px; height: 15px; flex-shrink: 0; }
 .gap-bar { display: flex; flex-wrap: wrap; gap: 5px 3px; margin: 0 0 0.5rem; }
+.gap-bar-wrap { position: relative; }
 .tick {
+  display: block;
   width: 6px;
   height: 26px;
+  padding: 0;
+  margin: 0;
   background: transparent;
   border: 1.25px solid var(--ink-soft);
+  border-radius: 0;
   opacity: 0.45;
+  cursor: pointer;
   transition: transform 0.12s, opacity 0.12s;
 }
+.tick:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+.gap-bar .tick.active { transform: scaleY(1.18); opacity: 1; }
+/* tooltip card */
+.tip {
+  position: absolute;
+  z-index: 20;
+  width: 17rem;
+  max-width: calc(100vw - 2.5rem);
+  transform: translateX(-14px);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--teal);
+  box-shadow: 0 6px 18px rgba(31, 36, 33, 0.14);
+  padding: 0.7rem 0.85rem 0.6rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  pointer-events: none;
+  animation: tip-in 0.12s ease-out;
+}
+.tip.tip-flip { transform: translateX(calc(-100% + 14px)); }
+.tip.tip-dropped { border-top-color: var(--rust); }
+.tip::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 8px;
+  border: 6px solid transparent;
+  border-top: none;
+  border-bottom: 7px solid var(--teal);
+}
+.tip.tip-flip::before { left: auto; right: 8px; }
+.tip.tip-dropped::before { border-bottom-color: var(--rust); }
+@keyframes tip-in { from { opacity: 0; translate: 0 -3px; } to { opacity: 1; translate: 0 0; } }
+.tip-name { font-family: var(--display); font-weight: 600; font-size: 1rem; line-height: 1.2; margin-bottom: 0.2rem; }
+.tip-meta { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); margin-bottom: 0.45rem; }
+.tip-meta .badge { font-size: 0.62rem; padding: 0.05rem 0.4rem; }
+.tip-tier { font-weight: 500; padding: 0.25rem 0.5rem; margin: 0 0 0.45rem; border-left: 3px solid var(--line); background: var(--cream); }
+.tip-tier.tier-0 { border-left-color: var(--ink); }
+.tip-tier.tier-1 { border-left-color: var(--teal); }
+.tip-tier.tier-2 { border-left-color: var(--ink-soft); color: var(--ink-soft); }
+.tip-stats { display: grid; grid-template-columns: auto 1fr; gap: 0.1rem 0.7rem; margin: 0 0 0.4rem; font-family: var(--mono); font-size: 0.72rem; }
+.tip-stats dt { color: var(--ink-soft); }
+.tip-stats dd { margin: 0; color: var(--ink); }
+.tip-src { color: var(--ink-soft); font-size: 0.62rem; letter-spacing: 0.04em; }
+.tip-note { font-size: 0.75rem; color: var(--ink-soft); margin-bottom: 0.4rem; }
+.tip-hint { font-family: var(--mono); font-size: 0.66rem; color: var(--teal-deep); letter-spacing: 0.04em; text-transform: uppercase; }
 .tick.filled { background: var(--teal); border-color: var(--teal-deep); opacity: 1; }
 .tick.tick-dropped, .key-swatch.tick-dropped { border: 1.5px solid var(--rust); opacity: 0.9; }
 .tick.tick-dropped:not(.filled) { background: rgba(181, 84, 59, 0.12); }

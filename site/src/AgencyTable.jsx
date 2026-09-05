@@ -31,10 +31,17 @@ const FILTERS = [
   { key: "silent", label: "Searches, no portal", test: (a) => a.usatoday?.searches > 0 && !a.portal },
 ];
 
-export default function AgencyTable({ agencies, searchDeltas, history, staleThreshold }) {
+export default function AgencyTable({ agencies, searchDeltas, history, staleThreshold, externalQuery }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState({ key: null, dir: 1 });
+
+  // Another section asked for one agency (a click on the gap bar): show just that row.
+  useEffect(() => {
+    if (!externalQuery) return;
+    setQuery(externalQuery.text);
+    setFilter("all");
+  }, [externalQuery]);
 
   // Per-agency weekly search series for the sparklines.
   const series = useMemo(() => {

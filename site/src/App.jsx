@@ -10,12 +10,19 @@ import Trend from "./Trend.jsx";
 import Reach from "./Reach.jsx";
 import PermitTimeline from "./PermitTimeline.jsx";
 import SilentSearchers from "./SilentSearchers.jsx";
+import GapBar from "./GapBar.jsx";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  // A tick in the gap bar was clicked: filter the roster to that agency and scroll to it.
+  const [rosterQuery, setRosterQuery] = useState(null);
+  const findInRoster = (a) => {
+    setRosterQuery({ text: a.name, n: Date.now() });
+    document.querySelector(".roster")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   useEffect(() => {
     Promise.all(
@@ -80,11 +87,6 @@ export default function App() {
   const updated = new Date(meta.generated).toLocaleDateString("en-US", {
     year: "numeric", month: "long", day: "numeric", timeZone: "UTC",
   });
-
-  const tickClass = (a) =>
-    `tick${a.portal ? " filled" : ""}${a.portal?.public_search_audit ? " audit" : ""}${a.status.value === "dropped" ? " tick-dropped" : ""}`;
-  const tickTitle = (a) =>
-    `${a.name}${a.portal ? (a.portal.public_search_audit ? " — publishes usage data and a search audit log" : " — publishes usage data") : " — discloses nothing"}${a.status.value === "dropped" ? " · announced dropping Flock" : ""}`;
 
   return (
     <div className="page">
@@ -179,17 +181,10 @@ export default function App() {
             announced dropping Flock
           </span>
         </div>
-        <div
-          className="gap-bar"
-          role="img"
-          aria-label={`${withPortal.length} of ${inNetwork.length} network agencies publish a transparency portal, ${withAudit.length} of those also publish a search audit log; ${inNetwork.filter((a) => a.status.value === "dropped").length} have announced dropping Flock`}
-        >
-          {inNetwork.map((a) => (
-            <span key={a.canonical} className={tickClass(a)} title={tickTitle(a)} />
-          ))}
-        </div>
+        <GapBar agencies={inNetwork} onPick={findInRoster} />
         <p className="gap-caption">
-          Each mark is one agency — {withPortal.length} of {inNetwork.length} (
+          Each mark is one agency, grouped by what it discloses; hover or tap a mark for the
+          agency, click it to find the row in the roster — {withPortal.length} of {inNetwork.length} (
           {Math.round((100 * withPortal.length) / inNetwork.length)}%) let the public see how
           the system is used; {withAudit.length} ({Math.round((100 * withAudit.length) / inNetwork.length)}%)
           let the public see each individual search.
@@ -282,7 +277,7 @@ export default function App() {
           agencies too. The sparkline is the agency's 30-day search count across every weekly
           snapshot on record.
         </p>
-        <AgencyTable agencies={agencies} searchDeltas={searchDeltas} history={history} staleThreshold={staleThreshold} />
+        <AgencyTable agencies={agencies} searchDeltas={searchDeltas} history={history} staleThreshold={staleThreshold} externalQuery={rosterQuery} />
       </section>
 
       <section className="sharing" aria-label="Who shares with whom">
