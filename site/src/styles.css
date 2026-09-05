@@ -751,7 +751,18 @@ tbody tr:hover td.cell-usat { background: #e9e2d2; }
 }
 
 /* permit timeline */
-.permits-wrap { margin-top: 1.4rem; max-width: 34rem; }
+.permits-wrap {
+  margin: 1.6rem auto 0;
+  max-width: 40rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--teal);
+  padding: 1rem 1.4rem 0.9rem;
+  text-align: center;
+}
+.permits-lede { font-size: 0.95rem; margin: 0 0 0.6rem; }
+.permits-wrap .gap-caption { text-align: left; }
+.permit-cum { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-soft); opacity: 0.8; margin-top: 0.1rem; }
 .permits-title {
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -761,7 +772,7 @@ tbody tr:hover td.cell-usat { background: #e9e2d2; }
   margin: 0 0 0.4rem;
   font-weight: 400;
 }
-.permits { display: flex; align-items: flex-end; gap: 0.6rem; height: 130px; margin: 0 0 0.4rem; }
+.permits { display: flex; align-items: flex-end; gap: 0.7rem; height: 150px; margin: 0 0 0.5rem; }
 .permit-year { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); }
 .permit-n { margin-bottom: 0.2rem; color: var(--ink); }
 .permit-bar { width: 100%; background: var(--teal); border-top: 2px solid var(--teal-deep); min-height: 2px; }
