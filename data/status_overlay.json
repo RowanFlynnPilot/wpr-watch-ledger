@@ -689,9 +689,9 @@
     "name": "Stevens Point Police Department",
     "county": "Portage County",
     "status": "suspended",
-    "as_of": "2026-09-09",
-    "note": "The city covered its 10 Flock cameras to stop data collection; the mayor said the city has no way to audit where the data goes once Flock collects it.",
-    "source": "https://www.wpr.org/news/wisconsin-cities-disable-flock-cameras-cancel-contracts"
+    "as_of": "2026-09-07",
+    "note": "Mayor Mike Wiza had the city's 10 Flock cameras covered and suspended their use, citing doubts about how the company uses camera data and possible misuse by outsiders. The city is exploring ending the contract; no termination has been reported.",
+    "source": "https://wausaupilotandreview.com/2026/09/07/flock-pullout-reaches-central-wisconsin-as-stevens-point-covers-its-cameras-wausau-and-marathon-county-still-silent/"
   },
   "grand chute pd": {
     "name": "Grand Chute Police Department",

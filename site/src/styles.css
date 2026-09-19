@@ -393,7 +393,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   border-radius: 2px;
   color: var(--white);
 }
-.badge-active { background: var(--teal); }
+.badge-active { background: var(--teal-deep); } /* white on --teal is 4.2:1 at this size; --teal-deep is 6.1:1 */
 .badge-dropped { background: var(--rust); }
 .badge-never { background: var(--ink-soft); }
 .badge-unknown { background: transparent; color: var(--ink-soft); border: 1px solid var(--ink-soft); }
@@ -427,7 +427,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .chip:hover { border-color: var(--teal-deep); }
 .chip.active { background: var(--teal-deep); border-color: var(--teal-deep); color: var(--white); }
-.chip-count { opacity: 0.65; margin-left: 0.15rem; }
+.chip-count { opacity: 0.8; margin-left: 0.15rem; }
+.chip.active .chip-count { opacity: 1; }
 .table-viewport { position: relative; }
 .table-viewport::after {
   content: "";
@@ -566,7 +567,7 @@ tbody tr:hover td { background: var(--cream); }
 .who-else-dek { max-width: 44rem; }
 .who-else { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
 @media (min-width: 720px) { .who-else { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.we-count { font-family: var(--mono); font-weight: 400; color: var(--ink-soft); opacity: 0.8; margin-left: 0.3rem; }
+.we-count { font-family: var(--mono); font-weight: 400; color: var(--ink-soft); margin-left: 0.3rem; }
 .we-blurb { font-size: 0.8rem; color: var(--ink-soft); margin: -0.2rem 0 0.6rem; line-height: 1.35; }
 .we-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.2rem 0.8rem; }
 .we-chips { display: inline-flex; flex-wrap: wrap; gap: 0.3rem; justify-content: flex-end; }
@@ -583,7 +584,7 @@ tbody tr:hover td { background: var(--cream); }
 }
 .we-chip strong { color: var(--ink); font-weight: 700; }
 .we-chip.chip-usat { background: #efe9dc; }
-.we-chip.chip-portal { background: var(--teal); border-color: var(--teal-deep); color: var(--white); }
+.we-chip.chip-portal { background: var(--teal-deep); border-color: var(--teal-deep); color: var(--white); }
 .who-else-group { background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--teal); padding: 1rem 1.2rem; }
 .who-else-group h3 {
   font-family: var(--mono);
@@ -1403,3 +1404,9 @@ tr.row-home td:first-child { font-weight: 700; }
 .decisions-more:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 2px; }
 @media (max-width: 560px) { .decisions-more { margin-left: 1.5rem; } }
 @media print { .decisions-more { display: none !important; } }
+
+/* gap bar: suspended agencies get the rust outline dashed, matching the timeline's hollow marker */
+.tick.tick-suspended, .key-swatch.tick-suspended { border: 1.5px dashed var(--rust); opacity: 0.9; }
+.tick.filled.tick-suspended { background: var(--teal); }
+
+.action-preview pre:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 2px; }

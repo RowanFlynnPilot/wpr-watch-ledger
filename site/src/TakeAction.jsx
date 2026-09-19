@@ -67,7 +67,8 @@ export default function TakeAction({ agencies, picked }) {
           </select>
           <details className="action-preview">
             <summary>Read the letter</summary>
-            <pre>{text}</pre>
+            {/* scrolls, so keyboard users must be able to focus it to scroll */}
+            <pre tabIndex={0} role="region" aria-label="Text of the records request letter">{text}</pre>
           </details>
           <div className="action-buttons">
             <button type="button" className="dl dl-plate" onClick={copy}>{copied ? "Letter copied" : "Copy the letter"}</button>

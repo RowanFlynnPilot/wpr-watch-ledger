@@ -267,6 +267,13 @@ export default function App() {
             {inNetwork.filter((a) => a.status.value === "dropped").length} outlined in rust have
             announced dropping Flock
           </span>
+          {suspended.length > 0 && (
+            <span className="gap-key-item">
+              <span className="tick tick-suspended key-swatch" />{" "}
+              {inNetwork.filter((a) => a.status.value === "suspended").length} with a dashed outline have
+              suspended use
+            </span>
+          )}
         </div>
         <GapBar agencies={inNetwork} onPick={findInRoster} />
         <p className="gap-caption">

@@ -52,8 +52,8 @@ export default function GapBar({ agencies, onPick }) {
           <button
             key={a.canonical}
             type="button"
-            className={`tick${a.portal ? " filled" : ""}${a.portal?.public_search_audit ? " audit" : ""}${a.status.value === "dropped" ? " tick-dropped" : ""}${active?.a === a ? " active" : ""}`}
-            aria-label={`${a.name}: ${discloses(a).toLowerCase()}${a.status.value === "dropped" ? ", announced dropping Flock" : ""}`}
+            className={`tick${a.portal ? " filled" : ""}${a.portal?.public_search_audit ? " audit" : ""}${a.status.value === "dropped" ? " tick-dropped" : a.status.value === "suspended" ? " tick-suspended" : ""}${active?.a === a ? " active" : ""}`}
+            aria-label={`${a.name}: ${discloses(a).toLowerCase()}${a.status.value === "dropped" ? ", announced dropping Flock" : a.status.value === "suspended" ? ", suspended use of its Flock cameras" : ""}`}
             onMouseEnter={(e) => setActive({ a, el: e.currentTarget })}
             onFocus={(e) => { lastPointer.current = { type: "keyboard", wasActive: true }; setActive({ a, el: e.currentTarget }); }}
             onBlur={() => setActive(null)}
