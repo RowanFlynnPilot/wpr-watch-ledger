@@ -102,7 +102,7 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   roster rows only; never creates one and never implies plate-reader use.
 - `tests/test_names.py` — unittest cases for canonicalize()/pretty_name(); both workflows run
   them first. Add a case whenever a new alias or name collision is found.
-- `pipeline/audit.py` — 60 PASS/FAIL consistency checks over the committed data. It gates
+- `pipeline/audit.py` — PASS/FAIL consistency checks (68 as of 2026-09-19) over the committed data. It gates
   both workflows: refresh.yml runs it after refresh.py and before the data commit (a bad
   refresh never lands), deploy.yml runs it before the build. Every check recomputes from
   the data; never assert a literal figure (168 rings, 20 sheriffs) that next week's data

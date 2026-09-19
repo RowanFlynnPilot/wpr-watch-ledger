@@ -59,6 +59,9 @@ jobs:
           git config user.email "actions@github.com"
           git add data/
           git diff --cached --quiet || git commit -m "data: weekly refresh $(date -u +%F)"
+          # A push to main while this job ran would reject ours and lose the week. The bot only
+          # touches data/, so replaying its commit on top is safe; a real conflict still fails.
+          git pull --rebase origin main
           git push
 
       - uses: actions/setup-node@v4

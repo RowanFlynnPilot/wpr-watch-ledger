@@ -3,7 +3,10 @@
 
 const cell = (v) => {
   if (v == null) return "";
-  const s = String(v);
+  let s = String(v);
+  // Names and notes come from outside sources. A text cell that begins like a formula is
+  // executed by Excel and Sheets, so it is neutralized; real numbers are left alone.
+  if (typeof v === "string" && /^[=+\-@\t\r]/.test(s)) s = "'" + s;
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
 
