@@ -78,7 +78,7 @@ export default function TakeAction({ agencies, picked }) {
             and a fee to locate records only when that cost is $50 or more.
           </p>
         </div>
-        <aside className="action-tips">
+        <div className="action-tips">
           <p className="action-tips-title">Got something back? Know of a camera?</p>
           <p>
             Send the newsroom what you receive, a contract you have seen on a council agenda, or
@@ -89,7 +89,7 @@ export default function TakeAction({ agencies, picked }) {
             To put a camera on the map itself, report it to the volunteers at{" "}
             <a href="https://deflock.org/" target="_blank" rel="noreferrer">DeFlock</a>.
           </p>
-        </aside>
+        </div>
       </div>
     </section>
   );

@@ -140,6 +140,14 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
 
 ## Known constraints
 
+- Licence: the camera dots are OpenStreetMap data (ODbL). "© OpenStreetMap contributors" must
+  stay in the map's attribution control and the methodology card; do not drop it in a restyle.
+- Toolchain: Vite 8 / plugin-react 6 (Node >= 20.19; CI pins Node 22). `npm audit` was clean on
+  2026-09-19; the earlier Vite 5 advisories concerned the dev server, not the built site.
+- Accessibility baseline: axe-core (wcag2a/aa, wcag21aa, best-practice) reports zero violations.
+  The gap bar is role="group", not "img", because its ticks are buttons. Check 320 px for
+  sideways scroll after layout changes (selects and fixed grid minimums are the usual cause).
+
 - Never size anything in `vh` alone. Inside the auto-height WordPress frame the viewport IS the
   page, so a vh height grows with the frame (the roster unrolled to 18,000 px). Pair it with a
   fixed ceiling: `min(72vh, 46rem)`.

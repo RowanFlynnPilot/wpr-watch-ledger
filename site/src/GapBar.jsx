@@ -45,7 +45,7 @@ export default function GapBar({ agencies, onPick }) {
     >
       <div
         className="gap-bar"
-        role="img"
+        role="group"
         aria-label={`${counts[0] + counts[1]} of ${ordered.length} network agencies publish a transparency portal, ${counts[0]} of those also publish a search audit log; ${ordered.filter((a) => a.status.value === "dropped").length} have announced dropping Flock`}
       >
         {ordered.map((a) => (

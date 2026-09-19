@@ -95,7 +95,11 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     // are being retired, so they are no longer an option for a static embed.
     L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-      { attribution: 'Tiles &copy; <a href="https://www.esri.com">Esri</a> &mdash; Esri, DeLorme, NAVTEQ', maxZoom: 16 }
+      {
+        // ODbL: the camera dots are OpenStreetMap data and must be credited wherever they are shown.
+        attribution: 'Cameras &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a> via <a href="https://deflock.org" target="_blank" rel="noreferrer">DeFlock</a> | Tiles &copy; <a href="https://www.esri.com">Esri</a>',
+        maxZoom: 16,
+      }
     ).addTo(map);
     L.control.scale({ imperial: true, metric: false, position: "bottomleft" }).addTo(map);
 

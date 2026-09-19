@@ -43,7 +43,7 @@ export default function SilentSearchers({ agencies, usat }) {
           </>
         )}
       </p>
-      <aside className="plate-check">
+      <div className="plate-check" role="note">
         <div>
           <p className="plate-check-title">Has your plate been searched?</p>
           <p className="plate-check-body">
@@ -57,7 +57,7 @@ export default function SilentSearchers({ agencies, usat }) {
           <a className="dl dl-plate" href="https://data.usatoday.com/projects/flock-search/" target="_blank" rel="noreferrer">USA TODAY plate search ↗</a>
           <a className="dl" href="https://haveibeenflocked.com/" target="_blank" rel="noreferrer">Have I Been Flocked ↗</a>
         </div>
-      </aside>
+      </div>
       <div className="silent-key" aria-hidden="true">
         <span className="silent-key-item"><span className="silent-swatch silent-yes" /> Publishes no transparency portal</span>
         <span className="silent-key-item"><span className="silent-swatch silent-no" /> Publishes a portal</span>

@@ -34,7 +34,10 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
         <Source eyebrow="Camera locations" name="DeFlock community mapping on OpenStreetMap" href="https://deflock.org" cadence="Refreshed weekly · volunteer-reported, incomplete">
           Every node volunteers have tagged as an ALPR in Wisconsin. The true number of cameras is
           higher. Where a volunteer recorded an operator, the camera is matched to the roster by
-          name; unmatched operators are listed as written, never guessed.
+          name; unmatched operators are listed as written, never guessed. Camera data ©{" "}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>,
+          under the Open Database License. County outlines on the map are U.S. Census Bureau
+          cartographic boundaries.
         </Source>
         <Source eyebrow="Transparency portals" name="Eyes On Flock" href="https://eyesonflock.com" cadence={`Refreshed weekly · stale after ${staleThreshold} days`}>
           Portal figures for every Wisconsin agency Eyes On Flock indexes, plus the sharing lists

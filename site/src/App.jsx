@@ -144,7 +144,7 @@ export default function App() {
   });
 
   return (
-    <div className="page">
+    <main className="page">
       <header className="masthead">
         <a className="brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">
           <span
@@ -371,6 +371,6 @@ export default function App() {
       <TakeAction agencies={agencies} picked={pickedAgency} />
 
       <Methodology meta={meta} wisdot={wisdot} counties={counties} withPortal={withPortal} staleThreshold={staleThreshold} />
-    </div>
+    </main>
   );
 }
