@@ -970,9 +970,15 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
             unmatched.append({"operator": op, "cameras": n})
     unmatched.sort(key=lambda u: (-u["cameras"], u["operator"]))
 
-    for a in agencies.values():
-        if a["county"] is None:
-            a["county"] = resolve_county(a["canonical"], city_county)
+    for key, a in agencies.items():
+        # The agency's own name outranks what any source says about where it is: EFF's Atlas
+        # files the Columbia County sheriff under Portage (its county seat, a city) and
+        # Franklin PD under Jackson County; others put Whitefish Bay in Door County. A county
+        # in the name, or an exact match in the municipality table, is not a guess. Only a
+        # hand-set overlay county is stronger.
+        named = resolve_county(a["canonical"], city_county)
+        if named and not overlay.get(key, {}).get("county"):
+            a["county"] = named
         if a["county"] is None and a["wisdot"] and len(a["wisdot"]["counties"]) == 1:
             # weakest signal, used last: every permitted camera stands in one county
             a["county"] = f"{a['wisdot']['counties'][0]} County"

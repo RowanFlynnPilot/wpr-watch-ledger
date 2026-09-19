@@ -2,7 +2,7 @@
 import sys, unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "pipeline"))
-from refresh import canonicalize, pretty_name  # noqa: E402
+from refresh import canonicalize, pretty_name, resolve_county, load_city_county  # noqa: E402
 
 SAME = [
     ("Marathon County Sheriff's Office", "Marathon County WI SO", "Marathon Co Sheriff", "Marathon County Sheriff’s Office"),
@@ -41,6 +41,15 @@ class Names(unittest.TestCase):
         self.assertEqual(pretty_name("Town Of Delavan PD"), "Town of Delavan Police Department")
         self.assertEqual(pretty_name("Jackson County Sheriff’s Office"), "Jackson County Sheriff's Office")
         self.assertEqual(pretty_name("RIG DTF"), "RIG DTF")
+
+class Counties(unittest.TestCase):
+    def test_name_and_municipality_rules(self):
+        cc = load_city_county()
+        self.assertEqual(resolve_county(canonicalize("Columbia County Sheriff's Office"), cc), "Columbia County")
+        for muni in ("Franklin", "Glendale", "Whitefish Bay"):
+            self.assertEqual(resolve_county(canonicalize(f"{muni} Police Department"), cc), "Milwaukee County")
+        self.assertIsNone(resolve_county(canonicalize("RIG DTF"), cc))
+
 
 if __name__ == "__main__":
     unittest.main()

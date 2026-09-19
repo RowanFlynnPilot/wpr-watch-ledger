@@ -120,6 +120,11 @@ Display-name precedence: overlay > Atlas (formal) > portal/edge shorthand, then 
 applies one house style to every non-overlay name (Co -> County, trailing SO/PD/Hwy expanded,
 "Town Of" -> "Town of", curly apostrophes straightened). Overlay names only get the apostrophe fix.
 
+County precedence (fixed 2026-09-19): overlay county > a county stated in the agency's own
+name or an exact municipality-table match (`resolve_county`) > whatever a source says > a
+single-county WisDOT permit set. Sources are wrong often enough to matter: the Atlas files the
+Columbia County sheriff under Portage (its county seat) and Franklin PD under Jackson County.
+
 ## Design system (WPR)
 
 teal #3A867C / deep #2C6B62, cream #F6F2E9, ink #1F2421, rust #B5543B (dropped status).

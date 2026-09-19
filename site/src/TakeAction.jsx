@@ -25,7 +25,7 @@ Thank you.`;
 
 export default function TakeAction({ agencies, picked }) {
   const options = useMemo(
-    () => agencies.filter((a) => a.in_network || a.wisdot || a.atlas).map((a) => a.name).sort((x, y) => x.localeCompare(y)),
+    () => agencies.map((a) => a.name).sort((x, y) => x.localeCompare(y)),
     [agencies]
   );
   const [agency, setAgency] = useState("");

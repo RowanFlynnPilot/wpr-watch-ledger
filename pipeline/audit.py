@@ -68,6 +68,9 @@ lastrun = changes['runs'][-1]
 check(lastrun['date'] != meta['generated'][:10] or lastrun['cameras']['total'] == meta['camera_count'],
       'latest change-log entry agrees with the camera count', str(lastrun['cameras']['total']))
 check(all(isinstance(a.get('other_tech'), list) for a in A), 'every roster row carries other_tech')
+misfiled = [(a['name'], a['county']) for a in A if (mm := re.match(r'^(.+?) County\b', a['name'])) and a['county']
+            and a['county'].replace('St. ', 'Saint ').lower() != (mm.group(1) + ' County').replace('St. ', 'Saint ').lower()]
+check(not misfiled, 'every county-named agency sits in its own county', str(misfiled))
 tech_bad = [a['name'] for a in A for t in a.get('other_tech', []) if 'plate' in t['technology'].lower() or not t['technology']]
 check(not tech_bad, 'other_tech never repeats plate readers', str(tech_bad[:3]))
 missing_partner = {p for lst in edges['edges'].values() for p in lst if p not in keys}
