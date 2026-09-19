@@ -3,9 +3,9 @@
     "name": "Wausau Police Department",
     "county": "Marathon County",
     "status": "active",
-    "as_of": "2026-06-16",
-    "note": "20 cameras at city entry points; shares only with Wisconsin agencies (opted out of nationwide sharing); 30-day retention; five-year contract, Dec. 15, 2023 to Dec. 15, 2028, per the city's records response and the two executed contracts. Current camera and search figures are from its transparency portal, above.",
-    "source": "https://www.wsaw.com/2026/06/16/wausau-police-highlight-use-flock-cameras-downtown-patrol-successes/",
+    "as_of": "2026-09-07",
+    "note": "20 cameras at city entry points, $50,000 a year under a five-year contract, Dec. 15, 2023 to Dec. 15, 2028, per the city's records response and the executed contracts. The agreement has no early termination for convenience, though a non-appropriation clause lets the city leave without penalty on 30 days' notice if funds are not budgeted. Shares only with Wisconsin agencies (opted out of nationwide sharing). The department cites 30-day retention; the contract gives Flock perpetual rights to use de-identified data in its other products. Current camera and search figures are from its transparency portal, above.",
+    "source": "https://wausaupilotandreview.com/2026/09/07/will-wausau-and-marathon-county-drop-flock-one-could-leave-for-4000-the-other-says-it-cant/",
     "portal": {
       "portal_url": "https://transparency.flocksafety.com/wausau-wi-pd",
       "read_on": "2026-09-01",
@@ -30,9 +30,9 @@
     "name": "Marathon County Sheriff's Office",
     "county": "Marathon County",
     "status": "active",
-    "as_of": "2026-09-01",
-    "note": "Publishes a transparency portal, linked from the county's own website; current figures are in the stat grid above. Shares its data with more than 1,400 agencies in 40 states, including the FBI and two HIDTA task forces. The office joined ICE's 287(g) jail-enforcement program in late 2025; UW-Madison police said in July 2026 it was cutting Flock access for 287(g) agencies, and Marathon County still appeared on its sharing list at the time.",
-    "source": "https://captimes.com/news/education/uw-madison-police-to-remove-contentious-flock-cameras-from-campus/article_150acf6c-c335-45f4-95dd-ab99d7f9b910.html",
+    "as_of": "2026-09-15",
+    "note": "Sheriff Chad Billeb said on Sept. 15 he will keep the office's 10 Flock cameras as other Wisconsin agencies cover or cancel theirs. The cameras cost $26,500 a year and have been grant-funded since 2023; the contract lets the county leave at any time for $500 a camera, about $4,000, with a prorated refund. Shares its data with more than 1,400 agencies in 40 states, including the FBI and two HIDTA task forces, and joined ICE's 287(g) jail-enforcement program in late 2025. Current figures are from its transparency portal, above.",
+    "source": "https://wausaupilotandreview.com/2026/09/15/marathon-county-sheriff-will-keep-flock-cameras-as-more-than-a-dozen-wisconsin-agencies-drop-them/",
     "portal": {
       "portal_url": "https://transparency.flocksafety.com/marathon-county-wi-so",
       "read_on": "2026-09-01",
@@ -682,8 +682,8 @@
     "county": "Waupaca County",
     "status": "suspended",
     "as_of": "2026-09-08",
-    "note": "Suspended use of its Flock cameras in early September over the same out-of-state records disclosures that led Fond du Lac and Winnebago counties to stop.",
-    "source": "https://fox11online.com/news/local/menasha-votes-to-terminate-flock-contract-neenah-working-toward-termination-too"
+    "note": "The county's Law Enforcement Committee voted to cut Flock funding from next year's budget, and the sheriff then suspended the cameras, citing loss of control over sensitive law enforcement information. The county spent $34,500 on Flock this year.",
+    "source": "https://www.wbay.com/2026/09/09/neenah-menasha-waupaca-county-move-cut-ties-with-flock-cameras/"
   },
   "stevens point pd": {
     "name": "Stevens Point Police Department",
@@ -692,5 +692,37 @@
     "as_of": "2026-09-09",
     "note": "The city covered its 10 Flock cameras to stop data collection; the mayor said the city has no way to audit where the data goes once Flock collects it.",
     "source": "https://www.wpr.org/news/wisconsin-cities-disable-flock-cameras-cancel-contracts"
+  },
+  "grand chute pd": {
+    "name": "Grand Chute Police Department",
+    "county": "Outagamie County",
+    "status": "dropped",
+    "as_of": "2026-06-02",
+    "note": "Town Board voted unanimously on June 2 to end its Flock contracts, the police chief citing cameras down for months and harder oversight of outside access. The town is keeping plate readers: its 23 cameras were to be replaced with Axon's by Sept. 1.",
+    "source": "https://www.nbc26.com/fox-cities/grand-chute-ends-flock-contract-switches-to-axon"
+  },
+  "kaukauna pd": {
+    "name": "Kaukauna Police Department",
+    "county": "Outagamie County",
+    "status": "dropped",
+    "as_of": "2026-07-09",
+    "note": "Did not renew its three-year Flock contract for six cameras when it expired in June 2026; the police chief said continuing was not fiscally responsible given the concerns raised.",
+    "source": "https://www.wbay.com/2026/07/09/kaukauna-drops-flock-safety-contract-privacy-debate-grows-northeast-wisconsin/"
+  },
+  "de pere pd": {
+    "name": "De Pere Police Department",
+    "county": "Brown County",
+    "status": "dropped",
+    "as_of": "2026-09-14",
+    "note": "Police chief announced an immediate end to officers' use of Flock cameras on Sept. 14, citing data disclosed without authorization. Cameras are bagged until the contract expires Nov. 15, 2026; the report does not say whether it will be renewed.",
+    "source": "https://www.wsaw.com/2026/09/15/de-pere-police-chief-announces-immediate-end-use-flock-cameras/"
+  },
+  "jefferson county so": {
+    "name": "Jefferson County Sheriff's Office",
+    "county": "Jefferson County",
+    "status": "suspended",
+    "as_of": "2026-09-11",
+    "note": "Sheriff suspended use of the cameras on Sept. 10 after learning that data on cases the office investigated in 2025 had been made public without its consent. No contract decision was reported.",
+    "source": "https://www.wmtv15news.com/2026/09/11/jefferson-county-sheriffs-office-suspending-flock-cameras/"
   }
 }

@@ -70,7 +70,10 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   `dropped` = ended, voted to end, or decided not to renew (cameras may run until expiry; say so
   in the note). `suspended` = stopped using or covered the cameras pending review with no
   contract decision reported; never counted in the "dropped" headline. Promote a suspended row
-  to dropped when a termination is reported. The overlay goes stale silently: nothing in the
+  to dropped when a termination is reported. The Wausau PD and Marathon County SO rows cite the newsroom's own reporting
+  (wausaupilotandreview.com, Sept. 2026: contract terms, exit clauses, the sheriff's decision to
+  keep his cameras); when the paper publishes on either agency, update those rows to match it.
+  The overlay goes stale silently: nothing in the
   pipeline notices a news event, so search for new Wisconsin Flock decisions at least monthly
   (the tenth audit found 19 agencies the ledger had missed in three weeks).
   Optional `portal` block = a HAND-READ transparency portal that Eyes On Flock does not

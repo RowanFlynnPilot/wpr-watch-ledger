@@ -719,6 +719,11 @@
    },
    "status": [
     {
+     "name": "De Pere Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
      "name": "Fond du Lac County Sheriff's Office",
      "from": "active",
      "to": "suspended"
@@ -734,9 +739,24 @@
      "to": "suspended"
     },
     {
+     "name": "Grand Chute Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
      "name": "Iron County Sheriff's Office",
      "from": "unknown",
      "to": "active"
+    },
+    {
+     "name": "Jefferson County Sheriff's Office",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Kaukauna Police Department",
+     "from": "active",
+     "to": "dropped"
     },
     {
      "name": "Lac Courte Oreilles Tribal Police Department",
