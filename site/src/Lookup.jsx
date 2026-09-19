@@ -26,8 +26,14 @@ function Stat({ num, label }) {
   );
 }
 
+// Publishers first, then the agencies that walked away, then the silent ones.
+const order = (a) => (a.portal ? 0 : a.status.value === "dropped" ? 1 : a.in_network ? 2 : 3);
+const CAP = 6;
+
 function CountyCard({ county, row, agencies, place, mapped, onPick }) {
-  const here = agencies.filter((a) => a.county === county);
+  const [all, setAll] = useState(false);
+  useEffect(() => setAll(false), [county, place]);
+  const here = agencies.filter((a) => a.county === county).sort((x, y) => order(x) - order(y) || x.name.localeCompare(y.name));
   const local = place ? here.filter((a) => a.name.toLowerCase().includes(place)) : [];
   const rest = here.filter((a) => !local.includes(a));
   const chip = (a) => (
@@ -69,8 +75,16 @@ function CountyCard({ county, row, agencies, place, mapped, onPick }) {
       )}
       {rest.length > 0 && (
         <>
-          <p className="lk-list-title">{local.length ? `Elsewhere in ${county}` : `Agencies in ${county}`}</p>
-          <ul className="lk-agencies">{rest.map(chip)}</ul>
+          <p className="lk-list-title">
+            {local.length ? `Elsewhere in ${county}` : `Agencies in ${county}`}
+            <span className="lk-list-count">{rest.length}</span>
+          </p>
+          <ul className="lk-agencies">{(all ? rest : rest.slice(0, CAP)).map(chip)}</ul>
+          {rest.length > CAP && (
+            <button type="button" className="lk-more" onClick={() => setAll(!all)} aria-expanded={all}>
+              {all ? "Show fewer" : `Show all ${rest.length} agencies`}
+            </button>
+          )}
         </>
       )}
       {here.length === 0 && <p className="card-note">No agency in this county appears in any of the ledger's sources.</p>}
@@ -184,7 +198,11 @@ export default function Lookup({ index, agencies, counties, countyCounts, usat, 
         </p>
       )}
       {item && (
-        <div className="lookup-result">
+        <div className="lookup-result" aria-live="polite">
+          <p className="lookup-kind">
+            {item.type === "agency" ? "Agency" : item.type === "county" ? "County" : "Community"}
+            {item.type !== "county" && item.county ? ` · ${item.county}` : ""}
+          </p>
           {item.type === "agency" ? (
             <AgencyCard a={item.agency} usat={usat} />
           ) : (

@@ -53,6 +53,11 @@ export default function TakeAction({ agencies, picked }) {
         the letter and send it to the agency's records custodian, whose address is usually on
         the department's website.
       </p>
+      <ol className="action-steps" aria-label="How it works">
+        <li className={agency ? "done" : undefined}><span>1</span>Pick the agency</li>
+        <li className={copied ? "done" : undefined}><span>2</span>Copy the letter</li>
+        <li><span>3</span>Send it to the records custodian</li>
+      </ol>
       <div className="action-grid">
         <div className="action-letter">
           <label className="action-label" htmlFor="action-agency">Agency</label>

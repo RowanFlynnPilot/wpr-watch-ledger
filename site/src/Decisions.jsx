@@ -41,8 +41,12 @@ export default function Decisions({ agencies, onPick }) {
                     </React.Fragment>
                   ))}
                 </p>
-                {s.note && <p className="decision-note">{s.note}</p>}
-                {s.source && <a className="decision-src" href={s.source} target="_blank" rel="noreferrer">Reporting ↗</a>}
+                <p className="decision-note">
+                  {group.length > 1 && <span className="decision-count">{group.length} agencies</span>}
+                  {s.note}
+                  {s.note && s.source && " "}
+                  {s.source && <a className="decision-src" href={s.source} target="_blank" rel="noreferrer">Reporting ↗</a>}
+                </p>
               </div>
             </li>
           );
