@@ -59,7 +59,7 @@ export default function App() {
   useEffect(() => {
     Promise.all(
       ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits", "counties", "wi_counties", "changes", "wi_city_county"].map((f) =>
-        fetch(`${import.meta.env.BASE_URL}data/${f}.json`).then((r) => {
+        fetch(`${import.meta.env.BASE_URL}data/${f}.json?v=${__BUILD_ID__}`).then((r) => {
           if (!r.ok) throw new Error(`Failed to load ${f}.json (${r.status})`);
           return r.json();
         })
