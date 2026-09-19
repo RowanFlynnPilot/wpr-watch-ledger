@@ -83,6 +83,14 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   do not switch back. Every chart (sparklines, week-by-week, reach bars, permit timeline,
   inner-circle graph) is plain SVG/CSS — no chart library.
   `cpdata.mjs` copies the listed `../data/*.json` files into `public/data/` on every dev/build — add any new data file to that list or the site gets index.html back as JSON.
+  Reader-facing pieces added 2026-09-19: `Lookup.jsx` (one search box over agencies, counties
+  and the municipalities in wi_city_county.json; selection lives in App and in the URL hash:
+  `#agency=<slug>`, `#county=<slug>`, `#place=<slug>`, helpers in `share.js`; the WordPress
+  embed script forwards the article's hash into the frame), `SinceLast.jsx` (changes.json),
+  `Decisions.jsx` (dated rail of dropped agencies from the overlay), `TakeAction.jsx` (Open
+  Records Law request letter + tip line; nothing is sent from the page). The map draws a
+  facing wedge per camera at zoom >= 14 from OSM `direction` (degrees, cardinals, `a;b`
+  lists and `a-b` ranges). The map instance hangs off its container as `__map` for debugging.
 - `data/changes.json` — GENERATED change log, one entry per run: cameras added/removed (by
   county), portals that appeared or vanished, status changes, roster additions. refresh.py
   diffs against the data committed by the previous run BEFORE overwriting it; a same-day

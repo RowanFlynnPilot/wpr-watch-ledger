@@ -4,6 +4,9 @@ import React, { useState } from "react";
 // agencies it actively shares Flock data with. Plain <details>/<summary>, no libraries.
 export default function SharingList({ agencies, edges }) {
   const [q, setQ] = useState("");
+  // 49 portals run to several screens; show the head of the list until asked or searched.
+  const [all, setAll] = useState(false);
+  const CAP = 8;
   const byCanonical = new Map(agencies.map((a) => [a.canonical, a]));
   const portalAgencies = agencies.filter((a) => a.portal && edges[a.canonical]);
   const t = q.trim().toLowerCase();
@@ -26,7 +29,7 @@ export default function SharingList({ agencies, edges }) {
         <span className="table-count">{shown.length} of {portalAgencies.length} portals{t ? " match" : ""}</span>
       </div>
     <div className="sharing-list">
-      {shown.map((a) => {
+      {(all || t ? shown : shown.slice(0, CAP)).map((a) => {
         const partners = edges[a.canonical];
         const hit = t && !a.name.toLowerCase().includes(t);
         return (
@@ -67,6 +70,11 @@ export default function SharingList({ agencies, edges }) {
         );
       })}
     </div>
+      {!t && shown.length > CAP && (
+        <button type="button" className="dl dl-quiet sharing-more" onClick={() => setAll(!all)} aria-expanded={all}>
+          {all ? "Show fewer" : `Show all ${shown.length} portals`}
+        </button>
+      )}
     </div>
   );
 }

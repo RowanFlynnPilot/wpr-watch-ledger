@@ -4,7 +4,19 @@ import "leaflet/dist/leaflet.css";
 import "./styles.css";
 import App from "./App.jsx";
 
-createRoot(document.getElementById("root")).render(<App />);
+// A render error must never leave a blank frame inside a news article.
+class ErrorBoundary extends React.Component {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch(error) { console.error("Watch Ledger render error", error); }
+  render() {
+    return this.state.failed
+      ? <div className="load-error">The Watch Ledger hit an error and could not display. Refresh the page to try again.</div>
+      : this.props.children;
+  }
+}
+
+createRoot(document.getElementById("root")).render(<ErrorBoundary><App /></ErrorBoundary>);
 
 // iframe auto-height: report the document height to the embedding page whenever it
 // changes (data load, table filtering, expanding a sharing list). The matching

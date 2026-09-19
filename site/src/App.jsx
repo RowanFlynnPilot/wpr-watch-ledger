@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CameraMap from "./CameraMap.jsx";
 import AgencyTable from "./AgencyTable.jsx";
 import SharingList from "./SharingList.jsx";
@@ -15,6 +15,11 @@ import Spotlight from "./Spotlight.jsx";
 import Methodology from "./Methodology.jsx";
 import Toolbar from "./Toolbar.jsx";
 import CountyPicker from "./CountyPicker.jsx";
+import Lookup, { buildIndex } from "./Lookup.jsx";
+import SinceLast from "./SinceLast.jsx";
+import TakeAction from "./TakeAction.jsx";
+import Decisions from "./Decisions.jsx";
+import { readHash, writeHash } from "./share.js";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
@@ -25,6 +30,27 @@ export default function App() {
   const [rosterQuery, setRosterQuery] = useState(null);
   // Counties chosen in the picker above the map; empty means the whole state.
   const [mapCounties, setMapCounties] = useState([]);
+  // The community lookup's selection; a deep link (#agency=, #county=, #place=) sets it.
+  const [pick, setPickState] = useState(() => readHash());
+  const setPick = (p) => { setPickState(p); writeHash(p); };
+  useEffect(() => {
+    const onHash = () => {
+      setPickState(readHash());
+      // The WordPress embed forwards the article's #hash into the frame after load.
+      if (readHash()) setTimeout(() => document.querySelector(".lookup")?.scrollIntoView({ block: "start" }), 50);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+  // Picked from elsewhere on the page (the decisions timeline): show it in the lookup.
+  const pickAndShow = (p) => {
+    setPick(p);
+    document.querySelector(".lookup")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const showCounty = (name) => {
+    setMapCounties([name]);
+    document.querySelector(".map-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   const findInRoster = (a) => {
     setRosterQuery({ text: a.name, n: Date.now() });
     document.querySelector(".roster")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -32,26 +58,45 @@ export default function App() {
 
   useEffect(() => {
     Promise.all(
-      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits", "counties", "wi_counties"].map((f) =>
+      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits", "counties", "wi_counties", "changes", "wi_city_county"].map((f) =>
         fetch(`${import.meta.env.BASE_URL}data/${f}.json`).then((r) => {
           if (!r.ok) throw new Error(`Failed to load ${f}.json (${r.status})`);
           return r.json();
         })
       )
     )
-      .then(([meta, cameras, agencies, history, edges, wisdot, counties, shapes]) =>
+      .then(([meta, cameras, agencies, history, edges, wisdot, counties, shapes, changes, places]) =>
         setData({
           meta, cameras, agencies: agencies.agencies, operators: agencies.unmatched_operators || [],
-          history, edges: edges.edges, wisdot, counties, shapes,
+          history, edges: edges.edges, wisdot, counties, shapes, changes, places,
         })
       )
       .catch((e) => setError(e.message));
   }, []);
 
+  const index = useMemo(
+    () => (data ? buildIndex(data.agencies, data.counties.counties, data.places) : []),
+    [data]
+  );
+  // Arriving on a deep link: bring the lookup into view once the data has rendered.
+  useEffect(() => {
+    if (!data || !readHash()) return;
+    // Fonts, the map and the tables reflow the page for a moment after first paint, so
+    // re-anchor until it settles, and stop the moment the reader scrolls for themselves.
+    const go = () => document.querySelector(".lookup")?.scrollIntoView({ block: "start" });
+    const timers = [0, 400, 1200, 2500].map((ms) => setTimeout(go, ms));
+    const stop = () => timers.forEach(clearTimeout);
+    window.addEventListener("wheel", stop, { once: true, passive: true });
+    window.addEventListener("touchstart", stop, { once: true, passive: true });
+    return () => { stop(); window.removeEventListener("wheel", stop); window.removeEventListener("touchstart", stop); };
+  }, [data]);
+
   if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
   if (!data) return <div className="loading">Loading the ledger…</div>;
 
-  const { meta, cameras, agencies, operators, history, edges, wisdot, counties, shapes } = data;
+  const { meta, cameras, agencies, operators, history, edges, wisdot, counties, shapes, changes } = data;
+  const ageDays = Math.floor((Date.now() - new Date(meta.generated).getTime()) / 86400000);
+  const pickedAgency = pick?.type === "agency" ? index.find((it) => it.type === "agency" && it.id === pick.id)?.agency?.name : null;
   const countyNames = counties.counties.map((c) => c.name).sort();
   const countyCounts = {};
   for (const c of cameras.cameras) if (c.county) (countyCounts[c.county] ||= { dots: 0, rings: 0 }).dots++;
@@ -121,6 +166,12 @@ export default function App() {
           and — critically — which agencies let the public see how the system is used.
         </p>
         <p className="updated">Data refreshed {updated}</p>
+        {ageDays > 10 && (
+          <p className="updated-late" role="status">
+            The weekly refresh has not run for {ageDays} days, so these figures are older than
+            usual. The sources may have changed since.
+          </p>
+        )}
       </header>
 
       <Toolbar title="The Watch Ledger — Wausau Pilot & Review" />
@@ -141,12 +192,31 @@ export default function App() {
           <span className="stat-label">agencies in the Flock sharing network</span>
           <span className="stat-sub">only {fmt(withPortal.length)} publish usage data · {fmt(withAudit.length)} a search log</span>
         </div>
-        <div className="stat stat-dropped">
+        <button
+          type="button"
+          className="stat stat-dropped stat-link"
+          onClick={() => document.querySelector(".decisions")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          title="See who, and when"
+        >
           <span className="stat-num">{fmt(dropped.length)}</span>
           <span className="stat-label">agencies have dropped Flock</span>
-          <span className="stat-sub">all since {droppedSince}</span>
-        </div>
+          <span className="stat-sub">all since {droppedSince} · see who →</span>
+        </button>
       </section>
+
+      <SinceLast changes={changes} history={history} />
+
+      <Lookup
+        index={index}
+        agencies={agencies}
+        counties={counties.counties}
+        countyCounts={countyCounts}
+        usat={meta.usatoday}
+        pick={pick}
+        onPick={setPick}
+        onShowCounty={showCounty}
+        onFindInRoster={findInRoster}
+      />
 
       {sightings30d > 0 && (
         <LedgerBand
@@ -211,6 +281,8 @@ export default function App() {
         )}
       </section>
 
+      <Decisions agencies={agencies} onPick={pickAndShow} />
+
       {meta.usatoday && <SilentSearchers agencies={agencies} usat={meta.usatoday} />}
 
       <section className="map-section" aria-label="Camera map">
@@ -222,7 +294,8 @@ export default function App() {
           are incomplete — the true number of cameras is higher. Rings are official: cameras
           permitted by the Wisconsin DOT on state-highway right-of-way, from records released
           under the state Open Records Law. A ring with no dot inside it is a camera the
-          volunteers haven't found yet. Tick the last box in the map's legend to show only those. Volunteers tagged an operator on{" "}
+          volunteers haven't found yet. Tick the last box in the map's legend to show only those. Zoom in to street level and
+          each dot grows a wedge showing which way volunteers recorded the camera facing. Volunteers tagged an operator on{" "}
           {fmt(cameras.cameras.filter((c) => c.operator).length)} of the dots; {fmt(mappedAttributed)}{" "}
           of those resolve to a roster agency and show in its "Mapped" column below.
         </p>
@@ -294,6 +367,8 @@ export default function App() {
         </p>
         <WhoElse agencies={agencies} operators={operators} />
       </section>
+
+      <TakeAction agencies={agencies} picked={pickedAgency} />
 
       <Methodology meta={meta} wisdot={wisdot} counties={counties} withPortal={withPortal} staleThreshold={staleThreshold} />
     </div>

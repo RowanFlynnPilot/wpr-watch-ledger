@@ -34,6 +34,41 @@ function findUnmapped(cameras, wisdotCameras) {
   });
 }
 
+// OSM `direction` is compass degrees clockwise from north, sometimes a cardinal, sometimes
+// several values joined by ";" for a pole carrying more than one camera.
+const WEDGE_SPREAD = 24;
+const CARDINALS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+export function bearings(direction) {
+  if (direction == null) return [];
+  const one = (t) => {
+    const i = CARDINALS.indexOf(t);
+    const n = i >= 0 ? i * 22.5 : Number(t);
+    return Number.isFinite(n) && t !== "" ? ((n % 360) + 360) % 360 : null;
+  };
+  return String(direction).split(";").map((d) => {
+    const t = d.trim().toUpperCase();
+    // "324-34" is OSM's range form: a field of view swept clockwise from the first bearing.
+    const r = /^(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)$/.exec(t);
+    if (r) {
+      const a = one(r[1]), b = one(r[2]);
+      const span = (b - a + 360) % 360;
+      return { deg: (a + span / 2) % 360, spread: Math.min(90, Math.max(12, span / 2)) };
+    }
+    const deg = one(t);
+    return deg == null ? null : { deg, spread: WEDGE_SPREAD };
+  }).filter(Boolean);
+}
+const compass = (deg) => CARDINALS[Math.round(deg / 22.5) % 16];
+const WEDGE_ZOOM = 14, WEDGE_M = 55;
+function wedge(lat, lon, deg, spread) {
+  const pts = [[lat, lon]];
+  for (let a = deg - spread; a <= deg + spread + 0.01; a += spread / 3) {
+    const r = (a * Math.PI) / 180;
+    pts.push([lat + (WEDGE_M * Math.cos(r)) / 110540, lon + (WEDGE_M * Math.sin(r)) / (111320 * Math.cos((lat * Math.PI) / 180))]);
+  }
+  return pts;
+}
+
 export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [], shapes }) {
   const el = useRef(null);
   const mapRef = useRef(null);
@@ -52,6 +87,7 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
   useEffect(() => {
     const map = L.map(el.current, { scrollWheelZoom: false });
     mapRef.current = map;
+    el.current.__map = map; // handle for debugging from the console
     map.fitBounds(WI_BOUNDS);
 
     // Esri's Light Gray Canvas: keyless. CARTO's raster basemaps began demanding an
@@ -79,10 +115,14 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
           `<p class="pop-title">${esc(c.manufacturer || "Unknown vendor")}</p>` +
           (c.operator ? `<p class="pop-row"><span>Operator</span>${esc(c.operator)}</p>` : "") +
           (c.zone ? `<p class="pop-row"><span>Zone</span>${esc(c.zone)}</p>` : "") +
-          (c.direction ? `<p class="pop-row"><span>Facing</span>${esc(c.direction)}</p>` : "") +
+          (bearings(c.direction).length
+            ? `<p class="pop-row"><span>Facing</span>${bearings(c.direction).map((d) => `${compass(d.deg)} (${Math.round(d.deg)}°)`).join(", ")}</p>`
+            : "") +
           `<p class="pop-link"><a href="https://www.openstreetmap.org/node/${c.id}" target="_blank" rel="noreferrer">View on OpenStreetMap ↗</a></p>`
       );
       m.options.county = c.county || null;
+      m.options.bearings = bearings(c.direction);
+      m.options.isFlock = isFlock;
       dots.push(m);
       (isFlock ? flock : other).addLayer(m);
     }
@@ -117,11 +157,34 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
         : z <= 7 ? { dot: 3, ring: 4.5, w: 1.1 }
         : z <= 9 ? { dot: 4, ring: 7, w: 1.5 }
         : { dot: 5, ring: 9, w: 1.75 };
-      for (const m of dots) m.setRadius(s.dot);
+      // Softer fills at the statewide view, so Milwaukee reads as density rather than a blot.
+      const fill = z <= 7 ? 0.5 : 0.75;
+      for (const m of dots) { m.setRadius(s.dot); if (!m.options.hidden) m.setStyle({ fillOpacity: fill }); }
       for (const m of rings) m.setStyle({ radius: s.ring, weight: s.w });
     };
     map.on("zoomend", resize);
     resize();
+
+    // Which way each camera looks: a wedge per bearing, drawn only at street level and
+    // only for the dots in view, so the statewide map never carries 2,000 polygons.
+    const wedges = L.layerGroup().addTo(map);
+    const drawWedges = () => {
+      wedges.clearLayers();
+      if (map.getZoom() < WEDGE_ZOOM) return;
+      const box = map.getBounds().pad(0.15);
+      for (const m of dots) {
+        if (!m.options.bearings.length || m.options.hidden || !map.hasLayer(m) || !box.contains(m.getLatLng())) continue;
+        const { lat, lng } = m.getLatLng();
+        for (const b of m.options.bearings) {
+          L.polygon(wedge(lat, lng, b.deg, b.spread), {
+            renderer, interactive: false, stroke: false,
+            fillColor: m.options.isFlock ? "#2C6B62" : "#55594F", fillOpacity: 0.28,
+          }).addTo(wedges);
+        }
+      }
+    };
+    map.on("moveend zoomend", drawWedges);
+    layers.current.drawWedges = drawWedges;
     map.on("movestart", () => setView(null));
 
     return () => { mapRef.current = null; layers.current = {}; map.remove(); };
@@ -142,8 +205,10 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     }
     for (const m of ly.dots) {
       const hide = !inSel(m);
-      m.setStyle({ opacity: hide ? 0 : 1, fillOpacity: hide ? 0 : 0.75 });
+      m.options.hidden = hide;
+      m.setStyle({ opacity: hide ? 0 : 1, fillOpacity: hide ? 0 : map.getZoom() <= 7 ? 0.5 : 0.75 });
     }
+    ly.drawWedges?.();
   }, [show, selectedCounties]);
 
   // Selected counties: draw their outlines and fit the view to them.

@@ -52,6 +52,11 @@ window.addEventListener("message", function (e) {
     frame.style.height = Math.ceil(e.data.height) + "px";
   }
 });
+// Optional: lets a shared link such as  your-article-url#county=marathon  open that result.
+(function () {
+  var f = document.getElementById("watch-ledger");
+  if (f && /^#(agency|county|place)=[a-z0-9-]+$/.test(location.hash)) f.src = f.src.split("#")[0] + location.hash;
+})();
 </script>
 ```
 

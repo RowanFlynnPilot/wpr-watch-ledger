@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { pageUrl } from "./share.js";
 
 // Under the masthead: jump links to every section, a bookmark button, and share.
 // Browsers do not let a page add itself to bookmarks, so the button copies the
 // link and shows the keyboard shortcut; the Web Share sheet is offered where it exists.
 
 const SECTIONS = [
+  ["Look up", ".lookup"],
   ["Ledger", ".ledger-line"],
   ["Week by week", ".trend"],
   ["Transparency gap", ".gap"],
@@ -16,6 +18,7 @@ const SECTIONS = [
   ["Sharing", ".sharing"],
   ["Reach", ".reach"],
   ["Who else", ".who-else-section"],
+  ["Get records", ".action"],
   ["Sources", ".methodology"],
 ];
 
@@ -48,17 +51,6 @@ export default function Toolbar({ title }) {
     const t = setTimeout(() => setNote(null), 4000);
     return () => clearTimeout(t);
   }, [note]);
-
-  const pageUrl = () => {
-    // Inside the WordPress iframe, the parent page is the address readers should keep.
-    try {
-      if (window.top === window) return window.location.href;
-      // A bare origin (default referrer policy) is the newsroom homepage, not the article;
-      // only trust the referrer when it carries a path.
-      const r = document.referrer ? new URL(document.referrer) : null;
-      return r && r.pathname && r.pathname !== "/" ? r.href : window.location.href;
-    } catch { return window.location.href; }
-  };
 
   const bookmark = async () => {
     const url = pageUrl();

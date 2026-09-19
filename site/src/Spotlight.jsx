@@ -16,7 +16,7 @@ function Stat({ num, label, title }) {
   );
 }
 
-function Card({ a, usat }) {
+export function AgencyCard({ a, usat, children }) {
   const p = a.portal;
   const flagged = a.usatoday?.flagged_rows > 0 ? a.usatoday.flagged[0] : null;
   const years = usat ? `${usat.coverage.first_seen.slice(0, 4)}–${usat.coverage.last_seen.slice(0, 4)}` : "";
@@ -53,6 +53,19 @@ function Card({ a, usat }) {
           Per ICE's participating-agencies list.
         </p>
       )}
+      {a.other_tech?.length > 0 && (
+        <p className="card-tech">
+          <strong>Also documented:</strong>{" "}
+          {a.other_tech.map((t, i) => (
+            <React.Fragment key={t.technology}>
+              {i > 0 && ", "}
+              {t.link ? <a href={t.link} target="_blank" rel="noreferrer">{t.technology.toLowerCase()}</a> : t.technology.toLowerCase()}
+              {t.vendor ? ` (${t.vendor})` : ""}
+            </React.Fragment>
+          ))}
+          . Per EFF's Atlas of Surveillance.
+        </p>
+      )}
       {a.status.note && <p className="card-note">{a.status.note}</p>}
       {flagged && (
         <p className="card-flag">
@@ -74,6 +87,7 @@ function Card({ a, usat }) {
           <a href="https://data.usatoday.com/projects/flock-search/" target="_blank" rel="noreferrer">USA TODAY records ↗</a>
         )}
       </p>
+      {children}
     </article>
   );
 }
@@ -85,7 +99,7 @@ export default function Spotlight({ agencies, usat }) {
     <section className="spotlight" aria-label="Marathon County">
       <h2>Marathon County</h2>
       <div className="spotlight-cards">
-        {featured.map((a) => <Card key={a.canonical} a={a} usat={usat} />)}
+        {featured.map((a) => <AgencyCard key={a.canonical} a={a} usat={usat} />)}
       </div>
       {rest.length > 0 && (
         <div className="spotlight-rest">
