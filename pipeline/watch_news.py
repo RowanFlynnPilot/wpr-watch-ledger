@@ -144,7 +144,10 @@ def main() -> None:
         "" if own else "",
         f"### Statewide ({len(wide)})" if wide else "",
         *[line(s) for s in wide[:25]],
-        f"- and {len(wide) - 25} more" if len(wide) > 25 else "",
+        # Everything past the first 25 still has to be IN the issue: the issue text is this
+        # script's only memory of what it has already reported.
+        *(["", f"<details><summary>and {len(wide) - 25} more</summary>", "", *[line(s) for s in wide[25:]], "", "</details>"]
+          if len(wide) > 25 else []),
         "",
         "### What to do",
         "- [ ] For each agency that ended, voted to end or will not renew: add or update a `dropped` row in `data/status_overlay.json`",
