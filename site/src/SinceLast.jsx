@@ -77,7 +77,7 @@ export default function SinceLast({ changes, history }) {
           <summary>Earlier refreshes</summary>
           <table className="since-table">
             <thead>
-              <tr><th scope="col">Refresh</th><th scope="col">Added</th><th scope="col">Removed</th><th scope="col"><span className="visually-hidden">Scale</span></th>{anyNotes && <th scope="col">Also</th>}</tr>
+              <tr><th scope="col">Refresh</th><th scope="col">Added</th><th scope="col">Removed</th><th scope="col"><span className="visually-hidden">Scale</span></th>{anyNotes && <th scope="col" className="since-t-note">Also</th>}</tr>
             </thead>
             <tbody>
               {earlier.map((r) => (

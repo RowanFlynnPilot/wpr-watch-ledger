@@ -1320,7 +1320,7 @@ tr.row-home td:first-child { font-weight: 700; }
 @media (max-width: 560px) {
   .since-spark { align-items: baseline; flex-direction: row; flex-wrap: wrap; gap: 0.2rem 0.6rem; padding: 0.55rem 0 0; border-left: none; border-top: 1px dashed var(--line); }
   .since-spark-label { text-align: left; }
-  .since-table thead th:last-child, .since-t-note { display: none; }
+  .since-t-note { display: none; } /* by class: the last header is the bar column when no run has notes */
 }
 
 .lookup-kind { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 0.4rem; }
@@ -1426,3 +1426,13 @@ tr.row-home td:first-child { font-weight: 700; }
   }
   .map-card-zoom { margin-bottom: 0; }
 }
+
+/* The change strip must never size itself to its contents: an opened "Earlier refreshes"
+   table once stretched the page to 828 px on a phone. */
+.since-earlier { min-width: 0; }
+/* the global `table { min-width: 790px }` exists for the roster's scroll box; this table has none */
+.since-table { table-layout: fixed; min-width: 0; }
+.since-table thead th:first-child, .since-table tbody th { width: 4.2rem; }
+.since-table thead th:nth-child(2), .since-table thead th:nth-child(3) { width: 4.4rem; text-align: right; }
+.since-t-note { width: 40%; }
+@media (max-width: 560px) { .since { grid-template-columns: minmax(0, 1fr); } }

@@ -122,7 +122,8 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   roster rows only; never creates one and never implies plate-reader use.
 - `tests/test_names.py` — unittest cases for canonicalize()/pretty_name(); both workflows run
   them first. Add a case whenever a new alias or name collision is found.
-- `pipeline/audit.py` — PASS/FAIL consistency checks (68 as of 2026-09-19) over the committed data. It gates
+- `pipeline/audit.py` — PASS/FAIL consistency checks over the committed data (the count grows with
+  the overlay: each curated row gets its own check). It gates
   both workflows: refresh.yml runs it after refresh.py and before the data commit (a bad
   refresh never lands), deploy.yml runs it before the build. Every check recomputes from
   the data; never assert a literal figure (168 rings, 20 sheriffs) that next week's data
@@ -176,6 +177,10 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
   which Safari before 16.4 ignores, silently disabling the responsive layout on older iPhones.
   Both workflows fail the build if range syntax reappears. Do not remove the targets. `npm audit` was clean on
   2026-09-19; the earlier Vite 5 advisories concerned the dev server, not the built site.
+- Layout checks that have each caught a real bug: no sideways scroll at 320, 375, 599 and 1000 px
+  WITH EVERY <details> OPEN and the show-all buttons pressed (a closed section hid a table that
+  stretched the page to 828 px). Note the global `table { min-width: 790px }`: it exists for the
+  roster's scroll box, so any new small table must set `min-width: 0`.
 - Accessibility baseline: axe-core (wcag2a/aa, wcag21aa, best-practice) reports zero violations
   WITH THE INTERACTIVE STATES OPEN (a lookup result, the full timeline, every <details>, a roster
   filter chip active): a plain page load hid four contrast misses and an unfocusable scroll region.
