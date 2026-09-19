@@ -55,6 +55,26 @@ The frame scrolls inside itself; set the height to taste.
 <iframe src="https://rowanflynnpilot.github.io/wpr-watch-ledger/" style="width:100%;border:none;height:90vh;min-height:800px" title="The Watch Ledger" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allow="geolocation; clipboard-write; web-share"></iframe>
 
 ============================================================
+IF THE FRAME STAYS 1200px TALL WITH ITS OWN SCROLLBAR
+============================================================
+That means WordPress kept the iframe but dropped the JavaScript (it strips scripts from many
+editors without saying so). The tool notices and pins its section tabs to the top of the
+window, so it stays usable. To get the full-height version, the JavaScript from Option A has
+to be loaded by the site rather than by the post. Any one of these works:
+
+  - a "header and footer scripts" setting (Newspack: Settings > Scripts; or the plugins
+    "WPCode" / "Insert Headers and Footers"): paste the Option A JavaScript wrapped in
+    <script> ... </script> into the FOOTER box
+  - Google Tag Manager: a Custom HTML tag with the same <script> ... </script>, firing on the
+    Watch Ledger page
+  - a caching plugin that delays or combines JavaScript (LiteSpeed Cache does) can also hold
+    the script back; exclude it from "Delay JS" if it was saved but does not run
+
+The script is safe to load on every page: it does nothing unless an iframe with
+id="watch-ledger" is present and the message comes from the tool's own address.
+A wider page template (one column, no sidebar) also helps: the tool is built for 700px or more.
+
+============================================================
 CHECK BEFORE SAVING
 ============================================================
 The src must read exactly  https://rowanflynnpilot.github.io/wpr-watch-ledger/

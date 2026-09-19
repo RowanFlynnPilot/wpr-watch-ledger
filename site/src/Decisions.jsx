@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { slug } from "./share.js";
 
 // The agencies that have ended Flock, and those that have stopped using the cameras without
@@ -8,13 +8,17 @@ import { slug } from "./share.js";
 const day = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 const short = (n) => n.replace(/ Police Department$/, " PD").replace(/ Sheriff's Office$/, " Sheriff");
 
+const CAP = 7;
+
 export default function Decisions({ agencies, onPick }) {
+  const [all, setAll] = useState(false);
   const acted = agencies.filter((a) => (a.status.value === "dropped" || a.status.value === "suspended") && a.status.as_of);
   if (acted.length === 0) return null;
   const dropped = acted.filter((a) => a.status.value === "dropped");
   const suspended = acted.filter((a) => a.status.value === "suspended");
   const groups = new Map();
-  for (const a of [...acted].sort((x, y) => x.status.as_of.localeCompare(y.status.as_of) || x.name.localeCompare(y.name))) {
+  // Newest first: the latest departures are the news; the first ones are history.
+  for (const a of [...acted].sort((x, y) => y.status.as_of.localeCompare(x.status.as_of) || x.name.localeCompare(y.name))) {
     const k = `${a.status.as_of}|${a.status.value}|${a.status.note || ""}|${a.status.source || ""}`;
     if (!groups.has(k)) groups.set(k, []);
     groups.get(k).push(a);
@@ -41,7 +45,7 @@ export default function Decisions({ agencies, onPick }) {
         {suspended.length > 0 && <span><span className="decision-dot is-suspended" /> Use suspended, contract in place</span>}
       </div>
       <ol className="decisions-line">
-        {[...groups.values()].map((group) => {
+        {[...groups.values()].slice(0, all ? undefined : CAP).map((group) => {
           const s = group[0].status;
           return (
             <li key={`${s.as_of}-${group[0].canonical}`} className={`decision${s.value === "suspended" ? " is-suspended" : ""}`}>
@@ -70,6 +74,11 @@ export default function Decisions({ agencies, onPick }) {
           );
         })}
       </ol>
+      {groups.size > CAP && (
+        <button type="button" className="dl dl-quiet decisions-more" onClick={() => setAll(!all)} aria-expanded={all}>
+          {all ? "Show fewer" : `Show all ${groups.size} reports, back to ${first}`}
+        </button>
+      )}
     </section>
   );
 }

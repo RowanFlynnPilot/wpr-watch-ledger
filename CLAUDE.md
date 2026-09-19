@@ -153,6 +153,14 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
 
 ## Known constraints
 
+- Production embed (checked 2026-09-19): wausaupilotandreview.com/the-watch-ledger-flock-cameras-in-wisconsin/
+  carries the iframe (LiteSpeed lazy-loads it: src="about:blank" + data-src) in a 599 px
+  column, but WordPress dropped the height-listener script, so the frame is a fixed 1200 px
+  window. main.jsx detects an unresized frame (content much taller than innerHeight) and adds
+  `fixed-frame` to <html>: the toolbar becomes sticky and sections get scroll-margin. Test any
+  toolbar or layout change in that mode too (a 599 px wide, 1200 px tall iframe with no
+  listener). The fix on the WordPress side is a site-level footer script; see /embed.txt.
+
 - Licence: the camera dots are OpenStreetMap data (ODbL). "© OpenStreetMap contributors" must
   stay in the map's attribution control and the methodology card; do not drop it in a restyle.
 - Toolchain: Vite 8 / plugin-react 6 (Node >= 20.19; CI pins Node 22). `npm audit` was clean on

@@ -44,6 +44,8 @@ export default function Toolbar({ title }) {
     return () => { window.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
   }, []);
   const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
+  // Inside a host page the tool is often narrower than it wants to be; offer the way out.
+  const embedded = typeof window !== "undefined" && window.parent !== window;
   const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
   useEffect(() => {
@@ -91,6 +93,11 @@ export default function Toolbar({ title }) {
           <button type="button" className="dl dl-quiet" onClick={share}>
             Share
           </button>
+        )}
+        {embedded && (
+          <a className="dl dl-quiet dl-full" href={window.location.href} target="_blank" rel="noreferrer" title="Open the Watch Ledger on its own page, full width">
+            Open full page ↗
+          </a>
         )}
       </div>
       {note && <p className="toolbar-note" role="status">{note}</p>}

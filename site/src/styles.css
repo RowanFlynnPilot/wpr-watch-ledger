@@ -1375,3 +1375,31 @@ tr.row-home td:first-child { font-weight: 700; }
 .decision.is-suspended::before { background: var(--cream); border-style: dashed; }
 .decision:hover::before { background: var(--rust); }
 .decision.is-suspended .decision-count { border-style: dashed; }
+
+/* ---- fixed-frame mode: the host page never resizes the frame, so the reader scrolls inside
+   a short window. Pin the section tabs there; they are the only way around a long page. ---- */
+.dl-full { text-decoration: none; display: inline-block; }
+.fixed-frame .page { padding-top: 1.25rem; }
+.fixed-frame .toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1200;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+  padding: 0.55rem 1.25rem 0.5rem;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 6px 14px -10px rgba(31, 36, 33, 0.55);
+}
+.fixed-frame .toolbar .jump { margin-right: 0; padding-right: 0; }
+/* anchors must clear the pinned bar */
+.fixed-frame section, .fixed-frame footer.methodology { scroll-margin-top: 6.2rem; }
+@media (max-width: 480px) {
+  .fixed-frame .toolbar { margin-left: -1rem; margin-right: -1rem; padding-left: 1rem; padding-right: 1rem; }
+}
+@media print { .dl-full { display: none !important; } }
+
+.decisions-more { margin: 0.9rem 0 0 8.4rem; cursor: pointer; }
+.decisions-more:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 2px; }
+@media (max-width: 560px) { .decisions-more { margin-left: 1.5rem; } }
+@media print { .decisions-more { display: none !important; } }

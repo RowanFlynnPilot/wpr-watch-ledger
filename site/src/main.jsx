@@ -39,4 +39,18 @@ if (window.parent !== window) {
   // report again when web fonts land and on a short schedule after load.
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(report);
   for (const ms of [500, 1500, 3000, 6000]) setTimeout(report, ms);
+
+  // A frame cannot resize itself: if the host page never installed the listener (WordPress
+  // strips scripts from many editors, and did on the newsroom's own page), the tool sits in
+  // a fixed window and the reader scrolls inside it. Detect that, and switch to a layout
+  // built for it: section tabs pinned to the top of the window. If a listener turns up
+  // later and the frame grows to fit, switch back.
+  const FIXED = "fixed-frame";
+  const judge = () => {
+    const content = root.getBoundingClientRect().height;
+    const unresized = content > 0 && content - window.innerHeight > 600;
+    document.documentElement.classList.toggle(FIXED, unresized);
+  };
+  for (const ms of [2000, 4000, 8000]) setTimeout(judge, ms);
+  window.addEventListener("resize", judge);
 }
