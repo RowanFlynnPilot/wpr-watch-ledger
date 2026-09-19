@@ -170,7 +170,11 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
 
 - Licence: the camera dots are OpenStreetMap data (ODbL). "© OpenStreetMap contributors" must
   stay in the map's attribution control and the methodology card; do not drop it in a restyle.
-- Toolchain: Vite 8 / plugin-react 6 (Node >= 20.19; CI pins Node 22). `npm audit` was clean on
+- Toolchain: Vite 8 / plugin-react 6 (Node >= 20.19; CI pins Node 22). vite.config.js pins
+  build.target and build.cssTarget to Safari 14-era browsers ON PURPOSE: Vite 8's defaults made
+  its CSS minifier rewrite every `max-width` media query into range syntax (`width<=560px`),
+  which Safari before 16.4 ignores, silently disabling the responsive layout on older iPhones.
+  Both workflows fail the build if range syntax reappears. Do not remove the targets. `npm audit` was clean on
   2026-09-19; the earlier Vite 5 advisories concerned the dev server, not the built site.
 - Accessibility baseline: axe-core (wcag2a/aa, wcag21aa, best-practice) reports zero violations
   WITH THE INTERACTIVE STATES OPEN (a lookup result, the full timeline, every <details>, a roster

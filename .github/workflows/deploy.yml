@@ -48,6 +48,12 @@ jobs:
         run: |
           npm ci
           npm run build
+          # Older iPhones (Safari < 16.4) ignore media-query range syntax, which silently turns off
+          # the whole responsive layout. vite.config.js pins targets to prevent it; this proves it.
+          if grep -qE '@media[^{]*(width|height)[<>]' dist/assets/*.css; then
+            echo "Built CSS contains media-query range syntax; check build.cssTarget in vite.config.js" >&2
+            exit 1
+          fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
