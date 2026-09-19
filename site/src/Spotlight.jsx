@@ -63,7 +63,8 @@ export function AgencyCard({ a, usat, children }) {
               {t.vendor ? ` (${t.vendor})` : ""}
             </React.Fragment>
           ))}
-          . Per EFF's Atlas of Surveillance.
+          . Per EFF's{" "}
+          <a href="https://atlasofsurveillance.org/" target="_blank" rel="noreferrer">Atlas of Surveillance</a>, whose source links can go stale.
         </p>
       )}
       {a.status.note && <p className="card-note">{a.status.note}</p>}

@@ -86,11 +86,32 @@ def classify_orgs(orgs: list[str] | None) -> dict:
 SUFFIX_MAP = [
     (r"police department$", "pd"),
     (r"police dept$", "pd"),
+    (r"police$", "pd"),  # 'Wisconsin State Capitol Police' == '... Police Department'
     (r"sheriffs? office$", "so"),
     (r"sheriffs? department$", "so"),
     (r"sheriffs? dept$", "so"),
     (r"sheriffs?$", "so"),  # WisDOT permit registry style: 'Dane Co Sheriff'
 ]
+
+
+# Misspellings inside Flock's own sharing lists that would otherwise put one agency on the
+# roster twice. Hand-checked: Wisconsin has one Nekoosa.
+KEY_ALIASES = {"neekoosa pd": "nekoosa pd"}
+
+# Agencies and organizations whose names state no place. Hand-verified, used only when
+# every other rule leaves the county empty. Statewide bodies and multi-site chains
+# (WI Department of Justice, Blain's Farm and Fleet) stay unresolved on purpose.
+HAND_COUNTIES = {
+    "mountain bay metro pd": "Marathon County",      # Rothschild, Weston, Schofield, Town of Weston
+    "kenosha joint services": "Kenosha County",
+    "state capitol pd": "Dane County",
+    "lac courte oreilles tribal pd": "Sawyer County",
+    "saint croix tribal pd": "Burnett County",       # Webster / Hertel
+    "stockbridge munsee pd": "Shawano County",       # Bowler
+    "ho chunk gaming wittenberg": "Shawano County",
+    "ho chunk gaming madison": "Dane County",
+    "grafton commons": "Ozaukee County",
+}
 
 
 def canonicalize(name: str) -> str:
@@ -111,7 +132,7 @@ def canonicalize(name: str) -> str:
     s = re.sub(r"^(city|village) of ", "", s)
     for pattern, abbr in SUFFIX_MAP:
         s = re.sub(pattern, abbr, s)
-    return s
+    return KEY_ALIASES.get(s, s)
 
 
 # ---------------------------------------------------------------- fetchers
@@ -979,6 +1000,8 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
         named = resolve_county(a["canonical"], city_county)
         if named and not overlay.get(key, {}).get("county"):
             a["county"] = named
+        if a["county"] is None:
+            a["county"] = HAND_COUNTIES.get(key)
         if a["county"] is None and a["wisdot"] and len(a["wisdot"]["counties"]) == 1:
             # weakest signal, used last: every permitted camera stands in one county
             a["county"] = f"{a['wisdot']['counties'][0]} County"

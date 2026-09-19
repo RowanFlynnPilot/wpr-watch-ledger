@@ -68,6 +68,17 @@ lastrun = changes['runs'][-1]
 check(lastrun['date'] != meta['generated'][:10] or lastrun['cameras']['total'] == meta['camera_count'],
       'latest change-log entry agrees with the camera count', str(lastrun['cameras']['total']))
 check(all(isinstance(a.get('other_tech'), list) for a in A), 'every roster row carries other_tech')
+import difflib
+_core = lambda k: re.sub(r'\s+', ' ', re.sub(r'\b(pd|so|police|department|tribal)\b', ' ', k)).strip()
+_seen = collections.defaultdict(list)
+# A bare municipality in a sharing list ('City of Fitchburg') is a separate Flock account from
+# its police department and is never guessed into it, so only policing rows are compared.
+for a in A:
+    if re.search(r' (pd|so|police)$', a['canonical']): _seen[_core(a['canonical'])].append(a['name'])
+check(not {k: v for k, v in _seen.items() if len(v) > 1}, 'no agency on the roster twice under a suffix variant', str({k: v for k, v in _seen.items() if len(v) > 1}))
+_keys = [a['canonical'] for a in A]
+_typos = [(x, y) for i, x in enumerate(_keys) for y in _keys[i + 1:] if abs(len(x) - len(y)) <= 2 and difflib.SequenceMatcher(None, x, y).ratio() > 0.92 and _core(x) != _core(y)]
+check(not _typos, 'no two roster keys within a typo of each other', str(_typos))
 misfiled = [(a['name'], a['county']) for a in A if (mm := re.match(r'^(.+?) County\b', a['name'])) and a['county']
             and a['county'].replace('St. ', 'Saint ').lower() != (mm.group(1) + ' County').replace('St. ', 'Saint ').lower()]
 check(not misfiled, 'every county-named agency sits in its own county', str(misfiled))

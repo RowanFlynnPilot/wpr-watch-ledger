@@ -11,6 +11,9 @@ SAME = [
     ("Fond du Lac Police Department", "Fond Du Lac WI PD"),
     ("Village of Rothschild Police Department", "Rothschild PD"),
     ("La Crosse Police Department", "La Crosse WI PD"),
+    ("Wisconsin State Capitol Police", "Wisconsin State Capitol Police Department"),
+    ("Lac Courte Oreilles Tribal Police", "Lac Courte Oreilles Tribal Police Department"),
+    ("Neekoosa WI PD", "Nekoosa Police Department"),
 ]
 DIFFERENT = [
     ("Town of Delavan Police Department", "City of Delavan Police Department"),

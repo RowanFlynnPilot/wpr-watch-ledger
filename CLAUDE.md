@@ -125,6 +125,13 @@ name or an exact municipality-table match (`resolve_county`) > whatever a source
 single-county WisDOT permit set. Sources are wrong often enough to matter: the Atlas files the
 Columbia County sheriff under Portage (its county seat) and Franklin PD under Jackson County.
 
+Duplicates found 2026-09-19: a trailing bare "Police" now folds to pd (State Capitol Police,
+Lac Courte Oreilles Tribal Police were each on the roster twice); `KEY_ALIASES` folds
+misspelled keys from Flock's own lists (Neekoosa); `HAND_COUNTIES` places agencies whose names
+state no place (Mountain Bay Metro PD is Marathon County: Rothschild, Weston, Schofield).
+A bare municipality in a sharing list ("City of Fitchburg") stays a separate row on purpose.
+audit.py checks for suffix-variant duplicates and keys within a typo of each other.
+
 ## Design system (WPR)
 
 teal #3A867C / deep #2C6B62, cream #F6F2E9, ink #1F2421, rust #B5543B (dropped status).
@@ -132,6 +139,10 @@ Fraunces display, Public Sans body, JetBrains Mono for data. Signature element: 
 transparency-gap tick bar (one tick per network agency, filled = publishes a portal).
 
 ## Known constraints
+
+- Never size anything in `vh` alone. Inside the auto-height WordPress frame the viewport IS the
+  page, so a vh height grows with the frame (the roster unrolled to 18,000 px). Pair it with a
+  fixed ceiling: `min(72vh, 46rem)`.
 
 - Flock's own transparency portals sit behind Cloudflare JS challenges — do NOT try to
   scrape transparency.flocksafety.com directly. Eyes On Flock is the one correct source.

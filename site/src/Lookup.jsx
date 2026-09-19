@@ -26,6 +26,13 @@ function Stat({ num, label }) {
   );
 }
 
+// Communities policed by a department that does not carry their name. Hand-verified.
+const SERVED_BY = {
+  weston: ["mountain bay metro pd"],
+  rothschild: ["mountain bay metro pd"],
+  schofield: ["mountain bay metro pd"],
+};
+
 // Publishers first, then the agencies that walked away, then the silent ones.
 const order = (a) => (a.portal ? 0 : a.status.value === "dropped" ? 1 : a.in_network ? 2 : 3);
 const CAP = 6;
@@ -34,7 +41,9 @@ function CountyCard({ county, row, agencies, place, mapped, onPick }) {
   const [all, setAll] = useState(false);
   useEffect(() => setAll(false), [county, place]);
   const here = agencies.filter((a) => a.county === county).sort((x, y) => order(x) - order(y) || x.name.localeCompare(y.name));
-  const local = place ? here.filter((a) => a.name.toLowerCase().includes(place)) : [];
+  const local = place
+    ? here.filter((a) => a.name.toLowerCase().includes(place) || (SERVED_BY[place] || []).includes(a.canonical))
+    : [];
   const rest = here.filter((a) => !local.includes(a));
   const chip = (a) => (
     <li key={a.canonical}>
@@ -69,7 +78,7 @@ function CountyCard({ county, row, agencies, place, mapped, onPick }) {
       )}
       {local.length > 0 && (
         <>
-          <p className="lk-list-title">Agencies named for {title(place)}</p>
+          <p className="lk-list-title">Agencies serving {title(place)}</p>
           <ul className="lk-agencies">{local.map(chip)}</ul>
         </>
       )}
