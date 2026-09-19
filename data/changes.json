@@ -652,6 +652,76 @@
     "added": [],
     "removed": []
    }
+  },
+  {
+   "date": "2026-09-19",
+   "since": "2026-09-14",
+   "cameras": {
+    "total": 2131,
+    "added": 21,
+    "removed": 5,
+    "by_county": [
+     {
+      "county": "Milwaukee County",
+      "added": 13,
+      "removed": 0
+     },
+     {
+      "county": "Winnebago County",
+      "added": 4,
+      "removed": 0
+     },
+     {
+      "county": "Outagamie County",
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "county": "Barron County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Dane County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Florence County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Marinette County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Ozaukee County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Racine County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Rock County",
+      "added": 0,
+      "removed": 1
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
   }
  ]
 }
