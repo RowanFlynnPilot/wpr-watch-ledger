@@ -133,6 +133,8 @@ export default function App() {
   const perDay = Math.round(sightings30d / 30);
   const silentCount = inNetwork.length - withPortal.length;
   const dropped = agencies.filter((a) => a.status.value === "dropped");
+  // Stopped using the cameras pending review, contract still in place: never counted as dropped.
+  const suspended = agencies.filter((a) => a.status.value === "suspended");
   const droppedSince = new Date(
     Math.min(...dropped.map((a) => new Date(a.status.as_of || Date.now()).getTime()))
   ).toLocaleDateString("en-US", { year: "numeric", month: "long", timeZone: "UTC" });
@@ -200,7 +202,10 @@ export default function App() {
         >
           <span className="stat-num">{fmt(dropped.length)}</span>
           <span className="stat-label">agencies have dropped Flock</span>
-          <span className="stat-sub">all since {droppedSince} · see who →</span>
+          <span className="stat-sub">
+            all since {droppedSince}
+            {suspended.length > 0 && ` · ${suspended.length} more have suspended use`} · see who →
+          </span>
         </button>
       </section>
 

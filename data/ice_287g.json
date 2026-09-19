@@ -1,9 +1,9 @@
 {
  "source": "U.S. Immigration and Customs Enforcement, 287(g) Participating Agencies (ice.gov/identify-and-arrest/287g), Wisconsin rows",
  "url": "https://www.ice.gov/identify-and-arrest/287g",
- "file_url": "https://www.ice.gov/file-download/download/public/208912",
- "retrieved": "2026-09-05",
- "national_rows": 2472,
+ "file_url": "https://www.ice.gov/file-download/download/public/209157",
+ "retrieved": "2026-09-19",
+ "national_rows": 2539,
  "notes": [
   "One row per signed agreement; an agency with two rows holds two models (e.g. Warrant Service Officer plus Jail Enforcement Model).",
   "Support types: Jail Enforcement Model (identify and process removable aliens in the jail), Task Force Model (limited immigration authority during routine duties), Warrant Service Officer (serve ICE administrative warrants in the jail).",

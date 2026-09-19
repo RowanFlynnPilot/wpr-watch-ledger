@@ -38,7 +38,7 @@ out body;
 EOF_URL = "https://eyesonflock.com/api/v1/data"
 ATLAS_URL = "https://atlasofsurveillance.org/download"
 
-VALID_STATUSES = {"active", "dropped", "never"}
+VALID_STATUSES = {"active", "dropped", "suspended", "never"}
 
 # A portal whose figures Flock has not updated in this many days is excluded from
 # the statewide 30-day totals and flagged in the roster.

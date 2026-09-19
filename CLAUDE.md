@@ -37,18 +37,22 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   hand-checked WISDOT_OWNER_ALIASES map in refresh.py; ambiguous owners stay as written.
 - `data/usatoday_flock_search.json` — COMMITTED SNAPSHOT of the Wisconsin slice of USA
   TODAY's Flock search-records tool (data.usatoday.com/projects/flock-search): cumulative
-  audit-log searches per agency (Jan 2023 - Apr 2026, 249 agencies, 1.87M searches) plus
+  audit-log searches per agency (Jan 2023 - Apr 2026; 252 agencies, 1.90M searches as of the 2026-09-19 re-snapshot) plus
   the WI rows among the 5,000 highest "frequency score" plate searches nationally. Built
   from the page's three static files (state_summary.json, org_map.json, data/initial.json)
-  by a one-off script; validated at build (keys, totals must sum). Joined by canonical
+  by `pipeline/snapshot_usatoday.py` (run by hand; USA TODAY does republish, and reassigns its
+  org_ids when it does, so rebuild whole); validated at build (keys, totals must sum). Joined by canonical
   name into `agency.usatoday`; USAT_ALIASES folds units (Milwaukee PD - STAC) into their
   department. An agency with searches > 0 joins the network roster (derived active).
   NEVER put these cumulative counts in the same column as, or add them to, the portals'
   30-day session figures. Attribute USA TODAY. Flock withdrew the audit view in Dec 2025,
-  so this does not refresh; re-snapshot only if USA TODAY republishes.
+  so the window is fixed, but USA TODAY still adds logs: compare the live WI row of
+  state_summary.json with `coverage` monthly and re-run the script when they differ.
 - `data/ice_287g.json` — COMMITTED SNAPSHOT of the Wisconsin rows of ICE's 287(g)
   participating-agencies spreadsheet (ice.gov/identify-and-arrest/287g -> file-download
-  208912; one row per signed agreement; 20 sheriff's offices as of 2026-09-05). Validated at
+  <id changes every few days>; one row per signed agreement; 20 sheriff's offices as of
+  2026-09-19). Rebuilt by `pipeline/snapshot_ice.py` (run by hand; needs openpyxl; fetches through
+  curl because ice.gov fingerprints and blocks Python clients). Validated at
   build; joined by canonical name into `agency.ice_287g` (agreements, models, first_signed)
   and counted per county. Does not touch in_network. Re-download when ICE updates the list.
 - `data/wi_counties.json` — COMMITTED SNAPSHOT of Wisconsin county boundaries (Census
@@ -62,7 +66,13 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   official list and a mismatch aborts the run.
 - `data/status_overlay.json` — HAND-CURATED, never generated. Overlay always wins.
   Keys must be canonical (`canonicalize(key) == key`, validated at build).
-  Required per row: name, status (active|dropped|never), as_of, source URL.
+  Required per row: name, status (active|dropped|suspended|never), as_of, source URL.
+  `dropped` = ended, voted to end, or decided not to renew (cameras may run until expiry; say so
+  in the note). `suspended` = stopped using or covered the cameras pending review with no
+  contract decision reported; never counted in the "dropped" headline. Promote a suspended row
+  to dropped when a termination is reported. The overlay goes stale silently: nothing in the
+  pipeline notices a news event, so search for new Wisconsin Flock decisions at least monthly
+  (the tenth audit found 19 agencies the ledger had missed in three weeks).
   Optional `portal` block = a HAND-READ transparency portal that Eyes On Flock does not
   index (Marathon County SO and Wausau PD both have live portals EOF misses, found
   2026-09-01). A person opens transparency.flocksafety.com/<slug> in a browser and copies

@@ -37,7 +37,7 @@ dupes = collections.defaultdict(list)
 for a in A: dupes[strip(a['canonical'])].append(a['name'])
 dupes = {k: v for k, v in dupes.items() if len(v) > 1}
 check(True, 'near-duplicate canonicals (review by eye)', str(dupes))
-check(all(a['status']['value'] in ('active', 'dropped', 'never', 'unknown') for a in A), 'status values valid')
+check(all(a['status']['value'] in ('active', 'dropped', 'suspended', 'never', 'unknown') for a in A), 'status values valid')
 check(all(a['county'] is None or a['county'] in pop['counties'] for a in A), 'every county is a DOA county')
 noCounty = [a['name'] for a in A if not a['county']]
 check(True, f'{len(noCounty)} agencies without county (statewide/tribal/private expected)', ', '.join(noCounty))

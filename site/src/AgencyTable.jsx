@@ -58,6 +58,7 @@ const FILTERS = [
   { key: "audit", label: "Publish audit log", test: (a) => !!a.portal?.public_search_audit },
   { key: "hwy", label: "Hwy permits", test: (a) => !!a.wisdot },
   { key: "dropped", label: "Dropped", test: (a) => a.status.value === "dropped" },
+  { key: "suspended", label: "Suspended", test: (a) => a.status.value === "suspended" },
   { key: "unverified", label: "Unverified", test: (a) => a.status.value === "unknown" },
   { key: "silent", label: "Searches, no portal", test: (a) => a.usatoday?.searches > 0 && !a.portal },
   { key: "ice", label: "ICE 287(g)", test: (a) => !!a.ice_287g },

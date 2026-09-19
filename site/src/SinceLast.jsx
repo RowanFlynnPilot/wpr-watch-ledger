@@ -7,11 +7,21 @@ import Sparkline from "./Sparkline.jsx";
 const day = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 const list = (names, max = 3) => names.slice(0, max).join(", ") + (names.length > max ? ` and ${names.length - max} more` : "");
 
-function extras(run) {
+// "unverified" becoming "active" is the pipeline learning something, not an agency acting.
+const NEWS = new Set(["dropped", "suspended"]);
+
+function extras(run0) {
+  const run = { ...run0, status: run0.status.filter((s) => NEWS.has(s.to) || NEWS.has(s.from)) };
   const parts = [];
   if (run.portals.new.length) parts.push(`new portal${run.portals.new.length === 1 ? "" : "s"}: ${list(run.portals.new)}`);
   if (run.portals.gone.length) parts.push(`portal${run.portals.gone.length === 1 ? "" : "s"} gone: ${list(run.portals.gone)}`);
-  if (run.status.length) parts.push(run.status.map((s) => `${s.name} now ${s.to}`).slice(0, 2).join("; "));
+  if (run.status.length > 0 && run.status.length <= 2) parts.push(run.status.map((s) => `${s.name} now ${s.to}`).join("; "));
+  if (run.status.length > 2) {
+    // A wave of decisions reads better as counts; the timeline below names each agency.
+    const by = {};
+    for (const s of run.status) by[s.to] = (by[s.to] || 0) + 1;
+    parts.push(Object.entries(by).map(([to, n]) => `${n} agencies now ${to}`).join(", "));
+  }
   if (run.agencies.added.length) parts.push(`joined the roster: ${list(run.agencies.added)}`);
   return parts;
 }

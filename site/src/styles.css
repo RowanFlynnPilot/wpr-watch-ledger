@@ -1364,3 +1364,14 @@ tr.row-home td:first-child { font-weight: 700; }
   .since { border: 1px solid #999; }
   .decision::before { background: #fff; }
 }
+
+/* ---- "suspended": stopped using the cameras, contract still in place ---- */
+.badge-suspended { background: transparent; color: var(--rust-text); border: 1px solid var(--rust); }
+.decisions-key { display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; margin: -0.4rem 0 1rem; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); }
+.decisions-key span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.decision-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--rust); background: var(--rust); }
+.decision-dot.is-suspended { background: var(--cream); border-style: dashed; }
+.decision::before { background: var(--rust); }
+.decision.is-suspended::before { background: var(--cream); border-style: dashed; }
+.decision:hover::before { background: var(--rust); }
+.decision.is-suspended .decision-count { border-style: dashed; }

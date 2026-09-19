@@ -541,5 +541,156 @@
       "prohibited_uses": null,
       "read_on": "2026-09-01"
     }
+  },
+  "racine county so": {
+    "name": "Racine County Sheriff's Office",
+    "county": "Racine County",
+    "status": "dropped",
+    "as_of": "2026-09-09",
+    "note": "Sheriff Christopher Schmaling ordered all Flock cameras taken down after learning the company builds a separate dataset from camera data and markets it to other customers: \"This is not what we agreed to.\"",
+    "source": "https://www.wpr.org/news/wisconsin-cities-disable-flock-cameras-cancel-contracts"
+  },
+  "sheboygan pd": {
+    "name": "Sheboygan Police Department",
+    "county": "Sheboygan County",
+    "status": "dropped",
+    "as_of": "2026-09-09",
+    "note": "Common Council voted unanimously to terminate the Flock contract after the company tried to sell years of the city's own traffic data to its public works department.",
+    "source": "https://www.wpr.org/news/wisconsin-cities-disable-flock-cameras-cancel-contracts"
+  },
+  "menasha pd": {
+    "name": "Menasha Police Department",
+    "county": "Winnebago County",
+    "status": "dropped",
+    "as_of": "2026-09-08",
+    "note": "Common Council voted 7-1 to terminate the Flock contract on the police chief's recommendation, days after Winnebago County agencies jointly stopped using the cameras.",
+    "source": "https://fox11online.com/news/local/menasha-votes-to-terminate-flock-contract-neenah-working-toward-termination-too"
+  },
+  "neenah pd": {
+    "name": "Neenah Police Department",
+    "county": "Winnebago County",
+    "status": "dropped",
+    "as_of": "2026-09-17",
+    "note": "Common Council voted unanimously to terminate the Flock contract early on the police chief's recommendation; cameras bagged, with Flock asked to remove them within 30 days.",
+    "source": "https://www.wbay.com/2026/09/17/neenah-ends-flock-contract-unanimous-vote/"
+  },
+  "oconomowoc pd": {
+    "name": "Oconomowoc Police Department",
+    "county": "Waukesha County",
+    "status": "dropped",
+    "as_of": "2026-09-15",
+    "note": "Common Council voted 5-2 to cancel the Flock contract with about a year remaining; the mayor said the cameras would be bagged the next day.",
+    "source": "https://www.fox6now.com/news/oconomowoc-racine-leaders-discuss-flock-safety-camera-contracts"
+  },
+  "racine pd": {
+    "name": "Racine Police Department",
+    "county": "Racine County",
+    "status": "dropped",
+    "as_of": "2026-09-15",
+    "note": "Common Council voted to end Flock camera use, the mayor breaking a 7-7 tie; the contract was funded through the end of 2026.",
+    "source": "https://www.fox6now.com/news/oconomowoc-racine-leaders-discuss-flock-safety-camera-contracts"
+  },
+  "waukesha pd": {
+    "name": "Waukesha Police Department",
+    "county": "Waukesha County",
+    "status": "dropped",
+    "as_of": "2026-09-15",
+    "note": "Common Council voted not to fund the Flock program beyond 2026. The cameras remain under contract until then.",
+    "source": "https://www.fox6now.com/news/oconomowoc-racine-leaders-discuss-flock-safety-camera-contracts"
+  },
+  "sun prairie pd": {
+    "name": "Sun Prairie Police Department",
+    "county": "Dane County",
+    "status": "dropped",
+    "as_of": "2026-09-16",
+    "note": "Will not renew its Flock contract: six cameras expire Dec. 31, 2026 and three on March 31, 2027. The department plans to propose a different vendor's plate readers.",
+    "source": "https://www.wmtv15news.com/2026/09/16/sun-prairie-joins-growing-list-wisconsin-cities-dropping-flock-cameras/"
+  },
+  "fond du lac county so": {
+    "name": "Fond du Lac County Sheriff's Office",
+    "county": "Fond du Lac County",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Fond du Lac County's sheriff and the police chiefs of Fond du Lac, North Fond du Lac, Ripon and Waupun jointly ceased use of Flock cameras countywide, effective immediately, and are covering every camera. They cited search data from their systems being released by agencies in other states under public-records requests, including active local investigations. No contract termination was reported.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "fond du lac pd": {
+    "name": "Fond du Lac Police Department",
+    "county": "Fond du Lac County",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Fond du Lac County's sheriff and the police chiefs of Fond du Lac, North Fond du Lac, Ripon and Waupun jointly ceased use of Flock cameras countywide, effective immediately, and are covering every camera. They cited search data from their systems being released by agencies in other states under public-records requests, including active local investigations. No contract termination was reported.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "north fond du lac pd": {
+    "name": "North Fond du Lac Police Department",
+    "county": "Fond du Lac County",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Fond du Lac County's sheriff and the police chiefs of Fond du Lac, North Fond du Lac, Ripon and Waupun jointly ceased use of Flock cameras countywide, effective immediately, and are covering every camera. They cited search data from their systems being released by agencies in other states under public-records requests, including active local investigations. No contract termination was reported.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "ripon pd": {
+    "name": "Ripon Police Department",
+    "county": "Fond du Lac County",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Fond du Lac County's sheriff and the police chiefs of Fond du Lac, North Fond du Lac, Ripon and Waupun jointly ceased use of Flock cameras countywide, effective immediately, and are covering every camera. They cited search data from their systems being released by agencies in other states under public-records requests, including active local investigations. No contract termination was reported.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "waupun pd": {
+    "name": "Waupun Police Department",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Fond du Lac County's sheriff and the police chiefs of Fond du Lac, North Fond du Lac, Ripon and Waupun jointly ceased use of Flock cameras countywide, effective immediately, and are covering every camera. They cited search data from their systems being released by agencies in other states under public-records requests, including active local investigations. No contract termination was reported.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "winnebago county so": {
+    "name": "Winnebago County Sheriff's Office",
+    "county": "Winnebago County",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Winnebago County's sheriff and the police chiefs of Fox Crossing, Menasha, Neenah, UW-Oshkosh and Winneconne jointly ceased use of Flock cameras countywide, effective immediately, pending an internal review of potentially affected investigations. No contract termination was reported for this agency.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "fox crossing pd": {
+    "name": "Fox Crossing Police Department",
+    "county": "Winnebago County",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Winnebago County's sheriff and the police chiefs of Fox Crossing, Menasha, Neenah, UW-Oshkosh and Winneconne jointly ceased use of Flock cameras countywide, effective immediately, pending an internal review of potentially affected investigations. No contract termination was reported for this agency.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "university of oshkosh pd": {
+    "name": "University of Wisconsin-Oshkosh Police Department",
+    "county": "Winnebago County",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Winnebago County's sheriff and the police chiefs of Fox Crossing, Menasha, Neenah, UW-Oshkosh and Winneconne jointly ceased use of Flock cameras countywide, effective immediately, pending an internal review of potentially affected investigations. No contract termination was reported for this agency.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "winneconne pd": {
+    "name": "Winneconne Police Department",
+    "county": "Winnebago County",
+    "status": "suspended",
+    "as_of": "2026-09-05",
+    "note": "Winnebago County's sheriff and the police chiefs of Fox Crossing, Menasha, Neenah, UW-Oshkosh and Winneconne jointly ceased use of Flock cameras countywide, effective immediately, pending an internal review of potentially affected investigations. No contract termination was reported for this agency.",
+    "source": "https://www.wsaw.com/2026/09/06/more-wisconsin-communities-stop-use-flock-cameras/"
+  },
+  "waupaca county so": {
+    "name": "Waupaca County Sheriff's Office",
+    "county": "Waupaca County",
+    "status": "suspended",
+    "as_of": "2026-09-08",
+    "note": "Suspended use of its Flock cameras in early September over the same out-of-state records disclosures that led Fond du Lac and Winnebago counties to stop.",
+    "source": "https://fox11online.com/news/local/menasha-votes-to-terminate-flock-contract-neenah-working-toward-termination-too"
+  },
+  "stevens point pd": {
+    "name": "Stevens Point Police Department",
+    "county": "Portage County",
+    "status": "suspended",
+    "as_of": "2026-09-09",
+    "note": "The city covered its 10 Flock cameras to stop data collection; the mayor said the city has no way to audit where the data goes once Flock collects it.",
+    "source": "https://www.wpr.org/news/wisconsin-cities-disable-flock-cameras-cancel-contracts"
   }
 }

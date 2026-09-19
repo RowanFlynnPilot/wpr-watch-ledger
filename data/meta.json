@@ -1,11 +1,11 @@
 {
-  "generated": "2026-09-19T15:16:30Z",
+  "generated": "2026-09-19T15:27:58Z",
   "camera_count": 2131,
   "flock_camera_count": 1615,
   "agency_count": 294,
   "portal_count": 52,
   "hand_read_portal_count": 3,
-  "curated_count": 20,
+  "curated_count": 39,
   "wisdot_camera_count": 759,
   "wisdot_agency_count": 186,
   "wisdot_permits_by_year": {
@@ -19,19 +19,19 @@
   },
   "stale_days_threshold": 45,
   "usatoday": {
-    "retrieved": "2026-09-04",
+    "retrieved": "2026-09-19",
     "url": "https://data.usatoday.com/projects/flock-search/",
     "coverage": {
       "state": "WI",
       "first_seen": "2023-01-01",
       "last_seen": "2026-04-16",
-      "searches": 1867858,
-      "agencies": 249,
+      "searches": 1897564,
+      "agencies": 252,
       "users": 6312,
       "plates": 61697,
-      "records": 86031,
-      "national_searches": 75690410,
-      "national_agencies": 6337
+      "records": 86034,
+      "national_searches": 78190516,
+      "national_agencies": 6413
     },
     "notes": [
       "Search totals are cumulative over the coverage window and count individual audit-log searches; they are not comparable to the 30-day search-session figures on Flock transparency portals.",
@@ -41,12 +41,12 @@
     ]
   },
   "ice_287g": {
-    "retrieved": "2026-09-05",
+    "retrieved": "2026-09-19",
     "url": "https://www.ice.gov/identify-and-arrest/287g",
     "agencies": 20,
     "agreements": 23,
     "in_network": 17,
-    "national_rows": 2472
+    "national_rows": 2539
   },
   "stale_portal_count": 3,
   "national": {

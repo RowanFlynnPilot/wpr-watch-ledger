@@ -717,7 +717,118 @@
     "new": [],
     "gone": []
    },
-   "status": [],
+   "status": [
+    {
+     "name": "Fond du Lac County Sheriff's Office",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Fond du Lac Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Fox Crossing Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Iron County Sheriff's Office",
+     "from": "unknown",
+     "to": "active"
+    },
+    {
+     "name": "Lac Courte Oreilles Tribal Police Department",
+     "from": "unknown",
+     "to": "active"
+    },
+    {
+     "name": "Menasha Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Neenah Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "North Fond du Lac Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Oconomowoc Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Racine County Sheriff's Office",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Racine Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Ripon Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Sheboygan Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Stevens Point Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Sun Prairie Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "University of Wisconsin-Oshkosh Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Waukesha Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Waupaca County Sheriff's Office",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Waupun Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Winnebago County Sheriff's Office",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Winneconne Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Wisconsin State Capitol Police Department",
+     "from": "unknown",
+     "to": "active"
+    }
+   ],
    "agencies": {
     "added": [],
     "removed": []

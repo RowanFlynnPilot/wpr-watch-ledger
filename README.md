@@ -100,6 +100,16 @@ disable AMP for the article or use `<amp-iframe>` with a fixed height.
 Contract status lives in `data/status_overlay.json` and always wins over derived status.
 See CLAUDE.md for the row schema. Every row requires a source URL and an as-of date.
 
+## Keeping the hand-maintained pieces current
+
+Nothing automatic notices a news event or a republished source. Roughly monthly:
+
+- search for Wisconsin agencies ending or suspending Flock and add sourced rows to
+  `data/status_overlay.json` (`dropped` or `suspended`; see CLAUDE.md)
+- re-read the hand-read transparency portals in the overlay and bump `read_on`
+- `python pipeline/snapshot_usatoday.py` and `python pipeline/snapshot_ice.py` rebuild those two
+  committed snapshots and print what changed; then refresh and run the audit
+
 ## Attribution
 
 - Camera locations © OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)

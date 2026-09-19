@@ -34,7 +34,8 @@ const SERVED_BY = {
 };
 
 // Publishers first, then the agencies that walked away, then the silent ones.
-const order = (a) => (a.portal ? 0 : a.status.value === "dropped" ? 1 : a.in_network ? 2 : 3);
+const left = (a) => a.status.value === "dropped" || a.status.value === "suspended";
+const order = (a) => (a.portal ? 0 : left(a) ? 1 : a.in_network ? 2 : 3);
 const CAP = 6;
 
 function CountyCard({ county, row, agencies, place, mapped, onPick }) {
@@ -49,13 +50,13 @@ function CountyCard({ county, row, agencies, place, mapped, onPick }) {
     <li key={a.canonical}>
       <button
         type="button"
-        className={`lk-agency${a.portal ? " has-portal" : ""}${a.status.value === "dropped" ? " is-dropped" : ""}`}
+        className={`lk-agency${a.portal ? " has-portal" : ""}${left(a) ? " is-dropped" : ""}`}
         onClick={() => onPick({ type: "agency", id: slug(a.canonical) })}
       >
         <span className="lk-dot" aria-hidden="true" />
         <span className="lk-agency-name">{a.name}</span>
         <span className="lk-agency-fact">
-          {a.status.value === "dropped" ? "dropped Flock" : a.portal ? "publishes a portal" : a.in_network ? "no portal" : "documented use"}
+          {a.status.value === "dropped" ? "dropped Flock" : a.status.value === "suspended" ? "suspended Flock use" : a.portal ? "publishes a portal" : a.in_network ? "no portal" : "documented use"}
         </span>
       </button>
     </li>

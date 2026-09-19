@@ -112,7 +112,7 @@ export default function Spotlight({ agencies, usat }) {
                 <span className="who-else-facts">
                   {" — "}
                   {[
-                    a.status.value === "dropped" ? "announced dropping Flock" : null,
+                    a.status.value === "dropped" ? "announced dropping Flock" : a.status.value === "suspended" ? "suspended its Flock cameras" : null,
                     a.usatoday?.searches > 0 ? `${fmt(a.usatoday.searches)} searches on record` : null,
                     a.wisdot ? `${fmt(a.wisdot.cameras)} highway camera${a.wisdot.cameras === 1 ? "" : "s"} permitted` : null,
                     a.osm_cameras > 0 ? `${fmt(a.osm_cameras)} mapped by volunteers` : null,
