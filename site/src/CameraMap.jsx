@@ -69,13 +69,37 @@ function wedge(lat, lon, deg, spread) {
   return pts;
 }
 
-export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [], shapes, outline }) {
+// County shading: mapped cameras per 10,000 residents, five quantile classes over the counties
+// that have any, so one outlier cannot flatten the scale. Light to dark, one hue.
+const RAMP = ["#DCEBE7", "#B4D3CB", "#84B5AA", "#508F83", "#245D55"];
+const NONE = "#FBF9F3";
+const rateOf = (c) => (c.population > 0 ? (10000 * c.dots) / c.population : 0);
+function classBreaks(stats) {
+  const v = stats.filter((c) => c.dots > 0).map(rateOf).sort((a, b) => a - b);
+  if (v.length < 5) return [];
+  return [0.2, 0.4, 0.6, 0.8].map((q) => v[Math.floor(q * (v.length - 1))]);
+}
+const classOf = (rate, breaks) => breaks.filter((b) => rate > b).length;
+const nice = (n) => (n >= 10 ? n.toFixed(0) : n.toFixed(1));
+function inRing(lon, lat, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+    if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [], shapes, outline, countyStats = [] }) {
   const el = useRef(null);
   const mapRef = useRef(null);
   const layers = useRef({});
   const meRef = useRef(null);
   const outlineRef = useRef(null);
   const boundsRef = useRef(null);
+  const [shade, setShade] = useState(false);
+  const breaks = useMemo(() => classBreaks(countyStats), [countyStats]);
+  const statByName = useMemo(() => new Map(countyStats.map((c) => [c.name, c])), [countyStats]);
   const [show, setShow] = useState({ flock: true, other: true, wisdot: true, unmappedOnly: false });
   const [view, setView] = useState("state");
   const [locating, setLocating] = useState(false);
@@ -100,7 +124,7 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
 
     // Panes, bottom to top: tiles, labels, the out-of-state mask, borders, then the markers.
     // Labels sit UNDER the mask so Wisconsin's cities read clearly and everyone else's fade.
-    for (const [name, z] of [["labels", 250], ["mask", 300], ["borders", 350]]) {
+    for (const [name, z] of [["labels", 250], ["mask", 300], ["shade", 320], ["borders", 350]]) {
       map.createPane(name).style.zIndex = z;
       map.getPane(name).style.pointerEvents = "none";
     }
@@ -199,10 +223,14 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
         : z <= 9 ? { dot: 4, ring: 7, w: 1.5 }
         : { dot: 5, ring: 9, w: 1.75 };
       // Softer fills at the statewide view, so Milwaukee reads as density rather than a blot.
-      const fill = z <= 7 ? 0.5 : 0.75;
-      for (const m of dots) { m.setRadius(s.dot); if (!m.options.hidden) m.setStyle({ fillOpacity: fill }); }
-      for (const m of rings) m.setStyle({ radius: s.ring, weight: s.w });
+      // With county shading on, the markers step back until the reader zooms into a county.
+      const fade = layers.current.shade && z < 9;
+      const fill = fade ? 0.1 : z <= 7 ? 0.5 : 0.75;
+      for (const m of dots) { m.setRadius(s.dot); if (!m.options.hidden) m.setStyle({ fillOpacity: fill, opacity: fade ? 0.28 : 1 }); }
+      for (const m of rings) { m.setStyle({ radius: s.ring, weight: s.w }); if (!m.options.hidden) m.setStyle({ opacity: fade ? 0.22 : 1 }); }
+      layers.current.shadeLayer?.setStyle({ fillOpacity: z >= 9 ? 0.3 : 0.85 });
     };
+    layers.current.resize = resize;
     map.on("zoomend", resize);
     resize();
 
@@ -242,15 +270,78 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     const inSel = (m) => selectedCounties.length === 0 || selectedCounties.includes(m.options.county);
     for (const m of ly.rings) {
       const hide = (show.unmappedOnly && !m.options.unmapped) || !inSel(m);
-      m.setStyle({ opacity: hide ? 0 : 1 });
+      m.options.hidden = hide;
+      if (hide) m.setStyle({ opacity: 0 });
     }
     for (const m of ly.dots) {
       const hide = !inSel(m);
       m.options.hidden = hide;
-      m.setStyle({ opacity: hide ? 0 : 1, fillOpacity: hide ? 0 : map.getZoom() <= 7 ? 0.5 : 0.75 });
+      if (hide) m.setStyle({ opacity: 0, fillOpacity: 0 });
     }
+    ly.shade = shade;
+    ly.resize?.();
     ly.drawWedges?.();
-  }, [show, selectedCounties]);
+  }, [show, selectedCounties, shade]);
+
+  // County shading: a filled layer under the borders, plus a readout that follows the pointer.
+  // The markers' canvas sits above every SVG pane and swallows pointer events, so the county
+  // under the cursor is found by point-in-polygon on the map's own mousemove.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !shapes || !shade) return;
+    const style = (f) => {
+      const c = statByName.get(f.properties.name);
+      const none = !c || c.dots === 0;
+      return { stroke: false, fillColor: none ? NONE : RAMP[classOf(rateOf(c), breaks)], fillOpacity: map.getZoom() >= 9 ? 0.3 : 0.85 };
+    };
+    const svg = L.svg({ pane: "shade" }).addTo(map);
+    const layer = L.geoJSON(shapes, { renderer: svg, pane: "shade", interactive: false, style }).addTo(map);
+    layers.current.shadeLayer = layer;
+
+    const index = shapes.features.map((f) => {
+      const polys = f.geometry.type === "MultiPolygon" ? f.geometry.coordinates : [f.geometry.coordinates];
+      const xs = polys.flatMap((p) => p[0].map((pt) => pt[0])), ys = polys.flatMap((p) => p[0].map((pt) => pt[1]));
+      return { f, polys, box: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] };
+    });
+    const countyAt = ({ lat, lng }) =>
+      index.find((c) => lng >= c.box[0] && lng <= c.box[2] && lat >= c.box[1] && lat <= c.box[3] && c.polys.some((p) => inRing(lng, lat, p[0])))?.f;
+
+    const tip = L.tooltip({ direction: "top", offset: [0, -6], opacity: 1, className: "county-tip" });
+    let hovered = null, outlineLayer = null, raf = 0;
+    const clear = () => { hovered = null; tip.remove(); outlineLayer?.remove(); outlineLayer = null; };
+    const showCounty = (latlng) => {
+      const f = countyAt(latlng);
+      if (!f) return clear();
+      if (f !== hovered) {
+        hovered = f;
+        outlineLayer?.remove();
+        outlineLayer = L.geoJSON(f, { pane: "borders", interactive: false, style: { color: "#1F2421", weight: 2, fill: false } }).addTo(map);
+        const c = statByName.get(f.properties.name);
+        const rate = c ? rateOf(c) : 0;
+        tip.setContent(
+          `<p class="pop-title">${esc(f.properties.name)}</p>` +
+            (c && c.dots > 0
+              ? `<p class="pop-row"><span>Per 10,000 residents</span>${nice(rate)}</p>`
+              : `<p class="pop-row"><span>Mapped cameras</span>none yet</p>`) +
+            (c ? `<p class="pop-row"><span>Mapped by volunteers</span>${c.dots.toLocaleString("en-US")}</p>` +
+                 `<p class="pop-row"><span>Highway permits</span>${c.rings.toLocaleString("en-US")}</p>` +
+                 `<p class="pop-row"><span>Residents</span>${c.population.toLocaleString("en-US")}</p>` : "")
+        );
+      }
+      tip.setLatLng(latlng);
+      if (!map.hasLayer(tip)) tip.addTo(map);
+    };
+    const onMove = (e) => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; showCounty(e.latlng); }); };
+    const onClick = (e) => showCounty(e.latlng); // touch screens have no hover
+    map.on("mousemove", onMove);
+    map.on("click", onClick);
+    map.on("mouseout", clear);
+    return () => {
+      map.off("mousemove", onMove); map.off("click", onClick); map.off("mouseout", clear);
+      if (raf) cancelAnimationFrame(raf);
+      clear(); layer.remove(); svg.remove(); layers.current.shadeLayer = null;
+    };
+  }, [shade, shapes, statByName, breaks]);
 
   // Selected counties: draw their outlines and fit the view to them.
   useEffect(() => {
@@ -324,6 +415,24 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
             <span className="legend-dot legend-unmapped" aria-hidden="true" />
             only rings with no dot within {NEAR_M} m <span className="legend-n">{fmt(unmapped.length)}</span>
           </label>
+          {breaks.length > 0 && (
+            <label className="legend-item legend-toggle legend-shade">
+              <input type="checkbox" checked={shade} onChange={() => setShade(!shade)} />
+              Shade counties by mapped cameras per 10,000 residents
+            </label>
+          )}
+          {shade && (
+            <div className="shade-key" role="img" aria-label={`County shading from light to dark: up to ${nice(breaks[0])}, then ${breaks.slice(1).map(nice).join(", ")} and above, mapped cameras per 10,000 residents`}>
+              <div className="shade-ramp">
+                {RAMP.map((color, i) => <span key={color} style={{ background: color }}>{i > 0 && <em>{nice(breaks[i - 1])}</em>}</span>)}
+              </div>
+              <p className="shade-unit">mapped cameras per 10,000 residents, in five equal groups of counties</p>
+              <p className="shade-note">
+                <span className="shade-none" /> none mapped · hover or tap a county. Shading follows
+                where volunteers have mapped, which is not the same as where cameras are.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

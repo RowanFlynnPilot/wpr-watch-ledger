@@ -78,6 +78,15 @@ export default function App() {
     () => (data ? buildIndex(data.agencies, data.counties.counties, data.places) : []),
     [data]
   );
+  // Per-county figures for the map's shading. Memoized on the data so the map's effects,
+  // which depend on it, do not re-run every time the page re-renders.
+  const countyStats = useMemo(() => {
+    if (!data) return [];
+    const n = {};
+    for (const c of data.cameras.cameras) if (c.county) (n[c.county] ||= { dots: 0, rings: 0 }).dots++;
+    for (const w of data.wisdot.cameras) if (w.county) (n[`${w.county} County`] ||= { dots: 0, rings: 0 }).rings++;
+    return data.counties.counties.map((c) => ({ name: c.name, population: c.population, dots: n[c.name]?.dots || 0, rings: n[c.name]?.rings || 0 }));
+  }, [data]);
   // Arriving on a deep link: bring the lookup into view once the data has rendered.
   useEffect(() => {
     if (!data || !readHash()) return;
@@ -300,7 +309,7 @@ export default function App() {
       <section className="map-section" aria-label="Camera map">
         <h2>Every mapped camera</h2>
         <CountyPicker counties={countyNames} selected={mapCounties} onChange={setMapCounties} counts={countyCounts} />
-        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} selectedCounties={mapCounties} shapes={shapes} outline={outline} />
+        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} selectedCounties={mapCounties} shapes={shapes} outline={outline} countyStats={countyStats} />
         <p className="map-caption">
           Dots are community-reported by volunteers to OpenStreetMap via the DeFlock project and
           are incomplete — the true number of cameras is higher. Rings are official: cameras

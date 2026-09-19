@@ -67,6 +67,12 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   Labels come from Esri's keyless World_Light_Gray_Reference layer, in a pane UNDER the mask so
   Wisconsin's place names stay crisp and neighbouring states' fade. Map height is set by the
   state's portrait shape (660 px desktop, 600 article column, 390 phone).
+  County shading (a legend toggle, off by default): mapped cameras per 10,000 residents in five
+  quantile classes over the counties that have any, one teal ramp, its own `shade` pane between
+  the mask and the borders. The markers' canvas sits above every SVG pane and swallows pointer
+  events, so the hover/tap readout finds the county by point-in-polygon on the map's own
+  mousemove. While shading is on the markers fade below zoom 9, and the fill fades above it.
+  The key says plainly that shading follows where volunteers have mapped, not where cameras are.
 - `data/wi_population.json` — COMMITTED SNAPSHOT of WI DOA official final population
   estimates (state/counties/places/towns). Joined at build into `data/counties.json`
   (per-county rollup + statewide coverage); county spellings are validated against DOA's
