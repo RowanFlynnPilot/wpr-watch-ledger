@@ -1410,3 +1410,19 @@ tr.row-home td:first-child { font-weight: 700; }
 .tick.filled.tick-suspended { background: var(--teal); }
 
 .action-preview pre:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 2px; }
+
+/* Between a phone and a full-width page (the newsroom's article column is 599 px) the floating
+   legend covered 15% of the map, over Door County and Green Bay. Below 720 px it sits under it. */
+@media (max-width: 720px) {
+  .map-card {
+    position: static;
+    max-width: none;
+    box-shadow: none;
+    border-top: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.5rem 1.25rem;
+  }
+  .map-card-zoom { margin-bottom: 0; }
+}
