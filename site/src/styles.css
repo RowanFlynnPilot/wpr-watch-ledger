@@ -1349,3 +1349,18 @@ tr.row-home td:first-child { font-weight: 700; }
 .graph-pick { flex-wrap: wrap; max-width: 100%; }
 .graph-pick select { max-width: 100%; min-width: 0; text-overflow: ellipsis; }
 @media (max-width: 480px) { .jump { margin-right: -1rem; padding-right: 1rem; } }
+
+/* ---- keyboard focus: one visible ring on every control, whatever its hover style ---- */
+.dl:focus-visible, .jump-link:focus-visible, .lk-agency:focus-visible, .lk-more:focus-visible,
+.decision-name:focus-visible, .lookup-ex:focus-visible, .stat-link:focus-visible,
+.sharing-more:focus-visible, .since-earlier summary:focus-visible, .action-preview summary:focus-visible {
+  outline: 2px solid var(--teal-deep);
+  outline-offset: 2px;
+}
+
+/* ---- print: the search box, the letter tool and the expanders are screen-only ---- */
+@media print {
+  .lookup, .action, .since-earlier, .lk-more, .sharing-more, .lookup-actions { display: none !important; }
+  .since { border: 1px solid #999; }
+  .decision::before { background: #fff; }
+}

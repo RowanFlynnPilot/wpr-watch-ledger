@@ -26,7 +26,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
-UA = {"User-Agent": "WPR-WatchLedger/1.0 (Wausau Pilot & Review; data@wausaupilotandreview.com)"}
+UA = {"User-Agent": "WPR-WatchLedger/1.0 (Wausau Pilot & Review; rowan.flynn@wausaupilotandreview.com)"}
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 OVERPASS_QUERY = """
@@ -772,6 +772,14 @@ def validate_overlay_portal(key: str, block: dict) -> None:
         raise RuntimeError(f"Overlay '{key}' portal: portal_url must be a transparency.flocksafety.com URL")
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", block["read_on"]):
         raise RuntimeError(f"Overlay '{key}' portal: read_on must be YYYY-MM-DD")
+    try:
+        read_on = datetime.strptime(block["read_on"], "%Y-%m-%d").date()
+    except ValueError:
+        raise RuntimeError(f"Overlay '{key}' portal: read_on {block['read_on']} is not a real date") from None
+    # A future date would never go stale: a typo'd year must not keep hand-read figures
+    # in the statewide totals indefinitely.
+    if read_on > datetime.now(timezone.utc).date():
+        raise RuntimeError(f"Overlay '{key}' portal: read_on {block['read_on']} is in the future")
     for k in OVERLAY_PORTAL_INT_KEYS:
         v = block.get(k)
         if v is not None and (not isinstance(v, int) or v < 0):
@@ -820,12 +828,20 @@ def load_overlay() -> dict:
     for key, entry in overlay.items():
         if canonicalize(key) != key:
             raise RuntimeError(f"Overlay key is not canonical: '{key}' (should be '{canonicalize(key)}')")
+        missing = [k for k in ("name", "status", "as_of", "source") if not entry.get(k)]
+        if missing:
+            raise RuntimeError(f"Overlay '{key}': missing required field(s) {missing}")
+        # The site sorts and prints this date; anything but a real ISO date renders "Invalid Date".
+        try:
+            as_of = datetime.strptime(entry["as_of"], "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            raise RuntimeError(f"Overlay '{key}': as_of must be a YYYY-MM-DD date, got {entry['as_of']!r}") from None
+        if as_of > datetime.now(timezone.utc).date():
+            raise RuntimeError(f"Overlay '{key}': as_of {entry['as_of']} is in the future")
         if entry["status"] not in VALID_STATUSES:
             raise RuntimeError(f"Overlay '{key}': status must be one of {VALID_STATUSES}")
         if not entry["source"].startswith("http"):
             raise RuntimeError(f"Overlay '{key}': source must be a URL")
-        if "as_of" not in entry or "name" not in entry:
-            raise RuntimeError(f"Overlay '{key}': 'name' and 'as_of' are required")
         if "portal" in entry:
             validate_overlay_portal(key, entry["portal"])
     return overlay

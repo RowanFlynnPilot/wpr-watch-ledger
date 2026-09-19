@@ -13,16 +13,23 @@ python pipeline/refresh.py
 cd site; npm install; npm run dev
 ```
 
+Needs Python 3.12+ and Node 20.19+ (the workflows use Node 22). `refresh.py` queries the
+public Overpass API, which asks for one query a week: for site-only work, skip it and build
+from the committed `data/`.
+
 ## Audit before publishing
 
 ```
+python -m unittest discover tests
 python pipeline/audit.py
 ```
 
-Read-only. Sixty cross-checks over `data/*.json` (meta vs files, roster integrity, history
+The tests cover agency-name and county matching, which every join depends on. The audit is
+read-only: cross-checks over `data/*.json` (meta vs files, roster integrity, history
 and edges vs portals, county rollup recomputed, USA TODAY and ICE joins, unmapped rings by
 brute force) and a printout of every headline figure the site derives, to compare against
-the page. Exits non-zero on any failure.
+the page. Exits non-zero on any failure. Both run in CI: the weekly refresh will not commit
+data that fails, and no push deploys over data that fails.
 
 ## Deploy
 
@@ -104,6 +111,8 @@ See CLAUDE.md for the row schema. Every row requires a source URL and an as-of d
 - ICE 287(g) agreements from U.S. Immigration and Customs Enforcement's participating-agencies
   list (ice.gov/identify-and-arrest/287g). `data/ice_287g.json` is a committed snapshot of the
   Wisconsin rows.
+- Population estimates from the Wisconsin Department of Administration; county outlines from
+  U.S. Census Bureau cartographic boundary files
 - State-highway camera permits from Wisconsin DOT records, obtained under the Wisconsin
   Open Records Law and mapped by Deflock Dane (deflockdane.org). `data/wisdot_permits.json`
   is a committed snapshot — refresh it when WisDOT releases new records, not on the cron.
