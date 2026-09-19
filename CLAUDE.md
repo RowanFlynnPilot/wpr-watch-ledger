@@ -83,6 +83,17 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   do not switch back. Every chart (sparklines, week-by-week, reach bars, permit timeline,
   inner-circle graph) is plain SVG/CSS — no chart library.
   `cpdata.mjs` copies the listed `../data/*.json` files into `public/data/` on every dev/build — add any new data file to that list or the site gets index.html back as JSON.
+- `data/changes.json` — GENERATED change log, one entry per run: cameras added/removed (by
+  county), portals that appeared or vanished, status changes, roster additions. refresh.py
+  diffs against the data committed by the previous run BEFORE overwriting it; a same-day
+  rerun leaves that date's entry untouched. Entries before 2026-09-07 were replayed from git
+  history and carry camera figures only (roster churn that week was our own development).
+  `history.json` snapshots also carry `cameras: {total, flock}` so the map's growth can be charted.
+- `agency.other_tech` — other surveillance technology (drones, face recognition, body-worn
+  cameras...) from the non-ALPR Wisconsin rows of the same Atlas CSV. Annotates existing
+  roster rows only; never creates one and never implies plate-reader use.
+- `tests/test_names.py` — unittest cases for canonicalize()/pretty_name(); both workflows run
+  them first. Add a case whenever a new alias or name collision is found.
 - `pipeline/audit.py` — 60 PASS/FAIL consistency checks over the committed data. It gates
   both workflows: refresh.yml runs it after refresh.py and before the data commit (a bad
   refresh never lands), deploy.yml runs it before the build. Every check recomputes from

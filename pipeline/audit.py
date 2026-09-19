@@ -56,6 +56,19 @@ check(set(last['portals']) == {a['canonical'] for a in eof}, 'history snapshot k
 dates = [s['date'] for s in hist['snapshots']]
 check(dates == sorted(dates) and len(dates) == len(set(dates)), 'history dates strictly increasing', str(dates))
 check(set(edges['edges']) == {a['canonical'] for a in eof}, 'edges keys == EOF portals')
+check(last.get('cameras') == {'total': meta['camera_count'], 'flock': meta['flock_camera_count']} or last['date'] != meta['generated'][:10],
+      'latest history snapshot carries the camera counts', str(last.get('cameras')))
+changes = L('changes.json')
+cdates = [r['date'] for r in changes['runs']]
+check(cdates == sorted(set(cdates)) and all(r['since'] < r['date'] for r in changes['runs']), 'change log dates strictly increasing', str(cdates[-3:]))
+check(all(r['cameras']['added'] == sum(c['added'] for c in r['cameras']['by_county']) and
+          r['cameras']['removed'] == sum(c['removed'] for c in r['cameras']['by_county']) for r in changes['runs']),
+      'change log county splits sum to the totals')
+lastrun = changes['runs'][-1]
+check(lastrun['date'] != meta['generated'][:10] or lastrun['cameras']['total'] == meta['camera_count'],
+      'latest change-log entry agrees with the camera count', str(lastrun['cameras']['total']))
+tech_bad = [a['name'] for a in A for t in a.get('other_tech', []) if 'plate' in t['technology'].lower() or not t['technology']]
+check(not tech_bad, 'other_tech never repeats plate readers', str(tech_bad[:3]))
 missing_partner = {p for lst in edges['edges'].values() for p in lst if p not in keys}
 check(not missing_partner, 'every sharing partner is a roster agency', str(list(missing_partner)[:5]))
 for a in withPortal:

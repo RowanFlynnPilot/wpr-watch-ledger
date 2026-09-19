@@ -123,6 +123,10 @@
      "cameras": 6,
      "vehicles_captured_30d": 133714
     }
+   },
+   "cameras": {
+    "total": 2107,
+    "flock": 1606
    }
   },
   {
@@ -248,6 +252,10 @@
      "vehicles_captured_30d": 133714,
      "hotlist_hits_30d": 1043
     }
+   },
+   "cameras": {
+    "total": 2107,
+    "flock": 1606
    }
   },
   {
@@ -373,6 +381,10 @@
      "searches_30d": 95,
      "cameras": 6
     }
+   },
+   "cameras": {
+    "total": 2112,
+    "flock": 1612
    }
   },
   {
@@ -510,6 +522,10 @@
      "vehicles_captured_30d": 129483,
      "cameras": 6
     }
+   },
+   "cameras": {
+    "total": 2170,
+    "flock": 1659
    }
   },
   {
@@ -647,6 +663,10 @@
      "searches_30d": 46,
      "vehicles_captured_30d": 127763
     }
+   },
+   "cameras": {
+    "total": 2100,
+    "flock": 1605
    }
   },
   {
@@ -784,6 +804,10 @@
      "vehicles_captured_30d": 127763,
      "cameras": 6
     }
+   },
+   "cameras": {
+    "total": 2100,
+    "flock": 1605
    }
   },
   {
@@ -1083,6 +1107,10 @@
      "searches_30d": 91,
      "cameras": 6
     }
+   },
+   "cameras": {
+    "total": 2092,
+    "flock": 1594
    }
   },
   {
@@ -1382,6 +1410,10 @@
      "vehicles_captured_30d": 125542,
      "hotlist_hits_30d": 734
     }
+   },
+   "cameras": {
+    "total": 2097,
+    "flock": 1596
    }
   },
   {
@@ -1681,6 +1713,10 @@
      "hotlist_hits_30d": 734,
      "vehicles_captured_30d": 125542
     }
+   },
+   "cameras": {
+    "total": 2115,
+    "flock": 1610
    }
   }
  ]

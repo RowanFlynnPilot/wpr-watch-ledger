@@ -31,8 +31,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Audit committed data before building
-        run: python pipeline/audit.py
+      - name: Name-matching tests, then audit committed data before building
+        run: |
+          pip install -r pipeline/requirements.txt
+          python -m unittest discover tests
+          python pipeline/audit.py
 
       - uses: actions/setup-node@v4
         with:

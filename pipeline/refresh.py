@@ -274,17 +274,27 @@ ATLAS_NAME_ALIASES = {
 }
 
 
-def fetch_atlas() -> list[dict]:
+def fetch_atlas() -> tuple[list[dict], dict]:
+    """Returns (WI ALPR rows, other surveillance technologies by canonical agency name).
+    The second half never adds a roster row; it only annotates agencies already there."""
     r = requests.get(ATLAS_URL, headers=UA, timeout=180)
     r.raise_for_status()
     rows = list(csv.DictReader(io.StringIO(r.content.decode("utf-8-sig"))))
     if not rows or "Technology" not in rows[0]:
         raise RuntimeError("Atlas of Surveillance CSV shape changed; expected a 'Technology' column.")
     out = []
+    other: dict[str, dict] = {}
     for row in rows:
         if row.get("State", "").strip() not in ("WI", "Wisconsin"):
             continue
         if "plate" not in row.get("Technology", "").lower():
+            tech = row.get("Technology", "").strip()
+            name = ATLAS_NAME_ALIASES.get(row["Agency"].strip(), row["Agency"].strip())
+            if tech and name:
+                entry = other.setdefault(canonicalize(name), {}).setdefault(
+                    tech, {"technology": tech, "vendor": None, "link": None})
+                entry["vendor"] = entry["vendor"] or (row.get("Vendor", "").strip() or None)
+                entry["link"] = entry["link"] or (row.get("Link 1", "").strip() or None)
             continue
         links = [row[k].strip() for k in ("Link 1", "Link 2", "Link 3") if row.get(k, "").strip()]
         agency = ATLAS_NAME_ALIASES.get(row["Agency"].strip(), row["Agency"].strip())
@@ -298,7 +308,7 @@ def fetch_atlas() -> list[dict]:
         })
     if len(out) < 50:
         raise RuntimeError(f"Atlas returned only {len(out)} WI ALPR rows; expected 100+. Aborting.")
-    return out
+    return out, {k: sorted(v.values(), key=lambda t: t["technology"]) for k, v in other.items()}
 
 
 # ---------------------------------------------------------------- history
@@ -314,13 +324,16 @@ def load_history() -> dict:
         raise RuntimeError("history.json corrupt: expected {'snapshots': [...]}")
     prev_date = ""
     for snap in history["snapshots"]:
-        if not isinstance(snap, dict) or set(snap.keys()) != {"date", "portals"}:
-            raise RuntimeError(f"history.json corrupt: snapshot keys must be {{date, portals}}, got {snap if not isinstance(snap, dict) else set(snap.keys())}")
+        if not isinstance(snap, dict) or not {"date", "portals"} <= set(snap.keys()) <= {"date", "portals", "cameras"}:
+            raise RuntimeError(f"history.json corrupt: snapshot keys must be {{date, portals[, cameras]}}, got {snap if not isinstance(snap, dict) else set(snap.keys())}")
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", snap["date"]):
             raise RuntimeError(f"history.json corrupt: bad snapshot date '{snap['date']}'")
         if snap["date"] <= prev_date:
             raise RuntimeError(f"history.json corrupt: snapshot dates not strictly increasing at '{snap['date']}'")
         prev_date = snap["date"]
+        if "cameras" in snap and not (isinstance(snap["cameras"], dict) and set(snap["cameras"]) == {"total", "flock"}
+                                      and all(isinstance(v, int) for v in snap["cameras"].values())):
+            raise RuntimeError(f"history.json corrupt: snapshot '{snap['date']}' cameras must be {{total, flock}} ints")
         if not isinstance(snap["portals"], dict):
             raise RuntimeError(f"history.json corrupt: snapshot '{snap['date']}' portals is not an object")
         for key, stats in snap["portals"].items():
@@ -332,7 +345,7 @@ def load_history() -> dict:
     return history
 
 
-def append_snapshot(history: dict, portals: list[dict], run_date: str) -> None:
+def append_snapshot(history: dict, portals: list[dict], run_date: str, cameras: dict) -> None:
     """Append today's per-portal stats. Past snapshots are never rewritten; a rerun
     on the same date replaces that date's snapshot instead of duplicating it."""
     entry = {p["canonical"]: {k: p[k] for k in HISTORY_STAT_KEYS} for p in portals}
@@ -341,10 +354,81 @@ def append_snapshot(history: dict, portals: list[dict], run_date: str) -> None:
             if value is not None and not isinstance(value, int):
                 raise RuntimeError(f"Portal '{key}' stat '{stat}' is {type(value).__name__}, expected int or null; refusing to write history.json")
     snapshots = history["snapshots"]
+    cams = {"total": cameras["count"], "flock": cameras["flock_count"]}
     if snapshots and snapshots[-1]["date"] == run_date:
         snapshots[-1]["portals"] = entry
+        snapshots[-1]["cameras"] = cams
     else:
-        snapshots.append({"date": run_date, "portals": entry})
+        snapshots.append({"date": run_date, "portals": entry, "cameras": cams})
+
+
+# ---------------------------------------------------------------- change log
+
+CHANGES_KEEP = 52
+
+
+def diff_run(prev_cameras: dict, prev_agencies: dict, cameras: dict, agencies: list[dict], run_date: str) -> dict:
+    """What moved between the previously committed data and this run. Pure: the
+    bootstrap script replays it over git history."""
+    old = {c["id"]: c for c in prev_cameras["cameras"]}
+    new = {c["id"]: c for c in cameras["cameras"]}
+    by_county: dict[str, dict] = {}
+    for cid in new.keys() - old.keys():
+        by_county.setdefault(new[cid].get("county") or "Unplaced", {"added": 0, "removed": 0})["added"] += 1
+    for cid in old.keys() - new.keys():
+        by_county.setdefault(old[cid].get("county") or "Unplaced", {"added": 0, "removed": 0})["removed"] += 1
+    prev = {a["canonical"]: a for a in prev_agencies["agencies"]}
+    cur = {a["canonical"]: a for a in agencies}
+    return {
+        "date": run_date,
+        "since": prev_cameras["generated"][:10],
+        "cameras": {
+            "total": len(new), "added": len(new.keys() - old.keys()), "removed": len(old.keys() - new.keys()),
+            "by_county": sorted(({"county": k, **v} for k, v in by_county.items()),
+                                key=lambda r: (-(r["added"] + r["removed"]), r["county"])),
+        },
+        "portals": {
+            "new": sorted(cur[k]["name"] for k in cur if cur[k]["portal"] and not (k in prev and prev[k]["portal"])),
+            "gone": sorted(prev[k]["name"] for k in prev if prev[k]["portal"] and not (k in cur and cur[k]["portal"])),
+        },
+        "status": sorted(({"name": cur[k]["name"], "from": prev[k]["status"]["value"], "to": cur[k]["status"]["value"]}
+                          for k in cur if k in prev and prev[k]["status"]["value"] != cur[k]["status"]["value"]),
+                         key=lambda r: r["name"]),
+        "agencies": {"added": sorted(cur[k]["name"] for k in cur.keys() - prev.keys()),
+                     "removed": sorted(prev[k]["name"] for k in prev.keys() - cur.keys())},
+    }
+
+
+def load_changes() -> dict:
+    path = DATA / "changes.json"
+    if not path.exists():
+        return {"runs": []}
+    changes = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(changes, dict) or list(changes.keys()) != ["runs"] or not isinstance(changes["runs"], list):
+        raise RuntimeError("changes.json corrupt: expected {'runs': [...]}")
+    prev = ""
+    for run in changes["runs"]:
+        if set(run.keys()) != {"date", "since", "cameras", "portals", "status", "agencies"}:
+            raise RuntimeError(f"changes.json corrupt: bad run keys {sorted(run.keys())}")
+        if run["date"] <= prev or run["since"] >= run["date"]:
+            raise RuntimeError(f"changes.json corrupt: dates out of order at '{run['date']}'")
+        prev = run["date"]
+    return changes
+
+
+def append_changes(changes: dict, cameras: dict, agencies: list[dict], run_date: str) -> bool:
+    """Diff against the data committed by the previous run. A rerun on the same date has
+    nothing earlier to compare with, so that date's entry is left exactly as it stands."""
+    cam_path, ag_path = DATA / "cameras.json", DATA / "agencies.json"
+    if not cam_path.exists() or not ag_path.exists():
+        return False
+    prev_cameras = json.loads(cam_path.read_text(encoding="utf-8"))
+    if prev_cameras["generated"][:10] >= run_date:
+        return False
+    entry = diff_run(prev_cameras, json.loads(ag_path.read_text(encoding="utf-8")), cameras, agencies, run_date)
+    changes["runs"] = [r for r in changes["runs"] if r["date"] != run_date] + [entry]
+    changes["runs"] = changes["runs"][-CHANGES_KEEP:]
+    return True
 
 
 # ---------------------------------------------------------------- county enrichment
@@ -743,7 +827,8 @@ def pretty_name(name: str, curated: bool = False) -> str:
 
 
 def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay: dict,
-                   city_county: dict, wisdot: dict, cameras: dict, usat: dict, ice: dict) -> tuple[list[dict], list[dict]]:
+                   city_county: dict, wisdot: dict, cameras: dict, usat: dict, ice: dict,
+                   other_tech: dict) -> tuple[list[dict], list[dict]]:
     """Returns (roster, OSM operators that matched no roster agency)."""
     agencies: dict[str, dict] = {}
 
@@ -752,6 +837,7 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
             "name": name, "canonical": key, "county": None, "type": None,
             "in_network": False, "network_mentions": 0,
             "portal": None, "atlas": None, "wisdot": None, "osm_cameras": 0, "usatoday": None, "ice_287g": None,
+            "other_tech": [],
             "status": {"value": "unknown", "derived": True, "as_of": None, "source": None, "note": None},
         })
 
@@ -898,6 +984,9 @@ def build_agencies(portals: list[dict], edges: dict, atlas: list[dict], overlay:
     # are curated and only get the apostrophe fix.
     for key, a in agencies.items():
         a["name"] = pretty_name(a["name"], curated=key in overlay)
+        # Other surveillance technology EFF's Atlas documents for the same agency. Annotates
+        # existing rows only: a drone program is not evidence of plate-reader use.
+        a["other_tech"] = other_tech.get(key, [])
 
     result = sorted(agencies.values(), key=lambda a: ((a["portal"] is None), -(a["portal"]["cameras"] or 0) if a["portal"] else 0, a["name"]))
     if len(result) < 100:
@@ -921,8 +1010,8 @@ def main() -> None:
           f"WI ranks #{national['wi_rank_by_portals']} of {national['states_with_portals']} states by portal count")
 
     print("[3/5] EFF Atlas of Surveillance: WI ALPR records...")
-    atlas = fetch_atlas()
-    print(f"      {len(atlas)} sourced records")
+    atlas, other_tech = fetch_atlas()
+    print(f"      {len(atlas)} sourced records; other technologies documented for {len(other_tech)} WI agencies")
 
     print("[4/5] Merging with curated status overlay + county lookup + WisDOT permits...")
     shapes = load_county_shapes()
@@ -937,7 +1026,7 @@ def main() -> None:
     population = load_population()
     usat = load_usatoday()
     ice = load_ice_287g()
-    agencies, unmatched_operators = build_agencies(portals, edges, atlas, overlay, city_county, wisdot, cameras, usat, ice)
+    agencies, unmatched_operators = build_agencies(portals, edges, atlas, overlay, city_county, wisdot, cameras, usat, ice, other_tech)
     with_ice = [a for a in agencies if a["ice_287g"]]
     print(f"      ICE 287(g): {len(with_ice)} agencies ({len(ice['agreements'])} agreements); "
           f"{sum(1 for a in with_ice if a['in_network'])} in the Flock network, "
@@ -968,8 +1057,11 @@ def main() -> None:
 
     print("[5/5] Appending portal stats to history ledger...")
     history = load_history()
-    append_snapshot(history, portals, generated[:10])
+    append_snapshot(history, portals, generated[:10], cameras)
     print(f"      {len(history['snapshots'])} snapshot(s) on record")
+    changes = load_changes()
+    logged = append_changes(changes, cameras, agencies, generated[:10])
+    print(f"      change log: {'entry written for ' + generated[:10] if logged else 'same-day rerun or first run, left as is'}")
 
     meta = {
         "generated": generated,
@@ -1003,6 +1095,7 @@ def main() -> None:
     (DATA / "agencies.json").write_text(json.dumps({"generated": generated, "agencies": agencies, "unmatched_operators": unmatched_operators}, separators=(",", ":")), encoding="utf-8")
     (DATA / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
     (DATA / "history.json").write_text(json.dumps(history, indent=1), encoding="utf-8")
+    (DATA / "changes.json").write_text(json.dumps(changes, indent=1), encoding="utf-8")
     (DATA / "edges.json").write_text(json.dumps({"generated": generated, "edges": sharing}, separators=(",", ":")), encoding="utf-8")
     (DATA / "counties.json").write_text(json.dumps(counties, separators=(",", ":")), encoding="utf-8")
     print(f"Done. {len(agencies)} agencies, {cameras['count']} cameras -> data/")

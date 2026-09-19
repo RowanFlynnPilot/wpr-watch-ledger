@@ -37,9 +37,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Refresh data (one 15-minute-backoff retry)
+      - name: Name-matching tests (every join depends on them)
         run: |
           pip install -r pipeline/requirements.txt
+          python -m unittest discover tests
+
+      - name: Refresh data (one 15-minute-backoff retry)
+        run: |
           python pipeline/refresh.py || {
             echo "First attempt failed; backing off 15 minutes before the only retry."
             sleep 900

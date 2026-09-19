@@ -1,0 +1,657 @@
+{
+ "runs": [
+  {
+   "date": "2026-08-09",
+   "since": "2026-08-08",
+   "cameras": {
+    "total": 2107,
+    "added": 0,
+    "removed": 0,
+    "by_county": []
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
+  },
+  {
+   "date": "2026-08-10",
+   "since": "2026-08-09",
+   "cameras": {
+    "total": 2112,
+    "added": 11,
+    "removed": 6,
+    "by_county": [
+     {
+      "county": "Dane County",
+      "added": 1,
+      "removed": 3
+     },
+     {
+      "county": "Milwaukee County",
+      "added": 1,
+      "removed": 2
+     },
+     {
+      "county": "Rock County",
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "county": "Brown County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Clark County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Sawyer County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Vilas County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Walworth County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Waukesha County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Waupaca County",
+      "added": 1,
+      "removed": 0
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
+  },
+  {
+   "date": "2026-08-24",
+   "since": "2026-08-10",
+   "cameras": {
+    "total": 2170,
+    "added": 86,
+    "removed": 28,
+    "by_county": [
+     {
+      "county": "Milwaukee County",
+      "added": 17,
+      "removed": 2
+     },
+     {
+      "county": "Kenosha County",
+      "added": 13,
+      "removed": 2
+     },
+     {
+      "county": "Dane County",
+      "added": 0,
+      "removed": 9
+     },
+     {
+      "county": "Outagamie County",
+      "added": 5,
+      "removed": 3
+     },
+     {
+      "county": "Sawyer County",
+      "added": 7,
+      "removed": 1
+     },
+     {
+      "county": "Marquette County",
+      "added": 7,
+      "removed": 0
+     },
+     {
+      "county": "Racine County",
+      "added": 5,
+      "removed": 0
+     },
+     {
+      "county": "Winnebago County",
+      "added": 1,
+      "removed": 3
+     },
+     {
+      "county": "Jefferson County",
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "county": "Marathon County",
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "county": "Portage County",
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "county": "Sauk County",
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "county": "Calumet County",
+      "added": 0,
+      "removed": 2
+     },
+     {
+      "county": "Shawano County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Waukesha County",
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "county": "Waupaca County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Adams County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Brown County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Buffalo County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Crawford County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Dodge County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Grant County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Green Lake County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Juneau County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Lincoln County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Oconto County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Oneida County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Ozaukee County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Richland County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Rock County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Unplaced",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Vilas County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Walworth County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Waushara County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Wood County",
+      "added": 1,
+      "removed": 0
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
+  },
+  {
+   "date": "2026-08-31",
+   "since": "2026-08-24",
+   "cameras": {
+    "total": 2100,
+    "added": 45,
+    "removed": 115,
+    "by_county": [
+     {
+      "county": "Winnebago County",
+      "added": 1,
+      "removed": 34
+     },
+     {
+      "county": "Outagamie County",
+      "added": 3,
+      "removed": 25
+     },
+     {
+      "county": "Sheboygan County",
+      "added": 0,
+      "removed": 24
+     },
+     {
+      "county": "Fond du Lac County",
+      "added": 18,
+      "removed": 1
+     },
+     {
+      "county": "Dane County",
+      "added": 0,
+      "removed": 18
+     },
+     {
+      "county": "Milwaukee County",
+      "added": 8,
+      "removed": 0
+     },
+     {
+      "county": "Waukesha County",
+      "added": 6,
+      "removed": 1
+     },
+     {
+      "county": "Marquette County",
+      "added": 0,
+      "removed": 4
+     },
+     {
+      "county": "Kenosha County",
+      "added": 2,
+      "removed": 1
+     },
+     {
+      "county": "Washington County",
+      "added": 0,
+      "removed": 3
+     },
+     {
+      "county": "Rock County",
+      "added": 0,
+      "removed": 2
+     },
+     {
+      "county": "Waupaca County",
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "county": "Wood County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Dodge County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Eau Claire County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Marinette County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Oneida County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Waushara County",
+      "added": 1,
+      "removed": 0
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
+  },
+  {
+   "date": "2026-09-02",
+   "since": "2026-08-31",
+   "cameras": {
+    "total": 2100,
+    "added": 0,
+    "removed": 0,
+    "by_county": []
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
+  },
+  {
+   "date": "2026-09-05",
+   "since": "2026-09-02",
+   "cameras": {
+    "total": 2092,
+    "added": 11,
+    "removed": 19,
+    "by_county": [
+     {
+      "county": "Door County",
+      "added": 0,
+      "removed": 8
+     },
+     {
+      "county": "Milwaukee County",
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "county": "Waukesha County",
+      "added": 1,
+      "removed": 2
+     },
+     {
+      "county": "Eau Claire County",
+      "added": 0,
+      "removed": 2
+     },
+     {
+      "county": "Portage County",
+      "added": 0,
+      "removed": 2
+     },
+     {
+      "county": "Rock County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Shawano County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Dane County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Florence County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Forest County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Kenosha County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Marinette County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Racine County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Richland County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Winnebago County",
+      "added": 1,
+      "removed": 0
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
+  },
+  {
+   "date": "2026-09-07",
+   "since": "2026-09-05",
+   "cameras": {
+    "total": 2097,
+    "added": 6,
+    "removed": 1,
+    "by_county": [
+     {
+      "county": "Milwaukee County",
+      "added": 4,
+      "removed": 0
+     },
+     {
+      "county": "Brown County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Rock County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Wood County",
+      "added": 1,
+      "removed": 0
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
+  },
+  {
+   "date": "2026-09-14",
+   "since": "2026-09-07",
+   "cameras": {
+    "total": 2115,
+    "added": 28,
+    "removed": 10,
+    "by_county": [
+     {
+      "county": "Milwaukee County",
+      "added": 11,
+      "removed": 0
+     },
+     {
+      "county": "Manitowoc County",
+      "added": 4,
+      "removed": 0
+     },
+     {
+      "county": "Eau Claire County",
+      "added": 1,
+      "removed": 2
+     },
+     {
+      "county": "Racine County",
+      "added": 0,
+      "removed": 3
+     },
+     {
+      "county": "Sauk County",
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "county": "Portage County",
+      "added": 0,
+      "removed": 2
+     },
+     {
+      "county": "Waukesha County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Barron County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Dunn County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Jefferson County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Juneau County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Polk County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Richland County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Sheboygan County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Walworth County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Waupaca County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Winnebago County",
+      "added": 1,
+      "removed": 0
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
+  }
+ ]
+}
