@@ -69,12 +69,13 @@ function wedge(lat, lon, deg, spread) {
   return pts;
 }
 
-export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [], shapes }) {
+export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [], shapes, outline }) {
   const el = useRef(null);
   const mapRef = useRef(null);
   const layers = useRef({});
   const meRef = useRef(null);
   const outlineRef = useRef(null);
+  const boundsRef = useRef(null);
   const [show, setShow] = useState({ flock: true, other: true, wisdot: true, unmappedOnly: false });
   const [view, setView] = useState("state");
   const [locating, setLocating] = useState(false);
@@ -85,10 +86,24 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
   const flockCount = cameras.filter((c) => c.manufacturer === "Flock Safety").length;
 
   useEffect(() => {
-    const map = L.map(el.current, { scrollWheelZoom: false });
+    // Quarter-step zoom lets the state fill the frame instead of snapping to a whole zoom level
+    // that leaves it small; the grey canvas tiles scale between levels without looking soft.
+    const map = L.map(el.current, { scrollWheelZoom: false, zoomSnap: 0.25, zoomDelta: 0.5 });
     mapRef.current = map;
     el.current.__map = map; // handle for debugging from the console
-    map.fitBounds(WI_BOUNDS);
+    const stateBounds = L.latLngBounds(outline ? outline.bounds : WI_BOUNDS);
+    boundsRef.current = stateBounds;
+    map.fitBounds(stateBounds, { padding: [14, 14] });
+    // This is a map of Wisconsin: do not let it drift to the continent or another state.
+    map.setMinZoom(map.getZoom() - 0.75);
+    map.setMaxBounds(stateBounds.pad(0.6));
+
+    // Panes, bottom to top: tiles, labels, the out-of-state mask, borders, then the markers.
+    // Labels sit UNDER the mask so Wisconsin's cities read clearly and everyone else's fade.
+    for (const [name, z] of [["labels", 250], ["mask", 300], ["borders", 350]]) {
+      map.createPane(name).style.zIndex = z;
+      map.getPane(name).style.pointerEvents = "none";
+    }
 
     // Esri's Light Gray Canvas: keyless. CARTO's raster basemaps began demanding an
     // API key in 2026 (tiles render an "API KEY REQUIRED" watermark without one) and
@@ -101,7 +116,28 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
         maxZoom: 16,
       }
     ).addTo(map);
+    // Place names from Esri's matching reference layer, also keyless.
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+      { pane: "labels", maxZoom: 16 }
+    ).addTo(map);
     L.control.scale({ imperial: true, metric: false, position: "bottomleft" }).addTo(map);
+
+    if (outline) {
+      const svg = L.svg({ pane: "mask" }).addTo(map);
+      const rings = outline.polygons.map((ring) => ring.map(([lon, lat]) => [lat, lon]));
+      // One polygon covering the world, with Wisconsin (and its islands) cut out of it.
+      L.polygon([[[-89, -360], [-89, 360], [89, 360], [89, -360]], ...rings], {
+        renderer: svg, pane: "mask", stroke: false, fillColor: "#F6F2E9", fillOpacity: 0.8, fillRule: "evenodd", interactive: false,
+      }).addTo(map);
+      const lines = L.svg({ pane: "borders" }).addTo(map);
+      if (shapes) {
+        L.geoJSON(shapes, { renderer: lines, pane: "borders", interactive: false,
+          style: { color: "#55594F", weight: 0.6, opacity: 0.4, fill: false } }).addTo(map);
+      }
+      L.polygon(rings.map((r) => [r]), { renderer: lines, pane: "borders", interactive: false,
+        color: "#1F2421", weight: 1.6, opacity: 0.85, fill: false, lineJoin: "round" }).addTo(map);
+    }
 
     const renderer = L.canvas({ padding: 0.4 });
     const flock = L.layerGroup(), other = L.layerGroup(), wisdot = L.layerGroup();
@@ -157,7 +193,8 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     // must read as a distribution, not a blot; zoomed in they become clickable targets.
     const resize = () => {
       const z = map.getZoom();
-      const s = z <= 6 ? { dot: 2.5, ring: 3.5, w: 1 }
+      const s = z < 6.5 ? { dot: 1.9, ring: 2.8, w: 0.8 }   // a phone's statewide view: keep it a texture, not a blot
+        : z < 7 ? { dot: 2.5, ring: 3.5, w: 1 }
         : z <= 7 ? { dot: 3, ring: 4.5, w: 1.1 }
         : z <= 9 ? { dot: 4, ring: 7, w: 1.5 }
         : { dot: 5, ring: 9, w: 1.75 };
@@ -192,7 +229,7 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     map.on("movestart", () => setView(null));
 
     return () => { mapRef.current = null; layers.current = {}; map.remove(); };
-  }, [cameras, wisdotCameras, unmappedIds]);
+  }, [cameras, wisdotCameras, unmappedIds, outline, shapes]);
 
   // Layer visibility follows the checkboxes.
   useEffect(() => {
@@ -230,7 +267,8 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
 
   const zoomTo = (key) => {
     setView(key);
-    mapRef.current?.fitBounds(key === "marathon" ? MARATHON_BOUNDS : WI_BOUNDS);
+    if (key === "marathon") mapRef.current?.fitBounds(MARATHON_BOUNDS);
+    else mapRef.current?.fitBounds(boundsRef.current || WI_BOUNDS, { padding: [14, 14] });
     setTimeout(() => setView(key), 0);
   };
   const nearMe = () => {

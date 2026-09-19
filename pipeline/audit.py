@@ -79,6 +79,12 @@ check(not {k: v for k, v in _seen.items() if len(v) > 1}, 'no agency on the rost
 _keys = [a['canonical'] for a in A]
 _typos = [(x, y) for i, x in enumerate(_keys) for y in _keys[i + 1:] if abs(len(x) - len(y)) <= 2 and difflib.SequenceMatcher(None, x, y).ratio() > 0.92 and _core(x) != _core(y)]
 check(not _typos, 'no two roster keys within a typo of each other', str(_typos))
+_out = L('wi_outline.json')
+_s, _w = _out['bounds'][0]; _n, _e = _out['bounds'][1]
+_inside = lambda c: _s - 0.02 <= c['lat'] <= _n + 0.02 and _w - 0.02 <= c['lon'] <= _e + 0.02
+check(len(_out['polygons']) >= 1 and all(len(r) >= 4 and r[0] == r[-1] for r in _out['polygons']), 'state outline: closed rings', f"{len(_out['polygons'])} polygons")
+check(all(_inside(c) for c in cams['cameras']), 'every mapped camera lies within the state outline bounds (the map masks everything outside)',
+      str([c['id'] for c in cams['cameras'] if not _inside(c)][:5]))
 misfiled = [(a['name'], a['county']) for a in A if (mm := re.match(r'^(.+?) County\b', a['name'])) and a['county']
             and a['county'].replace('St. ', 'Saint ').lower() != (mm.group(1) + ' County').replace('St. ', 'Saint ').lower()]
 check(not misfiled, 'every county-named agency sits in its own county', str(misfiled))

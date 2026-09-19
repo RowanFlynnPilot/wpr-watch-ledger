@@ -314,7 +314,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 /* map */
 .map-section { margin-bottom: 3rem; }
-.camera-map { height: 520px; border: 1px solid var(--line); background: var(--white); }
+/* Wisconsin is taller than it is wide, so height, not width, decides how large the state draws */
+.camera-map { height: 660px; border: 1px solid var(--line); background: var(--cream); }
 .map-caption { font-size: 0.85rem; color: var(--ink-soft); max-width: 44rem; }
 .map-frame { position: relative; border-top: 3px solid var(--teal-deep); margin-bottom: 0.6rem; }
 .map-card {
@@ -651,7 +652,7 @@ tbody tr:hover td { background: var(--cream); }
   .ledger-line::before { left: 1.25rem; }
   .gap-bar { gap: 2px; }
   .tick { width: 4px; height: 20px; border-width: 1px; }
-  .camera-map { height: 380px; }
+  .camera-map { height: 390px; } /* on a phone the state is width-limited; more height is just blank */
   .map-card {
     position: static;
     box-shadow: none;
@@ -1436,3 +1437,6 @@ tr.row-home td:first-child { font-weight: 700; }
 .since-table thead th:nth-child(2), .since-table thead th:nth-child(3) { width: 4.4rem; text-align: right; }
 .since-t-note { width: 40%; }
 @media (max-width: 560px) { .since { grid-template-columns: minmax(0, 1fr); } }
+
+/* article-column widths (the newsroom embed is 599 px): tall enough for the state to fill the frame */
+@media (min-width: 481px) and (max-width: 720px) { .camera-map { height: 600px; } }

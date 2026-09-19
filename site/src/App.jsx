@@ -58,17 +58,17 @@ export default function App() {
 
   useEffect(() => {
     Promise.all(
-      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits", "counties", "wi_counties", "changes", "wi_city_county"].map((f) =>
+      ["meta", "cameras", "agencies", "history", "edges", "wisdot_permits", "counties", "wi_counties", "changes", "wi_city_county", "wi_outline"].map((f) =>
         fetch(`${import.meta.env.BASE_URL}data/${f}.json?v=${__BUILD_ID__}`).then((r) => {
           if (!r.ok) throw new Error(`Failed to load ${f}.json (${r.status})`);
           return r.json();
         })
       )
     )
-      .then(([meta, cameras, agencies, history, edges, wisdot, counties, shapes, changes, places]) =>
+      .then(([meta, cameras, agencies, history, edges, wisdot, counties, shapes, changes, places, outline]) =>
         setData({
           meta, cameras, agencies: agencies.agencies, operators: agencies.unmatched_operators || [],
-          history, edges: edges.edges, wisdot, counties, shapes, changes, places,
+          history, edges: edges.edges, wisdot, counties, shapes, changes, places, outline,
         })
       )
       .catch((e) => setError(e.message));
@@ -94,7 +94,7 @@ export default function App() {
   if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
   if (!data) return <div className="loading">Loading the ledger…</div>;
 
-  const { meta, cameras, agencies, operators, history, edges, wisdot, counties, shapes, changes } = data;
+  const { meta, cameras, agencies, operators, history, edges, wisdot, counties, shapes, changes, outline } = data;
   const ageDays = Math.floor((Date.now() - new Date(meta.generated).getTime()) / 86400000);
   const pickedAgency = pick?.type === "agency" ? index.find((it) => it.type === "agency" && it.id === pick.id)?.agency?.name : null;
   const countyNames = counties.counties.map((c) => c.name).sort();
@@ -300,7 +300,7 @@ export default function App() {
       <section className="map-section" aria-label="Camera map">
         <h2>Every mapped camera</h2>
         <CountyPicker counties={countyNames} selected={mapCounties} onChange={setMapCounties} counts={countyCounts} />
-        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} selectedCounties={mapCounties} shapes={shapes} />
+        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} selectedCounties={mapCounties} shapes={shapes} outline={outline} />
         <p className="map-caption">
           Dots are community-reported by volunteers to OpenStreetMap via the DeFlock project and
           are incomplete — the true number of cameras is higher. Rings are official: cameras

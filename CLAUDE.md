@@ -60,6 +60,13 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   names normalized to the DOA list). Validated at build (72 MultiPolygon features). Each
   community-mapped camera gets `county` by point-in-polygon in refresh.py; the site's
   county picker filters dots and rings by it and draws the outlines.
+- `data/wi_outline.json` — Wisconsin's outline, dissolved from the county shapes by
+  `pipeline/build_outline.py` (run by hand, needs shapely; a small buffer closes the slivers
+  between simplified counties). The map masks everything outside it, draws the state border and
+  faint county lines, fits the statewide view to its bounds, and will not zoom out past the state.
+  Labels come from Esri's keyless World_Light_Gray_Reference layer, in a pane UNDER the mask so
+  Wisconsin's place names stay crisp and neighbouring states' fade. Map height is set by the
+  state's portrait shape (660 px desktop, 600 article column, 390 phone).
 - `data/wi_population.json` — COMMITTED SNAPSHOT of WI DOA official final population
   estimates (state/counties/places/towns). Joined at build into `data/counties.json`
   (per-county rollup + statewide coverage); county spellings are validated against DOA's
