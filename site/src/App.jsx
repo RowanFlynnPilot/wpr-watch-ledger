@@ -309,7 +309,7 @@ export default function App() {
       <section className="map-section" aria-label="Camera map">
         <h2>Every mapped camera</h2>
         <CountyPicker counties={countyNames} selected={mapCounties} onChange={setMapCounties} counts={countyCounts} />
-        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} selectedCounties={mapCounties} shapes={shapes} outline={outline} countyStats={countyStats} />
+        <CameraMap cameras={cameras.cameras} wisdotCameras={wisdot.cameras} selectedCounties={mapCounties} shapes={shapes} outline={outline} countyStats={countyStats} onSelectCounties={setMapCounties} />
         <p className="map-caption">
           Dots are community-reported by volunteers to OpenStreetMap via the DeFlock project and
           are incomplete — the true number of cameras is higher. Rings are official: cameras

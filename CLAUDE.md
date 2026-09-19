@@ -73,6 +73,11 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   events, so the hover/tap readout finds the county by point-in-polygon on the map's own
   mousemove. While shading is on the markers fade below zoom 9, and the fill fades above it.
   The key says plainly that shading follows where volunteers have mapped, not where cameras are.
+  Also on the map: county name labels between zoom 8 and 12.5; an "In view: N mapped · M
+  permitted" readout that recounts on every move and filter change; the Marathon Co. button
+  selects the county through `onSelectCounties` (same path as the picker) so it is outlined and
+  filtered, and Statewide clears the selection; a popup that opens under the floating legend
+  nudges the map just far enough to clear it; popups lead with the operator when recorded.
 - `data/wi_population.json` — COMMITTED SNAPSHOT of WI DOA official final population
   estimates (state/counties/places/towns). Joined at build into `data/counties.json`
   (per-county rollup + statewide coverage); county spellings are validated against DOA's

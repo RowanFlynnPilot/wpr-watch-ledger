@@ -1457,3 +1457,18 @@ tr.row-home td:first-child { font-weight: 700; }
 .county-tip .pop-row { margin: 0; display: flex; justify-content: space-between; gap: 1rem; font: 0.72rem var(--mono); }
 .county-tip .pop-row span { color: var(--ink-soft); font-family: var(--body); white-space: nowrap; text-transform: none; letter-spacing: 0; font-size: 0.74rem; }
 @media print { .legend-shade, .shade-key { display: none !important; } }
+
+/* ---- map polish: controls in the page's own voice ---- */
+.leaflet-touch .leaflet-bar, .leaflet-bar { border: 1px solid var(--line); border-radius: 2px; box-shadow: 0 2px 8px rgba(31, 36, 33, 0.12); }
+.leaflet-bar a, .leaflet-touch .leaflet-bar a { width: 30px; height: 30px; line-height: 28px; background: var(--white); color: var(--teal-deep); font-family: var(--mono); font-weight: 700; border-bottom: 1px solid var(--line); border-radius: 0 !important; }
+.leaflet-bar a:hover, .leaflet-bar a:focus-visible { background: var(--teal-deep); color: var(--white); }
+.leaflet-bar a.leaflet-disabled { background: var(--cream); color: var(--ink-soft); opacity: 0.6; }
+.leaflet-container .leaflet-control-attribution { font: 0.6rem var(--mono); color: var(--ink-soft); background: rgba(246, 242, 233, 0.86); padding: 1px 6px; }
+.leaflet-container .leaflet-control-attribution a { color: var(--teal-deep); }
+.leaflet-control-attribution svg { display: none !important; } /* the flag glyph; the credit stays */
+.leaflet-container:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 2px; }
+.county-label { font: 0.58rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); text-align: center; white-space: nowrap; pointer-events: none; text-shadow: 0 0 3px var(--white), 0 0 3px var(--white), 0 0 2px var(--white); opacity: 0.85; }
+.map-inview { margin: 0 0 0.45rem; font: 0.68rem var(--mono); color: var(--ink-soft); }
+.map-inview strong { color: var(--teal-deep); font-weight: 700; }
+.leaflet-popup-content .pop-title { line-height: 1.2; }
+@media print { .map-inview { display: none !important; } }

@@ -90,7 +90,7 @@ function inRing(lon, lat, ring) {
   return inside;
 }
 
-export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [], shapes, outline, countyStats = [] }) {
+export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [], shapes, outline, countyStats = [], onSelectCounties }) {
   const el = useRef(null);
   const mapRef = useRef(null);
   const layers = useRef({});
@@ -98,6 +98,8 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
   const outlineRef = useRef(null);
   const boundsRef = useRef(null);
   const [shade, setShade] = useState(false);
+  // What the current view holds, so panning and zooming always answer "how many here?"
+  const [inView, setInView] = useState(null);
   const breaks = useMemo(() => classBreaks(countyStats), [countyStats]);
   const statByName = useMemo(() => new Map(countyStats.map((c) => [c.name, c])), [countyStats]);
   const [show, setShow] = useState({ flock: true, other: true, wisdot: true, unmappedOnly: false });
@@ -159,9 +161,33 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
         L.geoJSON(shapes, { renderer: lines, pane: "borders", interactive: false,
           style: { color: "#55594F", weight: 0.6, opacity: 0.4, fill: false } }).addTo(map);
       }
+      // A pale halo under the border lifts the state off the masked background.
+      L.polygon(rings.map((r) => [r]), { renderer: lines, pane: "borders", interactive: false,
+        color: "#FFFDF8", weight: 5, opacity: 0.9, fill: false, lineJoin: "round" }).addTo(map);
       L.polygon(rings.map((r) => [r]), { renderer: lines, pane: "borders", interactive: false,
         color: "#1F2421", weight: 1.6, opacity: 0.85, fill: false, lineJoin: "round" }).addTo(map);
     }
+
+    // County names, once the reader is close enough for them to help and until streets take over.
+    const countyLabels = L.layerGroup();
+    if (shapes) {
+      for (const f of shapes.features) {
+        const polys = f.geometry.type === "MultiPolygon" ? f.geometry.coordinates : [f.geometry.coordinates];
+        const main = polys.reduce((a, b) => (b[0].length > a[0].length ? b : a))[0];
+        const lon = (Math.min(...main.map((p) => p[0])) + Math.max(...main.map((p) => p[0]))) / 2;
+        const lat = (Math.min(...main.map((p) => p[1])) + Math.max(...main.map((p) => p[1]))) / 2;
+        L.marker([lat, lon], {
+          interactive: false, keyboard: false, pane: "borders",
+          icon: L.divIcon({ className: "county-label", html: esc(f.properties.name.replace(/ County$/, "")), iconSize: [120, 14] }),
+        }).addTo(countyLabels);
+      }
+    }
+    const syncLabels = () => {
+      const z = map.getZoom();
+      if (z >= 8 && z < 12.5) countyLabels.addTo(map); else countyLabels.remove();
+    };
+    map.on("zoomend", syncLabels);
+    syncLabels();
 
     const renderer = L.canvas({ padding: 0.4 });
     const flock = L.layerGroup(), other = L.layerGroup(), wisdot = L.layerGroup();
@@ -176,8 +202,9 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
       });
       m.bindPopup(
         `<p class="pop-kicker">Community-mapped camera</p>` +
-          `<p class="pop-title">${esc(c.manufacturer || "Unknown vendor")}</p>` +
-          (c.operator ? `<p class="pop-row"><span>Operator</span>${esc(c.operator)}</p>` : "") +
+          `<p class="pop-title">${esc(c.operator || c.manufacturer || "Operator and vendor not recorded")}</p>` +
+          (c.operator ? `<p class="pop-row"><span>Vendor</span>${esc(c.manufacturer || "not recorded")}</p>` : "") +
+          (c.county ? `<p class="pop-row"><span>County</span>${esc(c.county.replace(/ County$/, ""))}</p>` : "") +
           (c.zone ? `<p class="pop-row"><span>Zone</span>${esc(c.zone)}</p>` : "") +
           (bearings(c.direction).length
             ? `<p class="pop-row"><span>Facing</span>${bearings(c.direction).map((d) => `${compass(d.deg)} (${Math.round(d.deg)}°)`).join(", ")}</p>`
@@ -256,6 +283,27 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     layers.current.drawWedges = drawWedges;
     map.on("movestart", () => setView(null));
 
+    const count = () => {
+      const box = map.getBounds();
+      let mapped = 0, permitted = 0;
+      for (const m of dots) if (!m.options.hidden && map.hasLayer(m) && box.contains(m.getLatLng())) mapped++;
+      for (const m of rings) if (!m.options.hidden && map.hasLayer(m) && box.contains(m.getLatLng())) permitted++;
+      setInView({ mapped, permitted });
+    };
+    map.on("moveend zoomend", count);
+    layers.current.count = count;
+    count();
+
+    // The legend floats over the map's top-right corner; a popup opening beneath it loses its
+    // close button. Nudge the map just far enough to clear it.
+    map.on("popupopen", (e) => {
+      const card = el.current.parentElement.querySelector(".map-card");
+      if (!card || getComputedStyle(card).position !== "absolute") return;
+      const p = e.popup.getElement().getBoundingClientRect(), k = card.getBoundingClientRect();
+      const overlapX = p.right - k.left, overlapY = k.bottom - p.top;
+      if (overlapX > 0 && overlapY > 0) map.panBy(overlapX < overlapY ? [overlapX + 12, 0] : [0, -(overlapY + 12)], { animate: true, duration: 0.25 });
+    });
+
     return () => { mapRef.current = null; layers.current = {}; map.remove(); };
   }, [cameras, wisdotCameras, unmappedIds, outline, shapes]);
 
@@ -280,6 +328,7 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     }
     ly.shade = shade;
     ly.resize?.();
+    ly.count?.();
     ly.drawWedges?.();
   }, [show, selectedCounties, shade]);
 
@@ -353,13 +402,21 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     const layer = L.geoJSON(fc, { style: { color: "#2C6B62", weight: 1.75, dashArray: "4 3", fill: true, fillColor: "#3A867C", fillOpacity: 0.05, interactive: false } }).addTo(map);
     outlineRef.current = layer;
     map.fitBounds(layer.getBounds().pad(0.08), { maxZoom: 12 });
-    setTimeout(() => setView("counties"), 0);
+    const onlyMarathon = selectedCounties.length === 1 && selectedCounties[0] === "Marathon County";
+    setTimeout(() => setView(onlyMarathon ? "marathon" : "counties"), 0);
   }, [selectedCounties, shapes]);
 
   const zoomTo = (key) => {
     setView(key);
-    if (key === "marathon") mapRef.current?.fitBounds(MARATHON_BOUNDS);
-    else mapRef.current?.fitBounds(boundsRef.current || WI_BOUNDS, { padding: [14, 14] });
+    if (key === "marathon") {
+      // Select the county rather than just framing it, so it is outlined and the markers filter.
+      const already = selectedCounties.length === 1 && selectedCounties[0] === "Marathon County";
+      if (onSelectCounties && !already) onSelectCounties(["Marathon County"]);
+      else mapRef.current?.fitBounds(MARATHON_BOUNDS); // already selected: just bring it back into frame
+    } else {
+      if (onSelectCounties && selectedCounties.length) onSelectCounties([]);
+      mapRef.current?.fitBounds(boundsRef.current || WI_BOUNDS, { padding: [14, 14] });
+    }
     setTimeout(() => setView(key), 0);
   };
   const nearMe = () => {
@@ -394,6 +451,11 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
           </button>
         </div>
         {locError && <p className="map-error">{locError}</p>}
+        {inView && (
+          <p className="map-inview" role="status" aria-live="polite">
+            In view: <strong>{fmt(inView.mapped)}</strong> mapped · <strong>{fmt(inView.permitted)}</strong> permitted
+          </p>
+        )}
         <div className="map-card-legend">
           <label className="legend-item legend-toggle">
             <input type="checkbox" checked={show.flock} onChange={() => toggle("flock")} />
