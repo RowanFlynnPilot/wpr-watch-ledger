@@ -1,0 +1,25 @@
+name: watch-news
+
+# Opens an issue when there are new Flock stories the hand-curated status list may not reflect.
+# It never edits data. Twice a week: the September 2026 wave moved faster than weekly.
+on:
+  schedule:
+    - cron: "0 14 * * 1,4"   # Monday and Thursday, 14:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Look for new Flock stories
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python pipeline/watch_news.py --assign "${{ github.repository_owner }}"

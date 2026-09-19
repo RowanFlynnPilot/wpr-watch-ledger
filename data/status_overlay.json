@@ -724,5 +724,21 @@
     "as_of": "2026-09-11",
     "note": "Sheriff suspended use of the cameras on Sept. 10 after learning that data on cases the office investigated in 2025 had been made public without its consent. No contract decision was reported.",
     "source": "https://www.wmtv15news.com/2026/09/11/jefferson-county-sheriffs-office-suspending-flock-cameras/"
+  },
+  "clark county so": {
+    "name": "Clark County Sheriff's Office",
+    "county": "Clark County",
+    "status": "dropped",
+    "as_of": "2026-09-17",
+    "note": "Sheriff Kerry Kirn announced on Sept. 17 that the office notified Flock on Sept. 10 it was cancelling its contract and ending plate-reader use countywide, citing residents' privacy concerns.",
+    "source": "https://www.wsaw.com/2026/09/17/clark-county-sheriffs-office-drops-flock-safety-cameras-citing-privacy-concerns/"
+  },
+  "university of milwaukee pd": {
+    "name": "University of Wisconsin-Milwaukee Police Department",
+    "county": "Milwaukee County",
+    "status": "dropped",
+    "as_of": "2026-09-10",
+    "note": "Ended its use of Flock and directed the company to remove all 18 campus cameras, plus two nearby; they are bagged in the meantime. Parking-facility plate readers are a separate system and are not affected.",
+    "source": "https://www.fox6now.com/news/uw-milwaukee-police-ending-flock-cameras-be-removed"
   }
 }

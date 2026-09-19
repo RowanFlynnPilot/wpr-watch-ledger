@@ -73,6 +73,13 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   to dropped when a termination is reported. The Wausau PD and Marathon County SO rows cite the newsroom's own reporting
   (wausaupilotandreview.com, Sept. 2026: contract terms, exit clauses, the sheriff's decision to
   keep his cameras); when the paper publishes on either agency, update those rows to match it.
+  `pipeline/watch_news.py` + `.github/workflows/watch-news.yml` (Mon and Thu 14:00 UTC, or manual)
+  is the safety net: it searches the newsroom's own posts (WordPress REST) and Google News for
+  Wisconsin Flock stories and opens ONE issue labelled `flock-watch`, assigned to the repo owner,
+  listing new stories and any agency a headline says acted while the ledger still shows it
+  active. It never edits data, and never repeats a story already in an earlier issue, open or
+  closed, so closing an issue is how you mark it handled. Its first dry run found two agencies
+  that two manual sweeps had missed.
   The overlay goes stale silently: nothing in the
   pipeline notices a news event, so search for new Wisconsin Flock decisions at least monthly
   (the tenth audit found 19 agencies the ledger had missed in three weeks).

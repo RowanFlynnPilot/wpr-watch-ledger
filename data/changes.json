@@ -719,6 +719,11 @@
    },
    "status": [
     {
+     "name": "Clark County Sheriff's Office",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
      "name": "De Pere Police Department",
      "from": "active",
      "to": "dropped"
@@ -810,6 +815,11 @@
     },
     {
      "name": "Sun Prairie Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "University of Wisconsin-Milwaukee Police Department",
      "from": "active",
      "to": "dropped"
     },

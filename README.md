@@ -102,7 +102,10 @@ See CLAUDE.md for the row schema. Every row requires a source URL and an as-of d
 
 ## Keeping the hand-maintained pieces current
 
-Nothing automatic notices a news event or a republished source. Roughly monthly:
+A scheduled watcher (`pipeline/watch_news.py`, Mondays and Thursdays) opens a GitHub issue
+labelled `flock-watch` when there are new Flock stories from the newsroom or statewide, with
+hints about agencies the ledger may be behind on. It only reports; a person updates the rows
+and closes the issue. Nothing notices a republished source, so roughly monthly:
 
 - search for Wisconsin agencies ending or suspending Flock and add sourced rows to
   `data/status_overlay.json` (`dropped` or `suspended`; see CLAUDE.md)
