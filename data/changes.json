@@ -863,6 +863,63 @@
     "added": [],
     "removed": []
    }
+  },
+  {
+   "date": "2026-09-21",
+   "since": "2026-09-19",
+   "cameras": {
+    "total": 2126,
+    "added": 2,
+    "removed": 7,
+    "by_county": [
+     {
+      "county": "Dane County",
+      "added": 0,
+      "removed": 3
+     },
+     {
+      "county": "Milwaukee County",
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "county": "Barron County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Marquette County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Oconto County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Walworth County",
+      "added": 0,
+      "removed": 1
+     }
+    ]
+   },
+   "portals": {
+    "new": [
+     "Mequon Police Department",
+     "Milwaukee Police Department"
+    ],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [
+     "Hawks Glen Subdivision",
+     "Highlands of Ville du Parc",
+     "Saddlebrook Park"
+    ],
+    "removed": []
+   }
   }
  ]
 }
