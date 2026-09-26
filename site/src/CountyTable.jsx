@@ -7,12 +7,14 @@ const perK = (r) => (r.usat_searches && r.population ? (1000 * r.usat_searches) 
 const COLS = [
   { key: "name", label: "County", get: (r) => r.name },
   { key: "population", label: "Population", get: (r) => r.population, numeric: true },
+  // The searches pair sits right after population so it is in view in the 599 px article
+  // column; keep the <td> order in the table body below in step with this list.
+  { key: "usat", label: "Searches on record", title: "Flock searches by the county's agencies in audit logs obtained by USA TODAY, Jan 2023 to Apr 2026", get: (r) => r.usat_searches ?? 0, numeric: true, usat: true },
+  { key: "perk", label: "Per 1,000 residents", title: "Searches on record divided by county population, per 1,000 residents", get: perK, numeric: true, usat: true },
   { key: "agencies", label: "Agencies", get: (r) => r.agencies, numeric: true },
   { key: "in_network", label: "In network", get: (r) => r.in_network, numeric: true },
   { key: "portals", label: "Portals", title: "Agencies publishing a Flock transparency portal", get: (r) => r.portals, numeric: true },
   { key: "audits", label: "Audit logs", title: "Agencies also publishing a redacted log of every search", get: (r) => r.audits ?? 0, numeric: true },
-  { key: "usat", label: "Searches on record", title: "Flock searches by the county's agencies in audit logs obtained by USA TODAY, Jan 2023 to Apr 2026", get: (r) => r.usat_searches ?? 0, numeric: true, usat: true },
-  { key: "perk", label: "Per 1,000 residents", title: "Searches on record divided by county population, per 1,000 residents", get: perK, numeric: true, usat: true },
   { key: "wisdot_cameras", label: "Hwy cams", title: "Cameras permitted on state-highway right-of-way (WisDOT records)", get: (r) => r.wisdot_cameras, numeric: true },
   { key: "dropped", label: "Dropped", get: (r) => r.dropped, numeric: true },
 ];
@@ -81,10 +83,6 @@ export default function CountyTable({ counties, home = "Marathon County", genera
                   {r.name === home && <span className="home-mark" title="Wausau Pilot & Review's home county">●</span>}
                 </td>
                 <td className="cell-num"><Num n={r.population} /></td>
-                <td className="cell-num"><Num n={r.agencies} /></td>
-                <td className="cell-num"><Num n={r.in_network} /></td>
-                <td className="cell-num"><Num n={r.portals} /></td>
-                <td className="cell-num"><Num n={r.audits ?? 0} /></td>
                 <td className="cell-num cell-usat cell-bar">
                   <span className="bar-track" aria-hidden="true">
                     <span className="bar-fill" style={{ width: `${(100 * (r.usat_searches ?? 0)) / maxUsat}%` }} />
@@ -92,6 +90,10 @@ export default function CountyTable({ counties, home = "Marathon County", genera
                   <Num n={r.usat_searches ?? 0} />
                 </td>
                 <td className="cell-num cell-usat"><Num n={perK(r)} dec={0} /></td>
+                <td className="cell-num"><Num n={r.agencies} /></td>
+                <td className="cell-num"><Num n={r.in_network} /></td>
+                <td className="cell-num"><Num n={r.portals} /></td>
+                <td className="cell-num"><Num n={r.audits ?? 0} /></td>
                 <td className="cell-num"><Num n={r.wisdot_cameras} /></td>
                 <td className={`cell-num${r.dropped ? " cell-dropped" : ""}`}><Num n={r.dropped} /></td>
               </tr>
