@@ -93,7 +93,11 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   `dropped` = ended, voted to end, or decided not to renew (cameras may run until expiry; say so
   in the note). `suspended` = stopped using or covered the cameras pending review with no
   contract decision reported; never counted in the "dropped" headline. Promote a suspended row
-  to dropped when a termination is reported. The Wausau PD and Marathon County SO rows cite the newsroom's own reporting
+  to dropped when a termination is reported. `never` = the agency says it never bought or
+  installed Flock cameras (McFarland, DeForest); it stays on the roster because sharing lists still
+  name it, and readers see it as "no cameras" (`site/src/status.js`). A hand-checked `active` row
+  goes stale like any other: Chetek's said active for five weeks after its council voted to end
+  the contract. The Wausau PD and Marathon County SO rows cite the newsroom's own reporting
   (wausaupilotandreview.com, Sept. 2026: contract terms, exit clauses, the sheriff's decision to
   keep his cameras); when the paper publishes on either agency, update those rows to match it.
   `pipeline/watch_news.py` + `.github/workflows/watch-news.yml` (Mon and Thu 14:00 UTC, or manual)
@@ -102,10 +106,17 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   listing new stories and any agency a headline says acted while the ledger still shows it
   active. It never edits data, and never repeats a story already in an earlier issue, open or
   closed, so closing an issue is how you mark it handled. Its first dry run found two agencies
-  that two manual sweeps had missed.
+  that two manual sweeps had missed. It runs SIX narrower Google News searches and merges them:
+  each search is capped at roughly 50-70 results, and one broad query silently dropped local
+  stories (Lake Mills, Waunakee, Marinette, Wautoma) in a heavy news week. Headline hints are
+  hints: "Plymouth votes to terminate" was Plymouth, Minnesota.
   The overlay goes stale silently: nothing in the
   pipeline notices a news event, so search for new Wisconsin Flock decisions at least monthly
-  (the tenth audit found 19 agencies the ledger had missed in three weeks).
+  (the tenth audit found 19 agencies the ledger had missed in three weeks; the twelfth, a week
+  later, found 12 more, including Kenosha). Useful cross-checks: DeFlock's cancellation tracker
+  (deflocktheusa.com/cancellations) and statewide roundups that list agencies by name. A
+  countywide joint announcement that names no agencies (Waupaca County, 2026-09-08) is not a
+  source for any one police department; mark only the agencies a report names.
   Optional `portal` block = a HAND-READ transparency portal that Eyes On Flock does not
   index (Marathon County SO and Wausau PD both have live portals EOF misses, found
   2026-09-01). A person opens transparency.flocksafety.com/<slug> in a browser and copies

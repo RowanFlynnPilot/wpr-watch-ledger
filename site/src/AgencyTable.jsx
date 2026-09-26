@@ -2,11 +2,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import Sparkline from "./Sparkline.jsx";
 import { downloadCsv } from "./csv.js";
 import useOverflow from "./useOverflow.js";
+import { statusLabel } from "./status.js";
 
 const CSV_COLS = [
   { label: "Agency", get: (a) => a.name },
   { label: "County", get: (a) => a.county },
-  { label: "Status", get: (a) => (a.status.value === "unknown" ? "unverified" : a.status.value) },
+  { label: "Status", get: (a) => statusLabel(a.status.value) },
   { label: "Status as of", get: (a) => a.status.as_of },
   { label: "In Flock network", get: (a) => (a.in_network ? "yes" : "no") },
   { label: "Publishes portal", get: (a) => (a.portal ? "yes" : "no") },
@@ -207,7 +208,7 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
                     className={`badge badge-${a.status.value}`}
                     title={a.status.note || (a.status.value === "unknown" ? "Documented ALPR use, but current Flock network participation is unverified" : "")}
                   >
-                    {a.status.value === "unknown" ? "unverified" : a.status.value}
+                    {statusLabel(a.status.value)}
                   </span>
                   {!a.status.derived && a.status.as_of && <span className="asof"> {a.status.as_of}</span>}
                   {a.ice_287g && <span className="flag flag-ice" title={iceTitle(a)}>ICE 287(g)</span>}

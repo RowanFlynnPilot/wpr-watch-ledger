@@ -139,9 +139,10 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     frame();
     map.on("resize", frame);
     // Leaflet only notices window resizes; a container that is revealed inside an unchanged
-    // window (an opened <details>, a tab panel) needs its own watcher.
+    // window (an opened <details>, a tab panel) needs its own watcher. invalidateSize's default
+    // keeps the centre, as Leaflet's own resize handler does, so a rotated phone stays on target.
     const watcher = typeof ResizeObserver === "function"
-      ? new ResizeObserver(() => { map.invalidateSize({ pan: false }); frame(); })
+      ? new ResizeObserver(() => { map.invalidateSize(); frame(); })
       : null;
     watcher?.observe(el.current);
 

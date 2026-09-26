@@ -1,5 +1,6 @@
 import React from "react";
 import { apDate } from "./dates.js";
+import { statusLabel } from "./status.js";
 
 // Marathon County: the newsroom's home county. The agencies that publish a
 // portal or carry a hand-verified status get a full card with a stat grid, the
@@ -26,7 +27,7 @@ export function AgencyCard({ a, usat, children }) {
       <header className="card-head">
         <h3>{a.name}</h3>
         <p className="card-status">
-          <span className={`badge badge-${a.status.value}`}>{a.status.value === "unknown" ? "unverified" : a.status.value}</span>
+          <span className={`badge badge-${a.status.value}`}>{statusLabel(a.status.value)}</span>
           {a.status.as_of && <span className="asof"> as of {apDate(a.status.as_of)}</span>}
         </p>
       </header>

@@ -102,16 +102,18 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
           </p>
         </div>
         <div className="method-note">
-          <h3>What "dropped" and "suspended" mean</h3>
+          <h3>What "dropped," "suspended" and "no cameras" mean</h3>
           <p>
             An agency is marked <strong>dropped</strong> when its governing body or its chief
             or sheriff has ended the Flock contract, voted to end it, or decided not to renew it.
             Some of those agencies keep running cameras until the contract expires, and their
             entries say so. An agency is marked <strong>suspended</strong> when it has stopped
             using or covered its cameras while it reviews the program, with no contract decision
-            reported. Suspended agencies are never counted as dropped. Both rest on a named news
-            report or public record, linked from the agency's entry, and the date shown is the
-            date of that report.
+            reported. Suspended agencies are never counted as dropped. An agency marked{" "}
+            <strong>no cameras</strong> has said it never bought or installed Flock cameras; it
+            is on the roster because other agencies' sharing lists still name it. Each of these
+            rests on a named news report or public record, linked from the agency's entry, and
+            the date shown is the date of that report.
           </p>
         </div>
         <div className="method-note">

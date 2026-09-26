@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
+import { statusLabel } from "./status.js";
 
 // The transparency-gap tick bar: one tick per network agency, sorted into three
 // bands (audit log, portal only, nothing), with a card tooltip on hover, focus or
@@ -76,7 +77,7 @@ export default function GapBar({ agencies, onPick }) {
           <div className="tip-meta">
             {active.a.county || "County unresolved"} ·{" "}
             <span className={`badge badge-${active.a.status.value}`}>
-              {active.a.status.value === "unknown" ? "unverified" : active.a.status.value}
+              {statusLabel(active.a.status.value)}
             </span>
           </div>
           <div className={`tip-tier tier-${tier(active.a)}`}>{discloses(active.a)}</div>

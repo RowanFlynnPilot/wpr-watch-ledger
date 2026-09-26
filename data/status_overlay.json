@@ -3,9 +3,9 @@
     "name": "Wausau Police Department",
     "county": "Marathon County",
     "status": "active",
-    "as_of": "2026-09-07",
-    "note": "20 cameras at city entry points, $50,000 a year under a five-year contract, Dec. 15, 2023 to Dec. 15, 2028, per the city's records response and the executed contracts. The agreement has no early termination for convenience, though a non-appropriation clause lets the city leave without penalty on 30 days' notice if funds are not budgeted. Shares only with Wisconsin agencies (opted out of nationwide sharing). The department cites 30-day retention; the contract gives Flock perpetual rights to use de-identified data in its other products. Current camera and search figures are from its transparency portal, above.",
-    "source": "https://wausaupilotandreview.com/2026/09/07/will-wausau-and-marathon-county-drop-flock-one-could-leave-for-4000-the-other-says-it-cant/",
+    "as_of": "2026-09-24",
+    "note": "20 cameras at 11 locations under a five-year, $250,000 sole-source contract approved in October 2023 and running to December 2028. The agreement has no early termination for convenience, though a non-appropriation clause lets the city leave without penalty on 30 days' notice if funds are not budgeted; as of the report, Mayor Doug Diny had not said whether the 2027 budget includes the December payment. The department turned off nationwide sharing in May 2026 and now shares only with Wisconsin agencies. Its policy requires annual written audits; it has produced three, each reviewing 10 searches out of more than 10,000 a year. The contract gives Flock perpetual rights to use de-identified data in its other products. Current camera and search figures are from its transparency portal, above.",
+    "source": "https://wausaupilotandreview.com/2026/09/24/is-flock-selling-your-data-what-the-contracts-say-why-wisconsin-agencies-are-leaving-and-where-marathon-county-and-wausau-stand/",
     "portal": {
       "portal_url": "https://transparency.flocksafety.com/wausau-wi-pd",
       "read_on": "2026-09-01",
@@ -30,9 +30,9 @@
     "name": "Marathon County Sheriff's Office",
     "county": "Marathon County",
     "status": "active",
-    "as_of": "2026-09-15",
-    "note": "Sheriff Chad Billeb said on Sept. 15 he will keep the office's 10 Flock cameras as other Wisconsin agencies cover or cancel theirs. The cameras cost $26,500 a year and have been grant-funded since 2023; the contract lets the county leave at any time for $500 a camera, about $4,000, with a prorated refund. Shares its data with more than 1,400 agencies in 40 states, including the FBI and two HIDTA task forces, and joined ICE's 287(g) jail-enforcement program in late 2025. Current figures are from its transparency portal, above.",
-    "source": "https://wausaupilotandreview.com/2026/09/15/marathon-county-sheriff-will-keep-flock-cameras-as-more-than-a-dozen-wisconsin-agencies-drop-them/",
+    "as_of": "2026-09-24",
+    "note": "Sheriff Chad Billeb has said he will keep the office's 10 Flock cameras as other Wisconsin agencies cover or cancel theirs. The cameras cost $26,500 a year and have been grant-funded since 2023; the contract lets the county leave at any time for $500 a camera, about $4,000, with a prorated refund. Shares its data with more than 1,400 agencies in 40 states, including seven federal agencies, and joined ICE's 287(g) jail-enforcement program in late 2025. Its policy says command staff \"may\" audit searches, with no schedule and no written findings required; asked by a county supervisor whether that could become \"shall,\" a captain said the change could be made. Current figures are from its transparency portal, above.",
+    "source": "https://wausaupilotandreview.com/2026/09/24/is-flock-selling-your-data-what-the-contracts-say-why-wisconsin-agencies-are-leaving-and-where-marathon-county-and-wausau-stand/",
     "portal": {
       "portal_url": "https://transparency.flocksafety.com/marathon-county-wi-so",
       "read_on": "2026-09-01",
@@ -186,10 +186,10 @@
   "chetek pd": {
     "name": "Chetek Police Department",
     "county": "Barron County",
-    "status": "active",
-    "as_of": "2026-07-21",
-    "note": "Two cameras installed May 2026 without notifying the mayor or city council",
-    "source": "https://www.weau.com/2026/07/21/chetek-police-install-flock-cameras-without-mayors-knowledge/"
+    "status": "dropped",
+    "as_of": "2026-09-02",
+    "note": "City Council voted 3-1 in late August, at the police chief's own request, to disable the city's two Flock cameras immediately and let him negotiate an end to the contract. The cameras had been installed in May without notice to the mayor or council.",
+    "source": "https://www.chetekalert.com/news/free_news/article_764a8c0d-e553-446d-ae68-c4fe04097dff.html"
   },
   "stoughton pd": {
     "name": "Stoughton Police Department",
@@ -682,7 +682,7 @@
     "county": "Waupaca County",
     "status": "suspended",
     "as_of": "2026-09-08",
-    "note": "The county's Law Enforcement Committee voted to cut Flock funding from next year's budget, and the sheriff then suspended the cameras, citing loss of control over sensitive law enforcement information. The county spent $34,500 on Flock this year.",
+    "note": "The county's Law Enforcement Committee voted to cut Flock funding from next year's budget, and the sheriff then suspended the cameras, citing loss of control over sensitive law enforcement information. The county spent $34,500 on Flock this year. Law enforcement agencies across the county announced the suspension jointly on Sept. 8.",
     "source": "https://www.wbay.com/2026/09/09/neenah-menasha-waupaca-county-move-cut-ties-with-flock-cameras/"
   },
   "stevens point pd": {
@@ -740,5 +740,93 @@
     "as_of": "2026-09-10",
     "note": "Ended its use of Flock and directed the company to remove all 18 campus cameras, plus two nearby; they are bagged in the meantime. Parking-facility plate readers are a separate system and are not affected.",
     "source": "https://www.fox6now.com/news/uw-milwaukee-police-ending-flock-cameras-be-removed"
+  },
+  "cottage grove pd": {
+    "name": "Cottage Grove Police Department",
+    "county": "Dane County",
+    "status": "dropped",
+    "as_of": "2026-09-22",
+    "note": "Village Board voted unanimously on Sept. 21 to stop using Flock and deactivate the village's nine cameras immediately, and directed staff to draft an ordinance barring the village from using plate-reader technology of any brand.",
+    "source": "https://www.hngnews.com/leader_independent/news/local/by-different-routes-cottage-grove-waunakee-part-with-flock/article_7c26e57e-2961-4cc2-b8fe-cc80feb26761.html"
+  },
+  "waunakee pd": {
+    "name": "Waunakee Police Department",
+    "county": "Dane County",
+    "status": "suspended",
+    "as_of": "2026-09-22",
+    "note": "Police chief removed the village's five Flock cameras in mid-September after they were damaged in August and September. The contract expires at year's end and the chief is evaluating other plate-reader vendors; no decision on the Flock contract reported.",
+    "source": "https://www.hngnews.com/leader_independent/news/local/by-different-routes-cottage-grove-waunakee-part-with-flock/article_7c26e57e-2961-4cc2-b8fe-cc80feb26761.html"
+  },
+  "oneida county so": {
+    "name": "Oneida County Sheriff's Office",
+    "county": "Oneida County",
+    "status": "dropped",
+    "as_of": "2026-09-25",
+    "note": "Sheriff Grady Hartman ended the office's use of Flock plate readers, citing public opposition and the potential for abuse. The chief deputy said the cameras had been offline since the end of August and were being taken down.",
+    "source": "https://lakelandtimes.com/news/2026/sep/25/oneida-county-pulls-plug-on-flock-cameras/"
+  },
+  "manitowoc pd": {
+    "name": "Manitowoc Police Department",
+    "county": "Manitowoc County",
+    "status": "dropped",
+    "as_of": "2026-09-25",
+    "note": "Mayor Justin Nickels said the city will not renew its Flock contract and asked Flock to remove its cameras, which the city had deactivated on Sept. 5. The city budget will not fund plate-reader cameras.",
+    "source": "https://www.seehafernews.com/2026/09/25/city-of-manitowoc-not-renewing-flock-safety-camera-contract/"
+  },
+  "mcfarland pd": {
+    "name": "McFarland Police Department",
+    "county": "Dane County",
+    "status": "never",
+    "as_of": "2026-05-15",
+    "note": "Called off a planned Flock purchase, budgeted for 2026, before buying any cameras, citing Dane County's loss of Flock funding and residents' privacy concerns. It still appears in other agencies' Flock sharing lists.",
+    "source": "https://www.mcfarland.wi.us/m/newsflash/home/detail/778"
+  },
+  "deforest pd": {
+    "name": "DeForest Police Department",
+    "county": "Dane County",
+    "status": "never",
+    "as_of": "2026-09-23",
+    "note": "Police Chief James Olson, vice president of the Wisconsin Police Chiefs Association, has said his department does not have Flock cameras. It appears in one agency's Flock sharing list.",
+    "source": "https://milwaukeenns.org/2026/09/23/tracking-milwaukee-4-takeaways-on-police-license-plate-readers/"
+  },
+  "lake mills pd": {
+    "name": "Lake Mills Police Department",
+    "county": "Jefferson County",
+    "status": "dropped",
+    "as_of": "2026-09-15",
+    "note": "Police Chief Steve Schroeder said the department is opting out of its Flock contract after its search data was shared outside the agency without authorization; the cameras stay covered until Flock removes them.",
+    "source": "https://www.wdtimes.com/news/local/lake-mills-police-department-opting-out-of-flock-contract/article_e1fab206-6af6-59eb-9c2f-94e36bcf23b2.html"
+  },
+  "kenosha pd": {
+    "name": "Kenosha Police Department",
+    "county": "Kenosha County",
+    "status": "dropped",
+    "as_of": "2026-09-02",
+    "note": "Mayor David Bogdala and Police Chief Patrick Patton said the city is ending its Flock contract a year early, citing data-security concerns and eroding trust, and replacing the cameras with Axon plate readers the department owns, sharing data only with Wisconsin agencies. It still runs plate readers, just not Flock's.",
+    "source": "https://www.fox6now.com/news/kenosha-police-ending-flock-contract-moving-axon"
+  },
+  "marinette pd": {
+    "name": "Marinette Police Department",
+    "county": "Marinette County",
+    "status": "dropped",
+    "as_of": "2026-09-17",
+    "note": "Common Council voted 9-0 on Sept. 17 to end the city's Flock contract. The mayor and police chief had ordered the cameras covered weeks earlier while the service was reviewed.",
+    "source": "https://fox11online.com/news/local/marinette-flock-safety-camera-contract-ends-unanimous-city-council-vote-automated-license-plate-reader"
+  },
+  "wautoma pd": {
+    "name": "Wautoma Police Department",
+    "county": "Waushara County",
+    "status": "dropped",
+    "as_of": "2026-09-16",
+    "note": "Police Chief Paul Mott told the Common Council on Sept. 14 that the department had canceled its Flock contract.",
+    "source": "https://www.wausharaargus.com/stories/city-of-wautoma-cancels-flock-contract,354536"
+  },
+  "ashland pd": {
+    "name": "Ashland Police Department",
+    "county": "Ashland County",
+    "status": "dropped",
+    "as_of": "2026-06-30",
+    "note": "Police Chief Brandon Marten said the department would not renew its one-year Flock contract and would remove the cameras, citing frequent downtime, slow service from Flock and community concerns.",
+    "source": "https://www.fox21online.com/news/political/ashland-police-department-to-remove-flock-cameras-from-city/article_794afeda-e1e4-4762-84c0-3952d291204c.html"
   }
 }

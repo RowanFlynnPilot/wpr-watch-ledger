@@ -33,13 +33,24 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
 
 WPR_API = "https://wausaupilotandreview.com/wp-json/wp/v2/posts"
 NEWS_RSS = "https://news.google.com/rss/search"
-NEWS_QUERY = 'Wisconsin "Flock" (cameras OR "license plate") when:{days}d'
+# Google News caps each search at about 50-70 results, and in a heavy news week one broad query
+# silently drops local stories (it missed Lake Mills opting out of its contract, 2026-09-15).
+# Several narrower searches, merged and de-duplicated, roughly double what one returns.
+NEWS_QUERIES = [
+    'Wisconsin "Flock" (cameras OR "license plate") when:{days}d',
+    '"Flock" Wisconsin police department when:{days}d',
+    '"Flock" Wisconsin sheriff when:{days}d',
+    '"Flock" Wisconsin ("village board" OR "common council" OR "city council" OR "county board") when:{days}d',
+    '"Flock" Wisconsin contract when:{days}d',
+    '"Flock" cameras (covered OR suspended OR "opting out" OR "not renew" OR deactivated) Wisconsin when:{days}d',
+]
 
 ON_TOPIC = re.compile(r"\bFlock\b|license[- ]plate (reader|camera)|\bALPRs?\b")
 # Words that suggest an agency changed what it does. Lawsuits and "will keep" stories are listed
 # in the issue but are not status changes, so they do not raise a ledger hint.
 ACTION = re.compile(r"\b(drop|end|ends|ended|ending|cancel|terminat|suspend|paus|cover|remov|vote|ditch|cut ties|"
-                    r"pull|halt|stop|scrap|not renew|defund|discontinu|bag)", re.I)
+                    r"pull|halt|stop|scrap|not renew|won.?t renew|defund|discontinu|bag|deactivat|opt(s|ing)? out|"
+                    r"take down|taken down|part(s|ing|ed)? (ways )?with)", re.I)
 
 
 def get(url: str) -> bytes:
@@ -60,9 +71,12 @@ def newsroom_stories(since: datetime) -> list[dict]:
 
 
 def statewide_stories(since: datetime) -> list[dict]:
-    q = urllib.parse.urlencode({"q": NEWS_QUERY.format(days=LOOKBACK_DAYS), "hl": "en-US", "gl": "US", "ceid": "US:en"})
+    items = []
+    for query in NEWS_QUERIES:
+        q = urllib.parse.urlencode({"q": query.format(days=LOOKBACK_DAYS), "hl": "en-US", "gl": "US", "ceid": "US:en"})
+        items += ET.fromstring(get(f"{NEWS_RSS}?{q}")).findall(".//item")
     out, seen = [], set()
-    for it in ET.fromstring(get(f"{NEWS_RSS}?{q}")).findall(".//item"):
+    for it in items:
         full = (it.findtext("title") or "").strip()
         title, _, outlet = full.rpartition(" - ")
         title, outlet = (title or full).strip(), (it.findtext("source") or outlet).strip()
