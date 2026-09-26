@@ -21,7 +21,7 @@ function extras(run0) {
     // A wave of decisions reads better as counts; the timeline below names each agency.
     const by = {};
     for (const s of run.status) by[s.to] = (by[s.to] || 0) + 1;
-    parts.push(Object.entries(by).map(([to, n]) => `${n} agencies now ${to}`).join(", "));
+    parts.push(Object.entries(by).map(([to, n]) => `${n} ${n === 1 ? "agency" : "agencies"} now ${to}`).join(", "));
   }
   if (run.agencies.added.length) parts.push(`joined the roster: ${list(run.agencies.added)}`);
   return parts;
