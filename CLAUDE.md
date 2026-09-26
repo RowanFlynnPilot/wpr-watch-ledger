@@ -78,6 +78,11 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   selects the county through `onSelectCounties` (same path as the picker) so it is outlined and
   filtered, and Statewide clears the selection; a popup that opens under the floating legend
   nudges the map just far enough to clear it; popups lead with the operator when recorded.
+  The map frames the state only once its box has a size (`frame()` in the setup effect, re-run
+  on Leaflet's `resize` and a ResizeObserver); every later fit goes through `fitIfSized`. A page
+  that loads hidden gives the map a 0 x 0 box, fitBounds then yields a NaN zoom, setMaxBounds
+  throws, and the error boundary blanked the WHOLE ledger (found 2026-09-26 in a hidden
+  preview pane). Never call fitBounds/setMaxBounds on the map directly.
 - `data/wi_population.json` — COMMITTED SNAPSHOT of WI DOA official final population
   estimates (state/counties/places/towns). Joined at build into `data/counties.json`
   (per-county rollup + statewide coverage); county spellings are validated against DOA's

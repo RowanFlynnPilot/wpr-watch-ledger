@@ -3,6 +3,8 @@ import L from "leaflet";
 
 const WI_BOUNDS = [[42.4, -93.0], [47.1, -86.7]];
 const MARATHON_BOUNDS = [[44.68, -90.36], [45.15, -89.15]];
+// fitBounds on a 0 x 0 map gives Leaflet a NaN zoom (see the setup effect): skip it until the map has a size.
+const fitIfSized = (map, bounds, opts) => { const s = map?.getSize(); if (s && s.x && s.y) map.fitBounds(bounds, opts); };
 const NEAR_M = 150; // a ring with no volunteer dot within this many meters is "unmapped"
 
 const fmt = (n) => n.toLocaleString("en-US");
@@ -119,10 +121,29 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     el.current.__map = map; // handle for debugging from the console
     const stateBounds = L.latLngBounds(outline ? outline.bounds : WI_BOUNDS);
     boundsRef.current = stateBounds;
-    map.fitBounds(stateBounds, { padding: [14, 14] });
-    // This is a map of Wisconsin: do not let it drift to the continent or another state.
-    map.setMinZoom(map.getZoom() - 0.75);
-    map.setMaxBounds(stateBounds.pad(0.6));
+    // Frame the state only once the map has a size. A page that loads hidden (a background
+    // pane, a collapsed block, an iframe not yet laid out) gives the map a 0 x 0 box; fitting
+    // to that hands Leaflet a NaN zoom, the bounds check below then throws, and the error
+    // boundary blanks the whole ledger. Until then the map holds a plain, valid view.
+    map.setView(stateBounds.getCenter(), 6);
+    let framed = false;
+    const frame = () => {
+      const size = map.getSize();
+      if (framed || !size.x || !size.y) return;
+      framed = true;
+      map.fitBounds(stateBounds, { padding: [14, 14], animate: false });
+      // This is a map of Wisconsin: do not let it drift to the continent or another state.
+      map.setMinZoom(map.getZoom() - 0.75);
+      map.setMaxBounds(stateBounds.pad(0.6));
+    };
+    frame();
+    map.on("resize", frame);
+    // Leaflet only notices window resizes; a container that is revealed inside an unchanged
+    // window (an opened <details>, a tab panel) needs its own watcher.
+    const watcher = typeof ResizeObserver === "function"
+      ? new ResizeObserver(() => { map.invalidateSize({ pan: false }); frame(); })
+      : null;
+    watcher?.observe(el.current);
 
     // Panes, bottom to top: tiles, labels, the out-of-state mask, borders, then the markers.
     // Labels sit UNDER the mask so Wisconsin's cities read clearly and everyone else's fade.
@@ -304,7 +325,7 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
       if (overlapX > 0 && overlapY > 0) map.panBy(overlapX < overlapY ? [overlapX + 12, 0] : [0, -(overlapY + 12)], { animate: true, duration: 0.25 });
     });
 
-    return () => { mapRef.current = null; layers.current = {}; map.remove(); };
+    return () => { watcher?.disconnect(); mapRef.current = null; layers.current = {}; map.remove(); };
   }, [cameras, wisdotCameras, unmappedIds, outline, shapes]);
 
   // Layer visibility follows the checkboxes.
@@ -401,7 +422,7 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
     const fc = { type: "FeatureCollection", features: shapes.features.filter((f) => selectedCounties.includes(f.properties.name)) };
     const layer = L.geoJSON(fc, { style: { color: "#2C6B62", weight: 1.75, dashArray: "4 3", fill: true, fillColor: "#3A867C", fillOpacity: 0.05, interactive: false } }).addTo(map);
     outlineRef.current = layer;
-    map.fitBounds(layer.getBounds().pad(0.08), { maxZoom: 12 });
+    fitIfSized(map, layer.getBounds().pad(0.08), { maxZoom: 12 });
     const onlyMarathon = selectedCounties.length === 1 && selectedCounties[0] === "Marathon County";
     setTimeout(() => setView(onlyMarathon ? "marathon" : "counties"), 0);
   }, [selectedCounties, shapes]);
@@ -412,10 +433,10 @@ export default function CameraMap({ cameras, wisdotCameras, selectedCounties = [
       // Select the county rather than just framing it, so it is outlined and the markers filter.
       const already = selectedCounties.length === 1 && selectedCounties[0] === "Marathon County";
       if (onSelectCounties && !already) onSelectCounties(["Marathon County"]);
-      else mapRef.current?.fitBounds(MARATHON_BOUNDS); // already selected: just bring it back into frame
+      else fitIfSized(mapRef.current, MARATHON_BOUNDS); // already selected: just bring it back into frame
     } else {
       if (onSelectCounties && selectedCounties.length) onSelectCounties([]);
-      mapRef.current?.fitBounds(boundsRef.current || WI_BOUNDS, { padding: [14, 14] });
+      fitIfSized(mapRef.current, boundsRef.current || WI_BOUNDS, { padding: [14, 14] });
     }
     setTimeout(() => setView(key), 0);
   };
