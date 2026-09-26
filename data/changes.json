@@ -920,6 +920,117 @@
     ],
     "removed": []
    }
+  },
+  {
+   "date": "2026-09-26",
+   "since": "2026-09-21",
+   "cameras": {
+    "total": 2125,
+    "added": 9,
+    "removed": 10,
+    "by_county": [
+     {
+      "county": "Kenosha County",
+      "added": 3,
+      "removed": 8
+     },
+     {
+      "county": "Racine County",
+      "added": 2,
+      "removed": 1
+     },
+     {
+      "county": "Dane County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Clark County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Walworth County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Waukesha County",
+      "added": 0,
+      "removed": 1
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [
+    {
+     "name": "Ashland Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Chetek Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Cottage Grove Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "DeForest Police Department",
+     "from": "active",
+     "to": "never"
+    },
+    {
+     "name": "Kenosha Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Lake Mills Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Manitowoc Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Marinette Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "McFarland Police Department",
+     "from": "active",
+     "to": "never"
+    },
+    {
+     "name": "Oneida County Sheriff's Office",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Waunakee Police Department",
+     "from": "active",
+     "to": "suspended"
+    },
+    {
+     "name": "Wautoma Police Department",
+     "from": "active",
+     "to": "dropped"
+    }
+   ],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
   }
  ]
 }

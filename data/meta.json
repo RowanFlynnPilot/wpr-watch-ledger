@@ -1,11 +1,11 @@
 {
-  "generated": "2026-09-21T14:59:02Z",
-  "camera_count": 2126,
-  "flock_camera_count": 1610,
+  "generated": "2026-09-26T13:46:44Z",
+  "camera_count": 2125,
+  "flock_camera_count": 1606,
   "agency_count": 297,
   "portal_count": 54,
   "hand_read_portal_count": 3,
-  "curated_count": 45,
+  "curated_count": 56,
   "wisdot_camera_count": 759,
   "wisdot_agency_count": 186,
   "wisdot_permits_by_year": {
@@ -41,16 +41,16 @@
     ]
   },
   "ice_287g": {
-    "retrieved": "2026-09-19",
+    "retrieved": "2026-09-26",
     "url": "https://www.ice.gov/identify-and-arrest/287g",
     "agencies": 20,
     "agreements": 23,
     "in_network": 17,
-    "national_rows": 2539
+    "national_rows": 2589
   },
   "stale_portal_count": 3,
   "national": {
-    "us_portal_count": 1517,
+    "us_portal_count": 1528,
     "states_with_portals": 45,
     "wi_portal_count": 51,
     "wi_rank_by_portals": 8,
