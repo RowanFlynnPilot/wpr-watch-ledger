@@ -108,7 +108,7 @@ export default function SharingGraph({ agencies, edges }) {
           </button>
         )}
       </div>
-      <div className="graph-scroll">
+      <div className="graph-scroll" tabIndex={0} role="region" aria-label="Inner-circle sharing graph; scrolls sideways on small screens">
         <svg
           viewBox={frame}
           className={`sharing-graph${pinned != null ? " pinned" : ""}`}

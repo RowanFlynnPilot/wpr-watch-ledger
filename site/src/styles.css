@@ -1531,3 +1531,4 @@ tr.row-home td:first-child { font-weight: 700; }
 
 /* a caption under a boxed chart gets a breath of space; inside the box it needs none */
 .graph-scroll + .gap-caption, .silent-rows + .gap-caption, .reach-rows + .gap-caption { margin-top: 0.55rem; }
+.graph-scroll:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 2px; }

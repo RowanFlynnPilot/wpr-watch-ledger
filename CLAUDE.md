@@ -227,6 +227,8 @@ transparency-gap tick bar (one tick per network agency, filled = publishes a por
 - Accessibility baseline: axe-core (wcag2a/aa, wcag21aa, best-practice) reports zero violations
   WITH THE INTERACTIVE STATES OPEN (a lookup result, the full timeline, every <details>, a roster
   filter chip active): a plain page load hid four contrast misses and an unfocusable scroll region.
+  Run it at 375 px as well as 599: a box that only scrolls on a phone (the inner-circle graph)
+  must be focusable (tabIndex 0, role="region", a label), and a 599 px scan never sees it.
   White text needs --teal-deep behind it, not --teal (4.2:1 at badge sizes).
   The gap bar is role="group", not "img", because its ticks are buttons. Check 320 px for
   sideways scroll after layout changes (selects and fixed grid minimums are the usual cause).
