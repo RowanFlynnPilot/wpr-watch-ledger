@@ -179,9 +179,9 @@
     "name": "Milwaukee Police Department",
     "county": "Milwaukee County",
     "status": "active",
-    "as_of": "2026-05-08",
-    "note": "Continuing Flock use after officer misuse case and Fire & Police Commission review; monthly audits added",
-    "source": "https://spectrumnews1.com/wi/milwaukee/news/2026/05/08/where-wisconsin-cities-stand-on-flock-camera-programs"
+    "as_of": "2026-09-23",
+    "note": "Still uses Flock, one of three plate-reader vendors it contracts with. In 2026 the department limited searches to supervisors and approved investigation types, cut image retention to seven days and stopped sharing data directly with outside agencies.",
+    "source": "https://milwaukeenns.org/2026/09/23/tracking-milwaukee-4-takeaways-on-police-license-plate-readers/"
   },
   "chetek pd": {
     "name": "Chetek Police Department",
@@ -786,7 +786,7 @@
     "county": "Dane County",
     "status": "never",
     "as_of": "2026-09-23",
-    "note": "Police Chief James Olson, vice president of the Wisconsin Police Chiefs Association, has said his department does not have Flock cameras. It appears in one agency's Flock sharing list.",
+    "note": "Police Chief James Olson, vice president of the Wisconsin Police Chiefs Association, has said his department does not have Flock cameras. It still appears in other agencies' Flock sharing lists, and USA TODAY's records show it has run searches on the network, which does not require cameras of its own.",
     "source": "https://milwaukeenns.org/2026/09/23/tracking-milwaukee-4-takeaways-on-police-license-plate-readers/"
   },
   "lake mills pd": {
@@ -802,7 +802,7 @@
     "county": "Kenosha County",
     "status": "dropped",
     "as_of": "2026-09-02",
-    "note": "Mayor David Bogdala and Police Chief Patrick Patton said the city is ending its Flock contract a year early, citing data-security concerns and eroding trust, and replacing the cameras with Axon plate readers the department owns, sharing data only with Wisconsin agencies. It still runs plate readers, just not Flock's.",
+    "note": "Mayor David Bogdala and Police Chief Patrick Patton said the city is ending its Flock contract a year early, citing data-security concerns and eroding trust, and replacing the cameras with Axon plate readers the department owns, limiting sharing to Wisconsin agencies and possibly Lake County, Ill. It still runs plate readers, just not Flock's.",
     "source": "https://www.fox6now.com/news/kenosha-police-ending-flock-contract-moving-axon"
   },
   "marinette pd": {

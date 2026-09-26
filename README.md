@@ -105,10 +105,14 @@ See CLAUDE.md for the row schema. Every row requires a source URL and an as-of d
 A scheduled watcher (`pipeline/watch_news.py`, Mondays and Thursdays) opens a GitHub issue
 labelled `flock-watch` when there are new Flock stories from the newsroom or statewide, with
 hints about agencies the ledger may be behind on. It only reports; a person updates the rows
-and closes the issue. Nothing notices a republished source, so roughly monthly:
+and closes the issue. Work each issue within a few days: two left open for a week in September
+2026 held a dozen decisions the page did not show. Nothing notices a republished source, so
+roughly monthly:
 
-- search for Wisconsin agencies ending or suspending Flock and add sourced rows to
-  `data/status_overlay.json` (`dropped` or `suspended`; see CLAUDE.md)
+- search for Wisconsin agencies ending or suspending Flock, cross-check against a list that
+  names agencies (DeFlock's tracker at deflocktheusa.com/cancellations), and add sourced rows
+  to `data/status_overlay.json` (`dropped`, `suspended` or `never`; see CLAUDE.md). Re-check
+  the hand-verified `active` rows too: they go stale the same way
 - re-read the hand-read transparency portals in the overlay and bump `read_on`
 - `python pipeline/snapshot_usatoday.py` and `python pipeline/snapshot_ice.py` rebuild those two
   committed snapshots and print what changed; then refresh and run the audit

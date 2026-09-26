@@ -27,6 +27,9 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 LOOKBACK_DAYS = 10
+# GitHub rejects an issue body over 65,536 characters, and Google News links run 300-600
+# characters each: six merged searches can pass that in a heavy week. Stay well under it.
+BODY_LIMIT = 60_000
 LABEL = "flock-watch"
 DATA = Path(__file__).resolve().parent.parent / "data"
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"}
@@ -147,6 +150,29 @@ def main() -> None:
         return
     gaps = ledger_gaps(own + wide)
     line = lambda s: f"- {s['date']} · [{s['title']}]({s['link']}) · {s['outlet']}"
+    # List as many stories as fit. Any held back are not in this issue's text, so the next run
+    # still counts them as new and reports them then: nothing is lost, only deferred.
+    listed = len(wide)
+    body = compose(own, wide, listed, gaps, line)
+    while len(body) > BODY_LIMIT and listed > 25:
+        listed -= 5
+        body = compose(own, wide, listed, gaps, line)
+    title = f"Flock watch: {len(own) + listed} new stor{'y' if len(own) + listed == 1 else 'ies'}, {datetime.now(timezone.utc):%b %d}"
+    if dry:
+        print(title, f"({len(body):,} characters)", "\n", body)
+        return
+    subprocess.run(["gh", "label", "create", LABEL, "--color", "B5543B", "--description",
+                    "News the hand-curated status list may not reflect yet", "--force"], check=True, capture_output=True)
+    cmd = ["gh", "issue", "create", "--title", title, "--body", body, "--label", LABEL]
+    owner = (sys.argv[sys.argv.index("--assign") + 1] if "--assign" in sys.argv else "").strip()
+    if owner:
+        cmd += ["--assignee", owner]
+    print(subprocess.run(cmd, check=True, capture_output=True, text=True).stdout.strip())
+
+
+def compose(own: list[dict], wide: list[dict], listed: int, gaps: list[str], line) -> str:
+    """The issue text, with the first `listed` statewide stories in it."""
+    shown, held = wide[:listed], len(wide) - listed
     body = "\n".join([
         "New Flock stories since the last check. The ledger's status list is hand-curated, so nothing here has been applied.",
         "",
@@ -156,12 +182,13 @@ def main() -> None:
         f"### Wausau Pilot & Review ({len(own)})" if own else "",
         *[line(s) for s in own],
         "" if own else "",
-        f"### Statewide ({len(wide)})" if wide else "",
-        *[line(s) for s in wide[:25]],
+        f"### Statewide ({len(shown)})" if shown else "",
+        *[line(s) for s in shown[:25]],
         # Everything past the first 25 still has to be IN the issue: the issue text is this
         # script's only memory of what it has already reported.
-        *(["", f"<details><summary>and {len(wide) - 25} more</summary>", "", *[line(s) for s in wide[25:]], "", "</details>"]
-          if len(wide) > 25 else []),
+        *(["", f"<details><summary>and {len(shown) - 25} more</summary>", "", *[line(s) for s in shown[25:]], "", "</details>"]
+          if len(shown) > 25 else []),
+        (f"_{held} more stories did not fit in one issue; the next check will list them._" if held else ""),
         "",
         "### What to do",
         "- [ ] For each agency that ended, voted to end or will not renew: add or update a `dropped` row in `data/status_overlay.json`",
@@ -172,18 +199,7 @@ def main() -> None:
         "",
         "_Headline matching is a hint, not a finding: read the story before changing a row._",
     ])
-    body = re.sub(r"\n{3,}", "\n\n", body)
-    title = f"Flock watch: {len(own) + len(wide)} new stor{'y' if len(own) + len(wide) == 1 else 'ies'}, {datetime.now(timezone.utc):%b %d}"
-    if dry:
-        print(title, "\n", body)
-        return
-    subprocess.run(["gh", "label", "create", LABEL, "--color", "B5543B", "--description",
-                    "News the hand-curated status list may not reflect yet", "--force"], check=True, capture_output=True)
-    cmd = ["gh", "issue", "create", "--title", title, "--body", body, "--label", LABEL]
-    owner = (sys.argv[sys.argv.index("--assign") + 1] if "--assign" in sys.argv else "").strip()
-    if owner:
-        cmd += ["--assignee", owner]
-    print(subprocess.run(cmd, check=True, capture_output=True, text=True).stdout.strip())
+    return re.sub(r"\n{3,}", "\n\n", body)
 
 
 if __name__ == "__main__":
