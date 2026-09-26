@@ -1,5 +1,6 @@
 import React from "react";
 import Sparkline from "./Sparkline.jsx";
+import { apDate } from "./dates.js";
 
 // Until the ledger holds a quarter of weekly snapshots, a line chart invites the
 // reader to see a trend in six points. Below that span each figure is a KPI tile
@@ -12,7 +13,7 @@ const CHART_AFTER_WEEKS = 12;
 // Figures are as each portal published them that week.
 
 const fmt = (n) => n.toLocaleString("en-US");
-const day = (d) => new Date(d + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+const day = (d) => apDate(d, { year: false });
 
 function Chart({ series, label }) {
   const W = 320, H = 96, padL = 6, padR = 6, padT = 12, padB = 20;
@@ -74,22 +75,34 @@ function Figure({ series, label, unit, portals = true, big = false }) {
   );
 }
 
-export default function Trend({ history, agencies }) {
+export default function Trend({ history, agencies, staleThreshold = 45 }) {
   const snaps = history.snapshots;
   if (snaps.length < 2) return null;
-  const total = (snap, key) => Object.values(snap.portals).reduce((n, p) => n + (p[key] || 0), 0);
-  const series = (key) => snaps.map((s) => ({ date: s.date, value: total(s, key), portals: Object.keys(s.portals).length }));
+  // A portal Flock has stopped updating repeats its last figures week after week, and the
+  // 30-day ledger above leaves it out. Do the same here, week by week, or the two sections
+  // print different totals for the same thing. A portal's last-updated date only moves
+  // forward, so one that is more than the threshold behind a snapshot's date today was
+  // already that far behind on that date.
+  const updated = new Map(agencies.filter((a) => a.portal?.updated).map((a) => [a.canonical, a.portal.updated]));
+  const frozen = (key, date) => {
+    const u = updated.get(key);
+    return u != null && (Date.parse(date) - Date.parse(u)) / 86400000 > staleThreshold;
+  };
+  const current = (s) => Object.entries(s.portals).filter(([k]) => !frozen(k, s.date)).map(([, p]) => p);
+  const handRead = agencies.filter((a) => a.portal?.hand_read).length;
+  const total = (snap, key) => current(snap).reduce((n, p) => n + (p[key] || 0), 0);
+  const series = (key) => snaps.map((s) => ({ date: s.date, value: total(s, key), portals: current(s).length }));
   // Per reporting portal, so a week when new portals appear is not read as a surge in
   // surveillance. Divides by the portals in that week's snapshot that carry the figure.
   const perPortal = (key) =>
     snaps.map((s) => {
-      const vals = Object.values(s.portals).map((p) => p[key]).filter((v) => v != null);
+      const vals = current(s).map((p) => p[key]).filter((v) => v != null);
       return { date: s.date, value: vals.length ? Math.round(vals.reduce((n, v) => n + v, 0) / vals.length) : 0, portals: vals.length };
     });
   const byCanonical = new Map(agencies.map((a) => [a.canonical, a.name]));
   const first = snaps[0], last = snaps[snaps.length - 1];
   const movers = Object.keys(last.portals)
-    .filter((k) => first.portals[k] && first.portals[k].searches_30d != null && last.portals[k].searches_30d != null)
+    .filter((k) => !frozen(k, last.date) && first.portals[k] && first.portals[k].searches_30d != null && last.portals[k].searches_30d != null)
     .map((k) => ({ key: k, name: byCanonical.get(k) || k, delta: last.portals[k].searches_30d - first.portals[k].searches_30d, now: last.portals[k].searches_30d }))
     .filter((m) => m.delta !== 0)
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
@@ -102,7 +115,9 @@ export default function Trend({ history, agencies }) {
       <p className="trend-dek">
         The ledger has snapshotted every Wisconsin portal weekly since {day(first.date)}. The
         statewide total moves whenever a new portal appears as much as when police activity
-        changes, so each figure is also shown as an average per reporting portal.
+        changes, so each figure is also shown as an average per reporting portal. As in the
+        30-day ledger, a portal is left out of any week in which its figures were more than{" "}
+        {staleThreshold} days old{handRead > 0 && `, and the ${handRead} portals read by hand are not part of the weekly snapshots`}.
         {weeks < CHART_AFTER_WEEKS && ` Line charts replace these figures once ${CHART_AFTER_WEEKS} weeks of snapshots exist.`}
       </p>
       <div className="trend-grid">
@@ -130,7 +145,7 @@ export default function Trend({ history, agencies }) {
           </div>
         ))}
         {movers.length > 0 && (
-          <div className="trend-card">
+          <div className="trend-card trend-movers">
             <h3>Biggest search movers, {weeks} week{weeks === 1 ? "" : "s"}</h3>
             <ul className="movers">
               {movers.map((m) => (

@@ -15,6 +15,9 @@ const short = (name) =>
     .replace("City of ", "");
 
 const W = 760, H = 700, CX = W / 2, CY = H / 2, R = 205;
+// JetBrains Mono's advance at the labels' 9px size, in SVG units. The viewBox is cropped to
+// the ring plus its longest label, so the circle fills its panel instead of floating in it.
+const LABEL_CH = 5.5;
 
 // A chord bent gently toward the center: the two agencies stay identifiable at
 // the rim while the bundle of lines separates instead of piling through the middle.
@@ -76,6 +79,8 @@ export default function SharingGraph({ agencies, edges }) {
   const nodeActive = (i) => adjacent == null || adjacent.has(i) || i === hover;
   const linkActive = (l) => hover == null || l.a === hover || l.b === hover;
   const hovered = hover == null ? null : nodes[hover];
+  const reach = Math.ceil(R + 15 + Math.max(0, ...nodes.map((nd) => short(nd.name).length)) * LABEL_CH + 6);
+  const frame = `${CX - reach} ${CY - reach} ${2 * reach} ${2 * reach}`;
 
   return (
     <>
@@ -105,7 +110,7 @@ export default function SharingGraph({ agencies, edges }) {
       </div>
       <div className="graph-scroll">
         <svg
-          viewBox={`0 0 ${W} ${H}`}
+          viewBox={frame}
           className={`sharing-graph${pinned != null ? " pinned" : ""}`}
           role="img"
           aria-label={`Sharing between the ${portals.length} portal agencies: ${links.length} connections, ${mutualCount} of them mutual`}

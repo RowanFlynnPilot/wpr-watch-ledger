@@ -245,7 +245,7 @@ export default function App() {
         />
       )}
 
-      <Trend history={history} agencies={agencies} />
+      <Trend history={history} agencies={agencies} staleThreshold={staleThreshold} />
 
       <section className="gap" aria-label="Transparency gap">
         <h2>The transparency gap</h2>
@@ -294,8 +294,11 @@ export default function App() {
         </p>
         {meta.national && (
           <p className="gap-line gap-national">
-            For national context: Wisconsin's {meta.national.wi_portal_count} transparency
-            portals rank <strong>#{meta.national.wi_rank_by_portals}</strong> among the{" "}
+            For national context: by Eyes On Flock's count
+            {meta.national.wi_portal_count === withPortal.length
+              ? ` of ${meta.national.wi_portal_count} Wisconsin portals`
+              : `, which includes ${meta.national.wi_portal_count} of the ${withPortal.length} Wisconsin portals above`}
+            , the state ranks <strong>#{meta.national.wi_rank_by_portals}</strong> among the{" "}
             {meta.national.states_with_portals} states where any agency publishes one
             ({meta.national.us_portal_count.toLocaleString("en-US")} portals nationwide).
           </p>

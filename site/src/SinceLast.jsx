@@ -1,10 +1,11 @@
 import React from "react";
 import Sparkline from "./Sparkline.jsx";
+import { apDate } from "./dates.js";
 
 // What moved since the previous refresh, from data/changes.json: the pipeline diffs each
 // run against the data it is about to replace. A reason to come back next week.
 
-const day = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+const day = (d) => apDate(d, { year: false });
 const list = (names, max = 3) => names.slice(0, max).join(", ") + (names.length > max ? ` and ${names.length - max} more` : "");
 
 // "unverified" becoming "active" is the pipeline learning something, not an agency acting.

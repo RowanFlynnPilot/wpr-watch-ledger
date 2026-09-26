@@ -1,4 +1,5 @@
 import React from "react";
+import { apDate } from "./dates.js";
 
 // When the highway cameras arrived: WisDOT right-of-way permit approvals by year.
 // Straight from the committed records snapshot; the current year is partial.
@@ -29,7 +30,7 @@ export default function PermitTimeline({ byYear, snapshotDate }) {
             <span
               className={`permit-bar${y === currentYear ? " partial" : ""}`}
               style={{ height: `${(100 * byYear[y]) / max}%` }}
-              title={`${y}: ${fmt(byYear[y])} cameras approved${y === currentYear ? ` (through ${snapshotDate})` : ""} · ${fmt(running[i])} in total by then`}
+              title={`${y}: ${fmt(byYear[y])} cameras approved${y === currentYear ? ` (through ${apDate(snapshotDate)})` : ""} · ${fmt(running[i])} in total by then`}
             />
             <span className="permit-label">{y}{y === currentYear ? "*" : ""}</span>
             <span className="permit-cum">{fmt(running[i])}</span>
@@ -39,7 +40,7 @@ export default function PermitTimeline({ byYear, snapshotDate }) {
       <p className="gap-caption">
         Bars are cameras by WisDOT approval date; the small figure under each year is the
         running total. {peak} was the peak year so far; *{currentYear} covers only the months
-        through the {snapshotDate} records snapshot
+        through the {apDate(snapshotDate)} records snapshot
         {unknown > 0 ? `, and ${unknown} cameras carry no approval date in the registry` : ""}.
       </p>
     </div>

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { downloadCsv } from "./csv.js";
+import useOverflow from "./useOverflow.js";
 
 const perK = (r) => (r.usat_searches && r.population ? (1000 * r.usat_searches) / r.population : 0);
 
@@ -29,6 +30,8 @@ const Num = ({ n, dec }) => (
 export default function CountyTable({ counties, home = "Marathon County", generated }) {
   const [sort, setSort] = useState({ key: "population", dir: -1 });
   const maxUsat = Math.max(...counties.map((r) => r.usat_searches ?? 0), 1);
+  // In the 599 px article column the searches column starts off-screen: say so.
+  const [scrollRef, overflow] = useOverflow();
 
   const rows = useMemo(() => {
     const col = COLS.find((c) => c.key === sort.key);
@@ -44,7 +47,9 @@ export default function CountyTable({ counties, home = "Marathon County", genera
 
   return (
     <>
-      <div className="table-scroll">
+      {overflow.right && <p className="table-hint">Swipe sideways for more columns →</p>}
+      <div className={`table-viewport${overflow.left ? " overflow-left" : ""}${overflow.right ? " overflow-right" : ""}`}>
+      <div className="table-scroll" ref={scrollRef}>
         <table className="county-table">
           <caption className="visually-hidden">
             Per-county rollup of agencies, Flock network membership, transparency portals,
@@ -93,6 +98,7 @@ export default function CountyTable({ counties, home = "Marathon County", genera
             ))}
           </tbody>
         </table>
+      </div>
       </div>
       <div className="table-tools">
         <button

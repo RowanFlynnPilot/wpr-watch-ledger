@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { slug } from "./share.js";
+import { apDate } from "./dates.js";
 
 // The agencies that have ended Flock, and those that have stopped using the cameras without
 // (yet) ending the contract, in order. Dates are when the newsroom's source reported the
 // decision (the overlay's as_of), so agencies named in one report share a date and a note.
 
-const day = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+const day = (d) => apDate(d);
 const short = (n) => n.replace(/ Police Department$/, " PD").replace(/ Sheriff's Office$/, " Sheriff");
 
 const CAP = 7;

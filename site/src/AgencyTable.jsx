@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Sparkline from "./Sparkline.jsx";
 import { downloadCsv } from "./csv.js";
+import useOverflow from "./useOverflow.js";
 
 const CSV_COLS = [
   { label: "Agency", get: (a) => a.name },
@@ -99,24 +100,7 @@ export default function AgencyTable({ agencies, searchDeltas, history, staleThre
   }, [history]);
 
   // Edge fades + swipe hint, shown only while there is actually more table to scroll to.
-  const scrollRef = useRef(null);
-  const [overflow, setOverflow] = useState({ left: false, right: false });
-  useEffect(() => {
-    const el = scrollRef.current;
-    const update = () =>
-      setOverflow((prev) => {
-        const left = el.scrollLeft > 4;
-        const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 4;
-        return prev.left === left && prev.right === right ? prev : { left, right };
-      });
-    update();
-    el.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      el.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, []);
+  const [scrollRef, overflow] = useOverflow();
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();

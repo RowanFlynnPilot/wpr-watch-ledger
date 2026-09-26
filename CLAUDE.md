@@ -129,6 +129,15 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   Records Law request letter + tip line; nothing is sent from the page). The map draws a
   facing wedge per camera at zoom >= 14 from OSM `direction` (degrees, cardinals, `a;b`
   lists and `a-b` ranges). The map instance hangs off its container as `__map` for debugging.
+  House rules from the 2026-09-25 visual pass: reader-facing dates go through `apDate()` in
+  `dates.js` (AP style, "Sept. 7, 2026"); tables and CSVs keep ISO. Long captions
+  (`.gap-caption`) are set in the body face; mono is for figures, kickers and labels. Any
+  sideways-scrolling table uses `useOverflow.js` for its edge fade and swipe hint.
+  Week by week (`Trend.jsx`) must follow the 30-day ledger's staleness rule or the two print
+  different totals for the same measure (they did: 7.78M vs 6.55M). It drops a portal from any
+  week in which its figures were more than STALE_DAYS old, judged from the portal's current
+  `updated` date (it only moves forward, so that is exact for exclusion). Hand-read portals are
+  not in the weekly snapshots, so the ledger's latest total exceeds the trend's by their figures.
 - `data/changes.json` — GENERATED change log, one entry per run: cameras added/removed (by
   county), portals that appeared or vanished, status changes, roster additions. refresh.py
   diffs against the data committed by the previous run BEFORE overwriting it; a same-day

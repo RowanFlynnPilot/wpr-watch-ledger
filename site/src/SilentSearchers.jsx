@@ -5,6 +5,8 @@ import React from "react";
 // cleanest statement of the transparency gap the ledger can make: most of the
 // heaviest users disclose nothing.
 
+import { apDate } from "./dates.js";
+
 const fmt = (n) => n.toLocaleString("en-US");
 const TOP = 20;
 
@@ -71,7 +73,8 @@ export default function SilentSearchers({ agencies, usat }) {
               {a.status.value === "dropped" && <span className="badge badge-dropped">dropped</span>}
               {a.ice_287g && <span className="flag flag-ice" title={`ICE 287(g): ${a.ice_287g.models.join(" + ")}`}>287(g)</span>}
             </span>
-            <div>
+            <span className="silent-num">{fmt(a.usatoday.searches)}</span>
+            <div className="silent-track">
               <span
                 className={`silent-bar${a.portal ? " has-portal" : ""}`}
                 role="img"
@@ -80,16 +83,19 @@ export default function SilentSearchers({ agencies, usat }) {
                 <span style={{ width: `${(100 * a.usatoday.searches) / max}%` }} />
               </span>
               <span className="silent-fact">
-                {fmt(a.usatoday.searches)} searches
-                {a.portal ? " · publishes a portal" : " · no portal"}
-                {a.usatoday.flagged_rows > 0 && ` · ${a.usatoday.flagged_rows} high-frequency plate search${a.usatoday.flagged_rows === 1 ? "" : "es"} flagged`}
+                <span className={a.portal ? "sf-portal" : undefined}>{a.portal ? "publishes a portal" : "no portal"}</span>
+                {a.usatoday.flagged_rows > 0 && (
+                  <span className="sf-flag">
+                    {" · "}{a.usatoday.flagged_rows} high-frequency plate search{a.usatoday.flagged_rows === 1 ? "" : "es"} flagged
+                  </span>
+                )}
               </span>
             </div>
           </div>
         ))}
       </div>
       <p className="gap-caption">
-        Cumulative individual searches from audit logs, {cov.first_seen} to {cov.last_seen}; a
+        Cumulative individual searches from audit logs, {apDate(cov.first_seen)} to {apDate(cov.last_seen)}; a
         different measure from the portals' 30-day session counts, and an agency's total reflects
         the logs USA TODAY obtained. Flagged rows are among the 5,000 highest-frequency plate
         searches nationally by USA TODAY's score, which the paper says is not an accusation of

@@ -1,4 +1,5 @@
 import React from "react";
+import { apDate } from "./dates.js";
 
 // Methodology & sources: one card per dataset (what it is, who made it, how it is
 // used here, how fresh it is), then how statuses are decided, then the standard the
@@ -55,7 +56,7 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
           deactivated placeholders removed.
         </Source>
         {u && (
-          <Source eyebrow="Search records" name="USA TODAY, Flock Safety Records Search" href={u.url} cadence={`Snapshot ${u.retrieved} · covers ${u.coverage.first_seen} to ${u.coverage.last_seen}`}>
+          <Source eyebrow="Search records" name="USA TODAY, Flock Safety Records Search" href={u.url} cadence={`Snapshot ${apDate(u.retrieved)} · covers ${apDate(u.coverage.first_seen)} to ${apDate(u.coverage.last_seen)}`}>
             Flock usage audit logs obtained under public-records laws and analyzed by USA TODAY:{" "}
             {fmt(u.coverage.searches)} searches by {u.coverage.agencies} Wisconsin agencies and{" "}
             {fmt(u.coverage.users)} known users. These are individual searches accumulated over the
@@ -65,7 +66,7 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
             of wrongdoing.
           </Source>
         )}
-        <Source eyebrow="Highway permits" name="Wisconsin DOT records, mapped by Deflock Dane" href="https://deflockdane.org/wisdot-alpr-map" cadence={`Snapshot ${wisdot.snapshot_date} · refreshed on each records release`}>
+        <Source eyebrow="Highway permits" name="Wisconsin DOT records, mapped by Deflock Dane" href="https://deflockdane.org/wisdot-alpr-map" cadence={`Snapshot ${apDate(wisdot.snapshot_date)} · refreshed on each records release`}>
           State-highway right-of-way permits obtained under the Wisconsin Open Records Law. Official,
           and independent of the volunteer map: a ring with no dot inside it is a camera the
           volunteers have not found yet.
@@ -75,7 +76,7 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
           agency names the roster prefers.
         </Source>
         {meta.ice_287g && (
-          <Source eyebrow="ICE cooperation" name="ICE 287(g) participating agencies" href={meta.ice_287g.url} cadence={`Snapshot ${meta.ice_287g.retrieved} · re-downloaded when ICE updates the list`}>
+          <Source eyebrow="ICE cooperation" name="ICE 287(g) participating agencies" href={meta.ice_287g.url} cadence={`Snapshot ${apDate(meta.ice_287g.retrieved)} · re-downloaded when ICE updates the list`}>
             ICE's own list of agencies with 287(g) agreements: {meta.ice_287g.agencies} Wisconsin sheriff's
             offices holding {meta.ice_287g.agreements} agreements, {meta.ice_287g.in_network} of them in the Flock
             network. Shown as a flag on the roster, the reach list and the silent searchers. A 287(g)
@@ -83,7 +84,7 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
             sharing lists can put their cameras within reach of an agency that also works with ICE.
           </Source>
         )}
-        <Source eyebrow="Population" name="Wisconsin Department of Administration estimates" href="https://doa.wi.gov/Pages/LocalGovtsGrants/Population_Estimates.aspx" cadence={`Official estimates as of ${counties.population_as_of}`}>
+        <Source eyebrow="Population" name="Wisconsin Department of Administration estimates" href="https://doa.wi.gov/Pages/LocalGovtsGrants/Population_Estimates.aspx" cadence={`Official estimates as of ${apDate(counties.population_as_of)}`}>
           County and municipal populations behind the coverage figure and the per-1,000-residents
           column. County spellings are validated against this list on every refresh.
         </Source>
@@ -132,7 +133,8 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
       </p>
 
       <p className="foot-credit">
-        Reporting tool developed by <strong>Rowan Flynn</strong> for Wausau Pilot &amp; Review.
+        Reporting tool developed by <strong>Rowan Flynn</strong> for Wausau Pilot &amp; Review
+        {" · "}<a className="foot-tel" href="tel:+17153015539">715-301-5539</a>
       </p>
 
       <a className="foot-brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">

@@ -1472,3 +1472,62 @@ tr.row-home td:first-child { font-weight: 700; }
 .map-inview strong { color: var(--teal-deep); font-weight: 700; }
 .leaflet-popup-content .pop-title { line-height: 1.2; }
 @media print { .map-inview { display: none !important; } }
+
+/* ---- visual pass, Sept. 25: captions, silent searchers, week by week, graph frame ---- */
+
+/* Long captions read in the body face; mono stays for figures, kickers and labels. */
+.gap-caption { font-family: var(--body); font-size: 0.82rem; line-height: 1.55; max-width: 46rem; }
+.permits-wrap .gap-caption { max-width: none; }
+.foot-tel { color: inherit; text-decoration: none; white-space: nowrap; }
+.foot-tel:hover, .foot-tel:focus-visible { color: var(--teal-deep); text-decoration: underline; }
+
+/* Silent searchers: the count gets its own right-aligned column, so a row is one line of
+   name, one bar, one short note, and the figures line up down the list. */
+.silent-row {
+  grid-template-columns: 1.6rem minmax(9rem, 15rem) minmax(0, 1fr) 4.6rem;
+  grid-template-areas: "rank name track num";
+  gap: 0.2rem 0.8rem;
+}
+.silent-rank { grid-area: rank; }
+.silent-name { grid-area: name; }
+.silent-track { grid-area: track; min-width: 0; }
+.silent-num { grid-area: num; font-family: var(--mono); font-weight: 700; font-size: 0.86rem; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+.silent-fact { font-size: 0.66rem; margin-top: 0.25rem; }
+.sf-portal { color: var(--teal-deep); }
+.sf-flag { color: var(--rust-text); }
+.silent-rows { gap: 0.7rem; }
+@media (max-width: 760px) {
+  .silent-row {
+    grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+    grid-template-areas: "rank name num" ". track track";
+    align-items: baseline;
+  }
+  .silent-row > .silent-track:last-child { grid-column: 2 / -1; } /* beats the older 560 px rule */
+  .silent-bar { height: 10px; }
+  .silent-row + .silent-row { border-top: 1px dashed var(--line); padding-top: 0.6rem; }
+}
+
+/* Week by week: in the article column the two figure cards sit side by side and the movers
+   card takes the full row beneath them, instead of sitting alone beside an empty cell. */
+.trend-grid { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 580px) {
+  .trend-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trend-movers { grid-column: 1 / -1; }
+}
+@media (min-width: 900px) {
+  .trend-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .trend-movers { grid-column: auto; }
+}
+.movers li > span:first-child { font-family: var(--body); font-size: 0.84rem; line-height: 1.3; }
+.movers li { align-items: baseline; }
+
+/* Inner circle: the white panel spans the column and the square graph sits centred in it. */
+.graph-scroll { background: var(--white); border: 1px solid var(--line); }
+.sharing-graph { background: none; border: 0; max-width: 700px; min-width: 540px; margin: 0 auto; }
+.sg-label { font-size: 9px; }
+
+/* County table: the roster's swipe hint and edge fade, now that it has the same scroll box. */
+.county-rollup .table-viewport { margin-bottom: 0; }
+
+/* a caption under a boxed chart gets a breath of space; inside the box it needs none */
+.graph-scroll + .gap-caption, .silent-rows + .gap-caption, .reach-rows + .gap-caption { margin-top: 0.55rem; }

@@ -1,4 +1,5 @@
 import React from "react";
+import { apDate } from "./dates.js";
 
 // Marathon County: the newsroom's home county. The agencies that publish a
 // portal or carry a hand-verified status get a full card with a stat grid, the
@@ -26,7 +27,7 @@ export function AgencyCard({ a, usat, children }) {
         <h3>{a.name}</h3>
         <p className="card-status">
           <span className={`badge badge-${a.status.value}`}>{a.status.value === "unknown" ? "unverified" : a.status.value}</span>
-          {a.status.as_of && <span className="asof"> as of {a.status.as_of}</span>}
+          {a.status.as_of && <span className="asof"> as of {apDate(a.status.as_of)}</span>}
         </p>
       </header>
       <p className={`card-tier${p ? (p.public_search_audit ? " tier-audit" : " tier-portal") : " tier-none"}`}>
@@ -49,7 +50,7 @@ export function AgencyCard({ a, usat, children }) {
       </div>
       {a.ice_287g && (
         <p className="card-ice">
-          <strong>ICE 287(g):</strong> {a.ice_287g.agreements.map((x) => `${x.support_type}${x.signed ? `, signed ${x.signed}` : ""}`).join("; ")}.
+          <strong>ICE 287(g):</strong> {a.ice_287g.agreements.map((x) => `${x.support_type}${x.signed ? `, signed ${apDate(x.signed)}` : ""}`).join("; ")}.
           Per ICE's participating-agencies list.
         </p>
       )}
