@@ -1031,6 +1031,61 @@
     "added": [],
     "removed": []
    }
+  },
+  {
+   "date": "2026-09-28",
+   "since": "2026-09-26",
+   "cameras": {
+    "total": 2125,
+    "added": 8,
+    "removed": 8,
+    "by_county": [
+     {
+      "county": "Dane County",
+      "added": 0,
+      "removed": 7
+     },
+     {
+      "county": "Milwaukee County",
+      "added": 3,
+      "removed": 0
+     },
+     {
+      "county": "Rock County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Barron County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Racine County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Sauk County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Walworth County",
+      "added": 0,
+      "removed": 1
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
   }
  ]
 }
