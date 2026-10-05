@@ -2966,6 +2966,321 @@
     "total": 2125,
     "flock": 1603
    }
+  },
+  {
+   "date": "2026-10-05",
+   "portals": {
+    "altoona pd": {
+     "vehicles_captured_30d": 164577,
+     "searches_30d": 62,
+     "cameras": 11,
+     "hotlist_hits_30d": 134
+    },
+    "appleton pd": {
+     "vehicles_captured_30d": 420996,
+     "searches_30d": 141,
+     "cameras": 20,
+     "hotlist_hits_30d": 64
+    },
+    "baraboo pd": {
+     "vehicles_captured_30d": 110063,
+     "searches_30d": 13,
+     "cameras": 6,
+     "hotlist_hits_30d": 2155
+    },
+    "bayfield county so": {
+     "vehicles_captured_30d": 97973,
+     "searches_30d": 49,
+     "cameras": 8,
+     "hotlist_hits_30d": 502
+    },
+    "columbus pd": {
+     "vehicles_captured_30d": 85533,
+     "searches_30d": 5,
+     "cameras": 4,
+     "hotlist_hits_30d": 84
+    },
+    "cottage grove pd": {
+     "vehicles_captured_30d": 126569,
+     "searches_30d": 18,
+     "cameras": 12,
+     "hotlist_hits_30d": 478
+    },
+    "cumberland pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 20,
+     "cameras": 4,
+     "hotlist_hits_30d": 797
+    },
+    "dane county so": {
+     "vehicles_captured_30d": 747129,
+     "searches_30d": 120,
+     "cameras": 24,
+     "hotlist_hits_30d": 2888
+    },
+    "delafield pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 16,
+     "cameras": 9,
+     "hotlist_hits_30d": 265
+    },
+    "dunn county so": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 115,
+     "cameras": 10,
+     "hotlist_hits_30d": 99
+    },
+    "eau claire county so": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 35,
+     "cameras": 13,
+     "hotlist_hits_30d": 168
+    },
+    "fitchburg pd": {
+     "vehicles_captured_30d": 3511,
+     "searches_30d": 31,
+     "cameras": 3,
+     "hotlist_hits_30d": null
+    },
+    "fond du lac pd": {
+     "vehicles_captured_30d": 174164,
+     "searches_30d": 55,
+     "cameras": 14,
+     "hotlist_hits_30d": 1559
+    },
+    "germantown pd": {
+     "vehicles_captured_30d": 298127,
+     "searches_30d": 96,
+     "cameras": 12,
+     "hotlist_hits_30d": 696
+    },
+    "grafton pd": {
+     "vehicles_captured_30d": 210847,
+     "searches_30d": 86,
+     "cameras": 9,
+     "hotlist_hits_30d": 942
+    },
+    "grand chute pd": {
+     "vehicles_captured_30d": 142556,
+     "searches_30d": 0,
+     "cameras": 13,
+     "hotlist_hits_30d": 154
+    },
+    "grant county so": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 28,
+     "cameras": null,
+     "hotlist_hits_30d": 110
+    },
+    "green bay pd": {
+     "vehicles_captured_30d": 447138,
+     "searches_30d": 601,
+     "cameras": 46,
+     "hotlist_hits_30d": 8468
+    },
+    "green lake county so": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 17,
+     "cameras": 9,
+     "hotlist_hits_30d": 551
+    },
+    "greenfield pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 190,
+     "cameras": 22,
+     "hotlist_hits_30d": 6332
+    },
+    "hudson pd": {
+     "vehicles_captured_30d": 292611,
+     "searches_30d": 120,
+     "cameras": 16,
+     "hotlist_hits_30d": 822
+    },
+    "manitowoc pd": {
+     "vehicles_captured_30d": 175287,
+     "searches_30d": 218,
+     "cameras": 13,
+     "hotlist_hits_30d": null
+    },
+    "maple bluff pd": {
+     "vehicles_captured_30d": 70455,
+     "searches_30d": 29,
+     "cameras": 17,
+     "hotlist_hits_30d": 132
+    },
+    "marathon county so": {
+     "vehicles_captured_30d": 497804,
+     "searches_30d": 142,
+     "cameras": 10,
+     "hotlist_hits_30d": 1284
+    },
+    "menasha pd": {
+     "vehicles_captured_30d": 87801,
+     "searches_30d": 38,
+     "cameras": 8,
+     "hotlist_hits_30d": 284
+    },
+    "menomonee falls pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 108,
+     "cameras": 18,
+     "hotlist_hits_30d": 911
+    },
+    "mequon pd": {
+     "vehicles_captured_30d": 242737,
+     "searches_30d": 49,
+     "cameras": 8,
+     "hotlist_hits_30d": 983
+    },
+    "milwaukee pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 505,
+     "cameras": 38,
+     "hotlist_hits_30d": 16325
+    },
+    "monona pd": {
+     "vehicles_captured_30d": 241393,
+     "searches_30d": 35,
+     "cameras": 4,
+     "hotlist_hits_30d": 1065
+    },
+    "muskego pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 63,
+     "cameras": 9,
+     "hotlist_hits_30d": 472
+    },
+    "neenah pd": {
+     "vehicles_captured_30d": 205429,
+     "searches_30d": 36,
+     "cameras": 12,
+     "hotlist_hits_30d": 181
+    },
+    "new berlin pd": {
+     "vehicles_captured_30d": 422103,
+     "searches_30d": 144,
+     "cameras": 10,
+     "hotlist_hits_30d": 452
+    },
+    "new london pd": {
+     "vehicles_captured_30d": 37417,
+     "searches_30d": 5,
+     "cameras": 6,
+     "hotlist_hits_30d": 314
+    },
+    "oshkosh pd": {
+     "vehicles_captured_30d": 0,
+     "searches_30d": 0,
+     "cameras": null,
+     "hotlist_hits_30d": null
+    },
+    "pleasant prairie pd": {
+     "vehicles_captured_30d": 310004,
+     "searches_30d": 32,
+     "cameras": 8,
+     "hotlist_hits_30d": 1308
+    },
+    "racine pd": {
+     "vehicles_captured_30d": 260689,
+     "searches_30d": 374,
+     "cameras": 37,
+     "hotlist_hits_30d": 6170
+    },
+    "river falls pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 43,
+     "cameras": 9,
+     "hotlist_hits_30d": 395
+    },
+    "saint croix falls pd": {
+     "vehicles_captured_30d": 133484,
+     "searches_30d": null,
+     "cameras": 3,
+     "hotlist_hits_30d": null
+    },
+    "sharon pd": {
+     "vehicles_captured_30d": 17385,
+     "searches_30d": 1,
+     "cameras": 3,
+     "hotlist_hits_30d": 14
+    },
+    "slinger pd": {
+     "vehicles_captured_30d": 177429,
+     "searches_30d": 15,
+     "cameras": 5,
+     "hotlist_hits_30d": 322
+    },
+    "stoughton pd": {
+     "vehicles_captured_30d": 0,
+     "searches_30d": 0,
+     "cameras": 4,
+     "hotlist_hits_30d": null
+    },
+    "sun prairie pd": {
+     "vehicles_captured_30d": 246152,
+     "searches_30d": 184,
+     "cameras": 9,
+     "hotlist_hits_30d": 773
+    },
+    "trempealeau county so": {
+     "vehicles_captured_30d": 73545,
+     "searches_30d": 3,
+     "cameras": 3,
+     "hotlist_hits_30d": 182
+    },
+    "university of madison pd": {
+     "vehicles_captured_30d": 0,
+     "searches_30d": 0,
+     "cameras": 6,
+     "hotlist_hits_30d": null
+    },
+    "waupaca pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 28,
+     "cameras": 4,
+     "hotlist_hits_30d": 349
+    },
+    "wausau pd": {
+     "vehicles_captured_30d": 230594,
+     "searches_30d": 200,
+     "cameras": 20,
+     "hotlist_hits_30d": 1413
+    },
+    "waushara county so": {
+     "vehicles_captured_30d": null,
+     "searches_30d": 50,
+     "cameras": 7,
+     "hotlist_hits_30d": 90
+    },
+    "weyauwega pd": {
+     "vehicles_captured_30d": 19254,
+     "searches_30d": 1,
+     "cameras": 1,
+     "hotlist_hits_30d": 19
+    },
+    "whitewater pd": {
+     "vehicles_captured_30d": null,
+     "searches_30d": null,
+     "cameras": 13,
+     "hotlist_hits_30d": null
+    },
+    "winnebago county so": {
+     "vehicles_captured_30d": 395853,
+     "searches_30d": 255,
+     "cameras": 14,
+     "hotlist_hits_30d": 942
+    },
+    "rapids pd": {
+     "vehicles_captured_30d": 90775,
+     "searches_30d": 115,
+     "cameras": 6,
+     "hotlist_hits_30d": 558
+    }
+   },
+   "cameras": {
+    "total": 2117,
+    "flock": 1598
+   }
   }
  ]
 }

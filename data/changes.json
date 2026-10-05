@@ -1086,6 +1086,81 @@
     "added": [],
     "removed": []
    }
+  },
+  {
+   "date": "2026-10-05",
+   "since": "2026-09-28",
+   "cameras": {
+    "total": 2117,
+    "added": 6,
+    "removed": 14,
+    "by_county": [
+     {
+      "county": "Portage County",
+      "added": 0,
+      "removed": 3
+     },
+     {
+      "county": "Waukesha County",
+      "added": 0,
+      "removed": 3
+     },
+     {
+      "county": "Milwaukee County",
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "county": "Racine County",
+      "added": 0,
+      "removed": 2
+     },
+     {
+      "county": "Sheboygan County",
+      "added": 2,
+      "removed": 0
+     },
+     {
+      "county": "Waupaca County",
+      "added": 0,
+      "removed": 2
+     },
+     {
+      "county": "Wood County",
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "county": "Dane County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Douglas County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Kenosha County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Winnebago County",
+      "added": 0,
+      "removed": 1
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
   }
  ]
 }
