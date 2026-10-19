@@ -1161,6 +1161,105 @@
     "added": [],
     "removed": []
    }
+  },
+  {
+   "date": "2026-10-19",
+   "since": "2026-10-05",
+   "cameras": {
+    "total": 2111,
+    "added": 10,
+    "removed": 16,
+    "by_county": [
+     {
+      "county": "Waupaca County",
+      "added": 0,
+      "removed": 5
+     },
+     {
+      "county": "Milwaukee County",
+      "added": 4,
+      "removed": 0
+     },
+     {
+      "county": "Waukesha County",
+      "added": 2,
+      "removed": 2
+     },
+     {
+      "county": "Kenosha County",
+      "added": 1,
+      "removed": 1
+     },
+     {
+      "county": "Washington County",
+      "added": 0,
+      "removed": 2
+     },
+     {
+      "county": "Barron County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Dane County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Florence County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Marathon County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Racine County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Sawyer County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Sheboygan County",
+      "added": 0,
+      "removed": 1
+     },
+     {
+      "county": "Walworth County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Wood County",
+      "added": 0,
+      "removed": 1
+     }
+    ]
+   },
+   "portals": {
+    "new": [
+     "Greendale Police Department",
+     "Nekoosa Police Department",
+     "Oak Creek Police Department",
+     "Pepin County Sheriff's Office",
+     "Prescott Police Department"
+    ],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [
+     "Glen Crossing",
+     "Jellystone Park Resort"
+    ],
+    "removed": []
+   }
   }
  ]
 }

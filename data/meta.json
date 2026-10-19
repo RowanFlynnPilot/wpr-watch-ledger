@@ -1,9 +1,9 @@
 {
-  "generated": "2026-10-05T16:59:50Z",
-  "camera_count": 2117,
-  "flock_camera_count": 1598,
-  "agency_count": 297,
-  "portal_count": 54,
+  "generated": "2026-10-19T15:27:38Z",
+  "camera_count": 2111,
+  "flock_camera_count": 1588,
+  "agency_count": 299,
+  "portal_count": 59,
   "hand_read_portal_count": 3,
   "curated_count": 56,
   "wisdot_camera_count": 759,
@@ -48,14 +48,14 @@
     "in_network": 17,
     "national_rows": 2589
   },
-  "stale_portal_count": 3,
+  "stale_portal_count": 7,
   "national": {
-    "us_portal_count": 1528,
+    "us_portal_count": 1603,
     "states_with_portals": 45,
-    "wi_portal_count": 51,
+    "wi_portal_count": 56,
     "wi_rank_by_portals": 8,
     "leader_state": "CA",
-    "leader_portal_count": 221
+    "leader_portal_count": 222
   },
   "attribution": {
     "cameras": "Camera locations \u00a9 OpenStreetMap contributors, mapped by the DeFlock community (deflock.org)",
