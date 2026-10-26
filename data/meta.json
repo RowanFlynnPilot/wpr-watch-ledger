@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-19T15:27:38Z",
-  "camera_count": 2111,
-  "flock_camera_count": 1588,
+  "generated": "2026-10-26T15:01:28Z",
+  "camera_count": 2102,
+  "flock_camera_count": 1577,
   "agency_count": 299,
   "portal_count": 59,
   "hand_read_portal_count": 3,
@@ -48,7 +48,7 @@
     "in_network": 17,
     "national_rows": 2589
   },
-  "stale_portal_count": 7,
+  "stale_portal_count": 8,
   "national": {
     "us_portal_count": 1603,
     "states_with_portals": 45,
