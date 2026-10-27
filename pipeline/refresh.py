@@ -856,6 +856,9 @@ def pretty_name(name: str, curated: bool = False) -> str:
     if curated:
         return n
     n = re.sub(r"\bTown Of\b", "Town of", n)
+    n = re.sub(r"\bHo[ -]Chunk\b", "Ho-Chunk", n)  # the Ho-Chunk Nation's own spelling
+    n = re.sub(r"^(Ho-Chunk Gaming) - ", r"\1 ", n)  # "Ho-Chunk Gaming - Madison"
+    n = re.sub(r"\bUniversity of Wisconsin - ", "University of Wisconsin-", n)  # UW house style
     n = re.sub(r"\bCo\.?(?= (?:SO|Hwy|Sheriff)\b)", "County", n)
     n = re.sub(r"\bSO$", "Sheriff's Office", n)
     n = re.sub(r"\bPD$", "Police Department", n)

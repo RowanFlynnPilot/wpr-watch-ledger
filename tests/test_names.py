@@ -44,6 +44,10 @@ class Names(unittest.TestCase):
         self.assertEqual(pretty_name("Town Of Delavan PD"), "Town of Delavan Police Department")
         self.assertEqual(pretty_name("Jackson County Sheriff’s Office"), "Jackson County Sheriff's Office")
         self.assertEqual(pretty_name("RIG DTF"), "RIG DTF")
+        self.assertEqual(pretty_name("Ho Chunk Gaming Wittenberg"), "Ho-Chunk Gaming Wittenberg")
+        self.assertEqual(pretty_name("Ho-Chunk Gaming - Madison"), "Ho-Chunk Gaming Madison")
+        self.assertEqual(pretty_name("University of Wisconsin - Whitewater PD"), "University of Wisconsin-Whitewater Police Department")
+        self.assertEqual(canonicalize("Ho-Chunk Gaming - Madison (WI)"), canonicalize("Ho-Chunk Gaming Madison"))
 
 class Counties(unittest.TestCase):
     def test_name_and_municipality_rules(self):
