@@ -19,6 +19,7 @@ import Lookup, { buildIndex } from "./Lookup.jsx";
 import SinceLast from "./SinceLast.jsx";
 import TakeAction from "./TakeAction.jsx";
 import Decisions from "./Decisions.jsx";
+import WhatsNext from "./WhatsNext.jsx";
 import { readHash, writeHash } from "./share.js";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
@@ -306,6 +307,8 @@ export default function App() {
       </section>
 
       <Decisions agencies={agencies} shapes={shapes} onPick={pickAndShow} />
+
+      <WhatsNext agencies={agencies} onPick={pickAndShow} />
 
       {meta.usatoday && <SilentSearchers agencies={agencies} usat={meta.usatoday} />}
 

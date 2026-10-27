@@ -141,7 +141,11 @@ the last committed data. Never add retry/fallback logic — fail loudly instead.
   and the municipalities in wi_city_county.json; selection lives in App and in the URL hash:
   `#agency=<slug>`, `#county=<slug>`, `#place=<slug>`, helpers in `share.js`; the WordPress
   embed script forwards the article's hash into the frame), `SinceLast.jsx` (changes.json),
-  `Decisions.jsx` (dated rail of dropped agencies from the overlay), `TakeAction.jsx` (Open
+  `Decisions.jsx` (dated rail of dropped agencies from the overlay, opened by `WalkAwayMap.jsx`:
+  the counties replaying the departures in date order, final state until seen), `WhatsNext.jsx`
+  (HAND-WRITTEN note on the ACLU's Oct. 14, 2026 Wisconsin Supreme Court warrant petition against
+  Milwaukee, Green Bay, Racine and Kenosha; update its AS_OF and copy when the court accepts,
+  declines or rules — the four cities' status badges come from the ledger), `TakeAction.jsx` (Open
   Records Law request letter + tip line; nothing is sent from the page). The map draws a
   facing wedge per camera at zoom >= 14 from OSM `direction` (degrees, cardinals, `a;b`
   lists and `a-b` ranges). The map instance hangs off its container as `__map` for debugging.

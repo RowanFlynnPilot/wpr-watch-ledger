@@ -1271,6 +1271,29 @@ tr.row-home td:first-child { font-weight: 700; }
 .decisions { margin: 0 0 3rem; }
 .decisions-dek { max-width: 44rem; margin: 0 0 1.1rem; }
 
+/* what's next: pending court action */
+.whats-next {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--ink);
+  padding: 1.1rem 1.25rem 1rem;
+  margin: -1.5rem 0 3rem;
+}
+.whats-next h2 { font-size: 1.35rem; margin: 0 0 0.5rem; }
+.whats-next p { max-width: 44rem; margin: 0 0 0.75rem; }
+.whats-next-kicker {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 0.3rem !important;
+}
+.whats-next-cities { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin: 0 0 0.8rem; padding: 0; }
+.whats-next-cities li { display: inline-flex; align-items: center; gap: 0.45rem; }
+.whats-next-cities .decision-name { font-family: var(--display); font-weight: 600; font-size: 1.05rem; }
+.whats-next-small { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0 !important; }
+
 /* the walk-away map: counties fill as their first agency leaves */
 .walkaway {
   display: grid;
