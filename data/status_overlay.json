@@ -3,9 +3,9 @@
     "name": "Wausau Police Department",
     "county": "Marathon County",
     "status": "active",
-    "as_of": "2026-09-24",
-    "note": "20 cameras at 11 locations under a five-year, $250,000 sole-source contract approved in October 2023 and running to December 2028. The agreement has no early termination for convenience, though a non-appropriation clause lets the city leave without penalty on 30 days' notice if funds are not budgeted; as of the report, Mayor Doug Diny had not said whether the 2027 budget includes the December payment. The department turned off nationwide sharing in May 2026 and now shares only with Wisconsin agencies. Its policy requires annual written audits; it has produced three, each reviewing 10 searches out of more than 10,000 a year. The contract gives Flock perpetual rights to use de-identified data in its other products. Current camera and search figures are from its transparency portal, above.",
-    "source": "https://wausaupilotandreview.com/2026/09/24/is-flock-selling-your-data-what-the-contracts-say-why-wisconsin-agencies-are-leaving-and-where-marathon-county-and-wausau-stand/",
+    "as_of": "2026-10-21",
+    "note": "Two council committees backed ending Flock: Public Health and Safety voted 5-0 Oct. 19 to stop the payments and have police stop using and cover the 20 cameras, and Finance cut the $50,000 from the 2027 budget Oct. 20. The full council takes up the budget Nov. 10; no report says the cameras are off.",
+    "source": "https://wausaupilotandreview.com/2026/10/21/second-wausau-committee-backs-cutting-flock-funding-for-2027/",
     "portal": {
       "portal_url": "https://transparency.flocksafety.com/wausau-wi-pd",
       "read_on": "2026-09-01",
@@ -179,9 +179,9 @@
     "name": "Milwaukee Police Department",
     "county": "Milwaukee County",
     "status": "active",
-    "as_of": "2026-09-23",
-    "note": "Still uses Flock, one of three plate-reader vendors it contracts with. In 2026 the department limited searches to supervisors and approved investigation types, cut image retention to seven days and stopped sharing data directly with outside agencies.",
-    "source": "https://milwaukeenns.org/2026/09/23/tracking-milwaukee-4-takeaways-on-police-license-plate-readers/"
+    "as_of": "2026-10-07",
+    "note": "Police said Oct. 6-7 they intend to renew the Flock contract, one of three plate-reader vendors the department uses, with limits including supervisor-only access and more auditing. Some alders have vowed to cut the funding in the 2027 budget.",
+    "source": "https://spectrumnews1.com/wi/milwaukee/news/2026/10/07/flock-cameras-milwaukee"
   },
   "chetek pd": {
     "name": "Chetek Police Department",
@@ -298,10 +298,10 @@
   "delavan pd": {
     "name": "City of Delavan Police Department",
     "county": "Walworth County",
-    "status": "active",
-    "as_of": "2026-09-01",
-    "note": "Publishes a transparency portal Eyes On Flock has not indexed: 11 cameras, 158,216 vehicles sighted, 36 searches and 2,508 hot-list hits in 30 days as of Sept. 1, 2026. Shares with 1,322 agencies in 38 states, including two HIDTA task forces; searchable by 999.",
-    "source": "https://transparency.flocksafety.com/city-of-delavan-wi-pd",
+    "status": "dropped",
+    "as_of": "2026-10-21",
+    "note": "City Council voted 7-1 to cancel its Flock contract and buy no plate readers from other vendors in 2027; crews removed the cameras the next day, TMJ4 reported.",
+    "source": "https://www.tmj4.com/news/local-news/in-your-community/walworth-county/delavan-residents-celebrate-after-city-votes-to-immediately-remove-flock-cameras",
     "portal": {
       "portal_url": "https://transparency.flocksafety.com/city-of-delavan-wi-pd",
       "cameras": 11,
@@ -828,5 +828,77 @@
     "as_of": "2026-06-30",
     "note": "Police Chief Brandon Marten said the department would not renew its one-year Flock contract and would remove the cameras, citing frequent downtime, slow service from Flock and community concerns.",
     "source": "https://www.fox21online.com/news/political/ashland-police-department-to-remove-flock-cameras-from-city/article_794afeda-e1e4-4762-84c0-3952d291204c.html"
+  },
+  "la crosse pd": {
+    "name": "La Crosse Police Department",
+    "county": "La Crosse County",
+    "status": "dropped",
+    "as_of": "2026-10-23",
+    "note": "The department announced Oct. 23 it is ending its Flock contract over accountability concerns about other agencies on the shared network; Mayor Shaundel Washington-Spivey backed the decision. No end date was given.",
+    "source": "https://www.cityoflacrosse.org/News-articles/Police-News/Statement-on-Flock-Safety-Program"
+  },
+  "kewaskum pd": {
+    "name": "Kewaskum Police Department",
+    "county": "Washington County",
+    "status": "dropped",
+    "as_of": "2026-10-17",
+    "note": "Did not renew its three-year Flock contract when it expired in August, Chief Tom Bishop said; the village's single camera, on Highway 45, was cut down and stolen in July and will not be replaced.",
+    "source": "https://www.washingtoncountyinsider.com/kewaskum-ends-flock-camera/"
+  },
+  "caledonia pd": {
+    "name": "Caledonia Police Department",
+    "county": "Racine County",
+    "status": "dropped",
+    "as_of": "2026-10-07",
+    "note": "Village Board voted unanimously to drop Flock from the 2027 budget and end the contract; the chief said the six cameras come down when the contract ends at the close of 2026.",
+    "source": "https://spectrumnews1.com/wi/green-bay/news/2026/10/07/caledonia-flock-cameras-racine-county"
+  },
+  "river falls pd": {
+    "name": "River Falls Police Department",
+    "county": "Pierce County",
+    "status": "dropped",
+    "as_of": "2026-10-13",
+    "note": "Police said Oct. 13 they will stop using all nine Flock cameras after an internal review and turned off outside data sharing Oct. 9. The chief will ask the council to end Flock funding in the 2027-28 budget; the four-year contract was signed in 2024.",
+    "source": "https://www.rfcity.org/CivicAlerts.aspx?AID=946"
+  },
+  "florence county so": {
+    "name": "Florence County Sheriff's Office",
+    "county": "Florence County",
+    "status": "dropped",
+    "as_of": "2026-10-21",
+    "note": "The Florence County Board voted unanimously to stop using Flock; the county's two active cameras are to be turned off and bagged until they are removed.",
+    "source": "https://www.uppermichiganssource.com/2026/10/21/florence-county-board-approves-data-center-moratorium-ends-flock-camera-use/"
+  },
+  "milwaukee county so": {
+    "name": "Milwaukee County Sheriff's Office",
+    "county": "Milwaukee County",
+    "status": "dropped",
+    "as_of": "2026-10-14",
+    "note": "The County Board voted unanimously Oct. 1 to remove the 42 Flock cameras in 11 county parks, most run by the sheriff's office; the county executive signed it Oct. 12 and the cameras were covered. The contract expires in December with no 2027 funding.",
+    "source": "https://www.newsfromthestates.com/article/milwaukee-county-covers-flock-cameras-moves-away-controversial-tech"
+  },
+  "manawa pd": {
+    "name": "Manawa Police Department",
+    "county": "Waupaca County",
+    "status": "dropped",
+    "as_of": "2026-09-24",
+    "note": "Common Council voted unanimously Sept. 21 to send Flock a formal cancellation letter at the chief's request. The city's two donation-funded cameras were never installed.",
+    "source": "https://waupacanow.com/stories/manawa-police-chief-recommends-terminating-flock-contract,355740"
+  },
+  "waupaca pd": {
+    "name": "Waupaca Police Department",
+    "county": "Waupaca County",
+    "status": "suspended",
+    "as_of": "2026-10-05",
+    "note": "Chief Pete Kraeger told the council in a memo that the city will suspend use of its four Flock cameras over data-sharing concerns while it watches for changes in state law; no contract decision was reported.",
+    "source": "https://waupacanow.com/stories/flock-cameras-suspended-in-waupaca,356960"
+  },
+  "dodge county so": {
+    "name": "Dodge County Sheriff's Office",
+    "county": "Dodge County",
+    "status": "active",
+    "as_of": "2026-10-21",
+    "note": "The County Board voted 22-10 on Oct. 20 against cutting Flock from the 2027 budget; the county has 18 cameras and requested $42,000 for 2027. Final budget adoption is in November.",
+    "source": "https://dailydodge.com/dodge-county-board-rejects-flock-camera-defunding-resolution-in-22-10-vote/"
   }
 }
