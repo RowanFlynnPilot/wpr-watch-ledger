@@ -38,8 +38,17 @@ body {
 
 .page { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
 
-.loading, .load-error { padding: 4rem 1.5rem; text-align: center; font-family: var(--mono); }
-.load-error { color: var(--rust); }
+.loading, .load-error { padding: 1rem 0 3rem; text-align: center; font-family: var(--mono); font-size: 0.8rem; color: var(--ink-soft); }
+.skeleton .stat { min-height: 7.5rem; gap: 0.55rem; }
+.sk-num, .sk-line { display: block; background: var(--line); border-radius: 2px; opacity: 0.55; animation: sk-pulse 1.4s ease-in-out infinite alternate; }
+.sk-num { width: 55%; height: 2rem; }
+.sk-line { width: 85%; height: 0.7rem; }
+.sk-line.short { width: 45%; }
+@keyframes sk-pulse { from { opacity: 0.35; } to { opacity: 0.7; } }
+@media (prefers-reduced-motion: reduce) { .sk-num, .sk-line { animation: none; } }
+.load-error { color: var(--ink); font-family: var(--body); font-size: 1rem; }
+.load-error p { margin: 0 0 0.4rem; }
+.load-error-detail { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-soft); }
 
 h2 {
   font-family: var(--display);

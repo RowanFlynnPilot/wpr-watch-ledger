@@ -24,6 +24,59 @@ import { readHash, writeHash } from "./share.js";
 
 const fmt = (n) => (n == null ? "—" : n.toLocaleString("en-US"));
 
+// The masthead, shared by the loaded page and its loading/error states, so a reader on a slow
+// phone sees the paper's brand and the story's title at once, not a blank page.
+function Brand() {
+  return (
+    <>
+      <a className="brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">
+        <span
+          className="brand-badge"
+          aria-hidden="true"
+          style={{ backgroundImage: `url(${import.meta.env.BASE_URL}wpr-badge.jpg)` }}
+        />
+        <span className="brand-wordmark">
+          Wausau Pilot <span className="amp">&amp;</span> Review
+        </span>
+      </a>
+      <div className="rule-double" aria-hidden="true" />
+      <p className="eyebrow">A newsroom data project · developed by Rowan Flynn</p>
+      <h1>The Watch Ledger</h1>
+      <p className="dek">
+        Automated license plate readers photograph every passing vehicle and log it in databases
+        searchable by police statewide. This ledger tracks every community-mapped camera in
+        Wisconsin, every agency in the Flock Safety network, who actually runs the searches,
+        and — critically — which agencies let the public see how the system is used.
+      </p>
+    </>
+  );
+}
+
+function Waiting({ error }) {
+  return (
+    <main className="page" aria-busy="true">
+      <header className="masthead">
+        <Brand />
+      </header>
+      {error ? (
+        <div className="load-error" role="alert">
+          <p>The ledger's data didn't load. Refresh the page to try again.</p>
+          <p className="load-error-detail">{error}</p>
+        </div>
+      ) : (
+        <>
+          <div className="stat-strip skeleton" aria-hidden="true">
+            {[0, 1, 2, 3].map((i) => (
+              <div className="stat" key={i}><span className="sk-num" /><span className="sk-line" /><span className="sk-line short" /></div>
+            ))}
+          </div>
+          <p className="loading" role="status">Loading the ledger…</p>
+        </>
+      )}
+    </main>
+  );
+}
+
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -101,8 +154,8 @@ export default function App() {
     return () => { stop(); window.removeEventListener("wheel", stop); window.removeEventListener("touchstart", stop); };
   }, [data]);
 
-  if (error) return <div className="load-error">Data failed to load: {error}. Refresh to try again.</div>;
-  if (!data) return <div className="loading">Loading the ledger…</div>;
+  if (error) return <Waiting error={error} />;
+  if (!data) return <Waiting />;
 
   const { meta, cameras, agencies, operators, history, edges, wisdot, counties, shapes, changes, outline } = data;
   const ageDays = Math.floor((Date.now() - new Date(meta.generated).getTime()) / 86400000);
@@ -158,25 +211,7 @@ export default function App() {
   return (
     <main className="page">
       <header className="masthead">
-        <a className="brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">
-          <span
-            className="brand-badge"
-            aria-hidden="true"
-            style={{ backgroundImage: `url(${import.meta.env.BASE_URL}wpr-badge.jpg)` }}
-          />
-          <span className="brand-wordmark">
-            Wausau Pilot <span className="amp">&amp;</span> Review
-          </span>
-        </a>
-        <div className="rule-double" aria-hidden="true" />
-        <p className="eyebrow">A newsroom data project · developed by Rowan Flynn</p>
-        <h1>The Watch Ledger</h1>
-        <p className="dek">
-          Automated license plate readers photograph every passing vehicle and log it in databases
-          searchable by police statewide. This ledger tracks every community-mapped camera in
-          Wisconsin, every agency in the Flock Safety network, who actually runs the searches,
-          and — critically — which agencies let the public see how the system is used.
-        </p>
+        <Brand />
         <p className="updated">Data refreshed {updated}</p>
         {ageDays > 10 && (
           <p className="updated-late" role="status">
