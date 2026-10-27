@@ -1310,6 +1310,77 @@
     "added": [],
     "removed": []
    }
+  },
+  {
+   "date": "2026-10-27",
+   "since": "2026-10-26",
+   "cameras": {
+    "total": 2099,
+    "added": 0,
+    "removed": 3,
+    "by_county": [
+     {
+      "county": "Outagamie County",
+      "added": 0,
+      "removed": 3
+     }
+    ]
+   },
+   "portals": {
+    "new": [],
+    "gone": []
+   },
+   "status": [
+    {
+     "name": "Caledonia Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "City of Delavan Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Florence County Sheriff's Office",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Kewaskum Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "La Crosse Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Manawa Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Milwaukee County Sheriff's Office",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "River Falls Police Department",
+     "from": "active",
+     "to": "dropped"
+    },
+    {
+     "name": "Waupaca Police Department",
+     "from": "active",
+     "to": "suspended"
+    }
+   ],
+   "agencies": {
+    "added": [],
+    "removed": []
+   }
   }
  ]
 }
