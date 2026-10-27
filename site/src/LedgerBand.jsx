@@ -15,7 +15,7 @@ export default function LedgerBand({ sightings, perDay, searches, hits, publishe
   const [progress, setProgress] = useState(1);
   useEffect(() => {
     if (reduced || !ref.current) return;
-    let raf;
+    let raf, done;
     const io = new IntersectionObserver(
       (entries) => {
         if (!entries.some((e) => e.isIntersecting)) return;
@@ -29,6 +29,12 @@ export default function LedgerBand({ sightings, perDay, searches, hits, publishe
         };
         setProgress(0);
         raf = requestAnimationFrame(step);
+        // Animation frames stop in a background tab or a throttled iframe; a timer still
+        // fires there, so the true figures always land even if the count-up is cut short.
+        done = setTimeout(() => {
+          cancelAnimationFrame(raf);
+          setProgress(1);
+        }, DURATION + 250);
       },
       { threshold: 0.4 }
     );
@@ -36,6 +42,7 @@ export default function LedgerBand({ sightings, perDay, searches, hits, publishe
     return () => {
       io.disconnect();
       cancelAnimationFrame(raf);
+      clearTimeout(done);
     };
   }, [reduced]);
 
@@ -97,14 +104,16 @@ export default function LedgerBand({ sightings, perDay, searches, hits, publishe
         whose figures are current{stale.length > 0 ? ` (of the ${publisherCount + stale.length} that publish one)` : ""}.
         The other <strong>{silentCount}</strong> agencies in the sharing network disclose
         nothing, so the true totals are higher.
-        {stale.length > 0 && (
-          <>
-            {" "}Left out: {stale.length === 1 ? "one portal" : `${stale.length} portals`} (
-            {stale.map((a) => a.name).join(", ")}) whose figures Flock has not updated in more
-            than {staleThreshold} days.
-          </>
-        )}
       </p>
+      {stale.length > 0 && (
+        <details className="ledger-stale">
+          <summary>
+            Left out: {stale.length === 1 ? "one portal" : `${stale.length} portals`} whose figures Flock has not
+            updated in more than {staleThreshold} days
+          </summary>
+          <p>{stale.map((a) => a.name.replace(/ Police Department$/, " PD").replace(/ Sheriff's Office$/, " Sheriff")).join(" · ")}</p>
+        </details>
+      )}
     </section>
   );
 }

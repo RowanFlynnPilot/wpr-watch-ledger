@@ -203,6 +203,10 @@ audit.py checks for suffix-variant duplicates and keys within a typo of each oth
 ## Design system (WPR)
 
 teal #3A867C / deep #2C6B62, cream #F6F2E9, ink #1F2421, rust #B5543B (dropped status).
+Rust means ONE thing on the page: an agency walked away (dropped or suspended). Silence/no
+portal is ink or a hollow mark, never rust (the silent-searchers and county-table bars used rust
+until 2026-10-26 and clashed with the DROPPED badges beside them). The map's rust "unmatched
+permit" rings are the one deliberate exception, a gap the volunteers haven't mapped.
 Fraunces display, Public Sans body, JetBrains Mono for data. Signature element: the
 transparency-gap tick bar (one tick per network agency, filled = publishes a portal).
 

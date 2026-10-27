@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // The silent searchers: the Wisconsin agencies that ran the most Flock searches in
 // the audit logs USA TODAY obtained, marked by whether they publish a portal. The
@@ -9,8 +9,10 @@ import { apDate } from "./dates.js";
 
 const fmt = (n) => n.toLocaleString("en-US");
 const TOP = 20;
+const FIRST = 10;
 
 export default function SilentSearchers({ agencies, usat }) {
+  const [all, setAll] = useState(false);
   const withRecords = agencies.filter((a) => a.usatoday && a.usatoday.searches > 0);
   const ice = withRecords.filter((a) => a.ice_287g);
   const iceSearches = ice.reduce((n, a) => n + a.usatoday.searches, 0);
@@ -65,7 +67,7 @@ export default function SilentSearchers({ agencies, usat }) {
         <span className="silent-key-item"><span className="silent-swatch silent-no" /> Publishes a portal</span>
       </div>
       <div className="silent-rows">
-        {top.map((a, i) => (
+        {top.slice(0, all ? TOP : FIRST).map((a, i) => (
           <div className="silent-row" key={a.canonical}>
             <span className="silent-rank">{i + 1}</span>
             <span className="silent-name">
@@ -94,6 +96,11 @@ export default function SilentSearchers({ agencies, usat }) {
           </div>
         ))}
       </div>
+      {top.length > FIRST && (
+        <button type="button" className="dl dl-quiet silent-more" onClick={() => setAll(!all)} aria-expanded={all}>
+          {all ? `Show the top ${FIRST}` : `Show all ${top.length}`}
+        </button>
+      )}
       <p className="gap-caption">
         Cumulative individual searches from audit logs, {apDate(cov.first_seen)} to {apDate(cov.last_seen)}; a
         different measure from the portals' 30-day session counts, and an agency's total reflects

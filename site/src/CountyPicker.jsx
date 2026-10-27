@@ -29,7 +29,7 @@ export default function CountyPicker({ counties, selected, onChange, counts }) {
   return (
     <div className="cp" ref={wrap}>
       <div className="cp-row">
-        <button type="button" className="dl cp-btn" aria-expanded={open} aria-haspopup="listbox" onClick={() => setOpen((o) => !o)}>
+        <button type="button" className="dl cp-btn" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
           {selected.length === 0 ? "All 72 counties" : `${selected.length} ${selected.length === 1 ? "county" : "counties"}`} ▾
         </button>
         <span className="cp-chips">
@@ -54,11 +54,11 @@ export default function CountyPicker({ counties, selected, onChange, counts }) {
             autoFocus
             aria-label="Search counties"
           />
-          <ul className="cp-list" role="listbox" aria-multiselectable="true">
+          <ul className="cp-list" aria-label="Counties to show on the map">
             {list.map((c) => {
               const n = counts[c] || { dots: 0, rings: 0 };
               return (
-                <li key={c} role="option" aria-selected={selected.includes(c)}>
+                <li key={c}>
                   <label className="cp-item">
                     <input type="checkbox" checked={selected.includes(c)} onChange={() => toggle(c)} />
                     <span className="cp-name">{short(c)}</span>

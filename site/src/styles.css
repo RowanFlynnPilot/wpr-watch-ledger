@@ -229,6 +229,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .ledger-pace-count { color: var(--white); font-weight: 700; }
 .ledger-kicker { max-width: 40rem; font-size: 0.95rem; margin: 0; color: var(--cream); }
 .ledger-kicker strong { color: var(--white); }
+.ledger-stale { margin-top: 0.7rem; font-size: 0.82rem; color: var(--cream); }
+.ledger-stale summary { cursor: pointer; font-family: var(--mono); font-size: 0.72rem; opacity: 0.85; }
+.ledger-stale summary:hover { opacity: 1; }
+.ledger-stale p { margin: 0.4rem 0 0; opacity: 0.9; max-width: 40rem; }
 
 /* transparency gap — the ledger bar */
 .gap { margin-bottom: 3rem; }
@@ -710,19 +714,21 @@ tbody tr:hover td.cell-usat { background: #e9e2d2; }
 /* the silent searchers */
 .silent { margin-bottom: 3rem; }
 .silent-dek { max-width: 44rem; }
-.silent-rows { display: flex; flex-direction: column; gap: 0.5rem; background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--rust); padding: 1rem 1.2rem; }
+.silent-rows { display: flex; flex-direction: column; gap: 0.5rem; background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--ink); padding: 1rem 1.2rem; }
 .silent-row { display: grid; grid-template-columns: 1.6rem minmax(9rem, 15rem) 1fr; gap: 0.7rem; align-items: center; font-size: 0.88rem; }
 .silent-rank { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-soft); text-align: right; }
 .silent-name { line-height: 1.25; }
 .silent-name .badge { margin-left: 0.4rem; }
 .silent-bar { display: block; height: 14px; background: var(--cream); border: 1px solid var(--line); position: relative; }
-.silent-bar > span { display: block; height: 100%; background: var(--rust); opacity: 0.85; }
+/* no portal = ink, the same 'discloses nothing' as the gap bar's hollow ticks; rust is kept for agencies that walked away */
+.silent-bar > span { display: block; height: 100%; background: var(--ink-soft); opacity: 0.8; }
 .silent-bar.has-portal > span { background: var(--teal); }
 .silent-fact { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); display: block; margin-top: 0.2rem; }
 .silent-key { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; font-family: var(--mono); font-size: 0.74rem; color: var(--ink-soft); margin-bottom: 0.6rem; }
 .silent-key-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+.silent-more { margin: 0.7rem 0 0.8rem; }
 .silent-swatch { display: inline-block; width: 14px; height: 10px; border: 1px solid var(--line); }
-.silent-swatch.silent-yes { background: var(--rust); }
+.silent-swatch.silent-yes { background: var(--ink-soft); }
 .silent-swatch.silent-no { background: var(--teal); }
 @media (max-width: 560px) {
   .silent-row { grid-template-columns: 1.6rem 1fr; }
@@ -880,6 +886,10 @@ tbody tr:hover td.cell-usat { background: #e9e2d2; }
 .cstat-num { font-family: var(--mono); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.02em; color: var(--teal-deep); line-height: 1.1; }
 .cstat-label { font-size: 0.72rem; color: var(--ink-soft); line-height: 1.3; }
 .card-spot .card-note { font-size: 0.88rem; color: var(--ink); margin: 0 0 0.7rem; }
+/* a hand-checked note is the latest reported development: it leads the card, under its badge */
+.card-note-curated { font-size: 0.95rem !important; line-height: 1.5; border-left: 3px solid var(--teal-deep); padding: 0.1rem 0 0.1rem 0.75rem; margin: 0.2rem 0 0.9rem !important; }
+.card-dropped .card-note-curated { border-left-color: var(--rust); }
+.card-note-curated + .card-tier { margin-top: 0; }
 .card-flag {
   font-size: 0.84rem;
   margin: 0 0 0.8rem;
@@ -900,7 +910,7 @@ tbody tr:hover td.cell-usat { background: #e9e2d2; }
 .cell-dropped span:not(.zero) { color: var(--rust); font-weight: 700; }
 .cell-bar { position: relative; }
 .bar-track { position: absolute; left: 0.4rem; right: 0.4rem; bottom: 4px; height: 3px; background: transparent; }
-.bar-fill { display: block; height: 100%; background: var(--rust); opacity: 0.45; }
+.bar-fill { display: block; height: 100%; background: var(--ink-soft); opacity: 0.4; }
 tr.row-home td { background: rgba(58, 134, 124, 0.09) !important; }
 tr.row-home td:first-child { font-weight: 700; }
 .home-mark { color: var(--teal); font-size: 0.6rem; margin-left: 0.35rem; vertical-align: middle; }
@@ -1577,7 +1587,7 @@ tr.row-home td:first-child { font-weight: 700; }
 .silent-num { grid-area: num; font-family: var(--mono); font-weight: 700; font-size: 0.86rem; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
 .silent-fact { font-size: 0.66rem; margin-top: 0.25rem; }
 .sf-portal { color: var(--teal-deep); }
-.sf-flag { color: var(--rust-text); }
+.sf-flag { color: var(--ink); }
 .silent-rows { gap: 0.7rem; }
 @media (max-width: 760px) {
   .silent-row {
@@ -1615,3 +1625,4 @@ tr.row-home td:first-child { font-weight: 700; }
 /* a caption under a boxed chart gets a breath of space; inside the box it needs none */
 .graph-scroll + .gap-caption, .silent-rows + .gap-caption, .reach-rows + .gap-caption { margin-top: 0.55rem; }
 .graph-scroll:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 2px; }
+.ledger-stale summary:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }

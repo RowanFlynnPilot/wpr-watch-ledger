@@ -31,6 +31,9 @@ export function AgencyCard({ a, usat, children }) {
           {a.status.as_of && <span className="asof"> as of {apDate(a.status.as_of)}</span>}
         </p>
       </header>
+      {a.status.note && (
+        <p className={`card-note${a.status.derived ? "" : " card-note-curated"}`}>{a.status.note}</p>
+      )}
       <p className={`card-tier${p ? (p.public_search_audit ? " tier-audit" : " tier-portal") : " tier-none"}`}>
         {p
           ? p.public_search_audit
@@ -69,7 +72,6 @@ export function AgencyCard({ a, usat, children }) {
           <a href="https://atlasofsurveillance.org/" target="_blank" rel="noreferrer">Atlas of Surveillance</a>, whose source links can go stale.
         </p>
       )}
-      {a.status.note && <p className="card-note">{a.status.note}</p>}
       {flagged && (
         <p className="card-flag">
           <strong>{a.usatoday.flagged_rows}</strong> of the nation's 5,000 highest-frequency plate searches in
