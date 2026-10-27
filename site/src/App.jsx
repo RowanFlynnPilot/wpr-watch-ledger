@@ -305,7 +305,7 @@ export default function App() {
         )}
       </section>
 
-      <Decisions agencies={agencies} onPick={pickAndShow} />
+      <Decisions agencies={agencies} shapes={shapes} onPick={pickAndShow} />
 
       {meta.usatoday && <SilentSearchers agencies={agencies} usat={meta.usatoday} />}
 

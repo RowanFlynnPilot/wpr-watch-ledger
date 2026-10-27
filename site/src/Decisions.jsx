@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { slug } from "./share.js";
 import { apDate } from "./dates.js";
+import WalkAwayMap from "./WalkAwayMap.jsx";
 
 // The agencies that have ended Flock, and those that have stopped using the cameras without
 // (yet) ending the contract, in order. Dates are when the newsroom's source reported the
@@ -11,7 +12,7 @@ const short = (n) => n.replace(/ Police Department$/, " PD").replace(/ Sheriff's
 
 const CAP = 7;
 
-export default function Decisions({ agencies, onPick }) {
+export default function Decisions({ agencies, shapes, onPick }) {
   const [all, setAll] = useState(false);
   const acted = agencies.filter((a) => (a.status.value === "dropped" || a.status.value === "suspended") && a.status.as_of);
   if (acted.length === 0) return null;
@@ -41,6 +42,7 @@ export default function Decisions({ agencies, onPick }) {
         . They span {counties.size} counties. Dates are when each decision was reported; an agency that decided not
         to renew may still run its cameras until the contract expires.
       </p>
+      {shapes && <WalkAwayMap agencies={agencies} shapes={shapes} />}
       <div className="decisions-key" aria-hidden="true">
         <span><span className="decision-dot" /> Ended, or voted to end</span>
         {suspended.length > 0 && <span><span className="decision-dot is-suspended" /> Use suspended, contract in place</span>}

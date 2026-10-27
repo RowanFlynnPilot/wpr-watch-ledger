@@ -1270,6 +1270,66 @@ tr.row-home td:first-child { font-weight: 700; }
 /* who has walked away: a dated rail */
 .decisions { margin: 0 0 3rem; }
 .decisions-dek { max-width: 44rem; margin: 0 0 1.1rem; }
+
+/* the walk-away map: counties fill as their first agency leaves */
+.walkaway {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
+  gap: 1rem 1.5rem;
+  align-items: start;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--rust);
+  padding: 1rem 1.1rem 1.1rem;
+  margin: 0 0 1.4rem;
+}
+.walkaway-map svg { display: block; width: 100%; max-width: 21rem; max-height: min(26rem, 70vh); margin: 0 auto; }
+.wa-county {
+  fill: var(--cream);
+  stroke: var(--white);
+  stroke-width: 0.6;
+  transition: fill 0.35s ease-out;
+}
+.wa-county.is-suspended { fill: #e9c4b8; }
+.wa-county.is-ended { fill: var(--rust); }
+.wa-county.is-home { stroke: var(--ink); stroke-width: 1.2; }
+.wa-county.is-new { animation: wa-pulse 0.9s ease-out; }
+@keyframes wa-pulse {
+  0% { stroke: var(--ink); stroke-width: 2.4; }
+  100% { stroke: var(--white); stroke-width: 0.6; }
+}
+.wa-county.is-home.is-new { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .wa-county { transition: none; }
+  .wa-county.is-new { animation: none; }
+}
+.walkaway-side { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.walkaway-date {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rust-text);
+  margin: 0;
+}
+.walkaway-tally { font-family: var(--display); font-size: 1.15rem; line-height: 1.3; margin: 0; }
+.wa-num { font-family: var(--mono); font-weight: 700; font-size: 2.1rem; letter-spacing: -0.02em; color: var(--rust); font-variant-numeric: tabular-nums; }
+.wa-num-soft { font-size: 1.35rem; color: var(--rust-text); }
+.walkaway-counties { display: block; font-family: var(--body); font-size: 0.85rem; color: var(--ink-soft); }
+.walkaway-latest { font-size: 0.82rem; color: var(--ink); min-height: 2.4em; margin: 0; }
+.walkaway-chart { width: 100%; height: auto; margin-top: 0.25rem; overflow: visible; }
+.wa-area-all { fill: #ecd2c9; }
+.wa-area-ended { fill: var(--rust); }
+.wa-playhead { stroke: var(--ink); stroke-width: 1; }
+.wa-month { font-family: var(--mono); font-size: 8.5px; fill: var(--ink-soft); }
+.walkaway-controls { display: flex; align-items: center; gap: 0.7rem; margin-top: 0.3rem; }
+.walkaway-controls .dl { flex-shrink: 0; min-width: 6.2rem; }
+.walkaway-controls input[type="range"] { flex: 1; min-width: 0; accent-color: var(--rust); }
+.walkaway-key { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-family: var(--mono); font-size: 0.68rem; color: var(--ink-soft); }
+.walkaway-key > span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.wa-swatch { width: 11px; height: 11px; display: inline-block; background: var(--rust); }
+.wa-swatch.is-suspended { background: #e9c4b8; }
+.wa-swatch.is-home { background: var(--cream); outline: 1.5px solid var(--ink); outline-offset: -1.5px; }
 .decisions-line { list-style: none; margin: 0; padding: 0; position: relative; }
 .decisions-line::before { content: ""; position: absolute; left: 7.35rem; top: 0.5rem; bottom: 0.5rem; border-left: 2px solid var(--line); }
 .decision { display: grid; grid-template-columns: 6.4rem minmax(0, 1fr); column-gap: 2rem; padding: 0 0 1.05rem; position: relative; }
