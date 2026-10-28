@@ -39,6 +39,7 @@ function Brand() {
           Wausau Pilot <span className="amp">&amp;</span> Review
         </span>
       </a>
+      <p className="tagline">Where Locals Look First For News</p>
       <div className="rule-double" aria-hidden="true" />
       <p className="eyebrow">A newsroom data project · developed by Rowan Flynn</p>
       <h1>The Watch Ledger</h1>

@@ -209,6 +209,12 @@ until 2026-10-26 and clashed with the DROPPED badges beside them). The map's rus
 permit" rings are the one deliberate exception, a gap the volunteers haven't mapped.
 Fraunces display, Public Sans body, JetBrains Mono for data. Signature element: the
 transparency-gap tick bar (one tick per network agency, filled = publishes a portal).
+This is WPR's "Follow the Money" system (see the wpr-brand skill). House invariants it carries:
+press seal + wordmark linked home, the tagline "Where Locals Look First For News" set exactly,
+thick-over-thin rule, and a footer of seal + provenance + non-affiliation + 715-301-5539.
+Social card: `pipeline/og_card.py` (run by hand; Pillow; downloads the house fonts) writes
+site/public/og-image.png from the current data with a dated figure. Rerun it when the headline
+ratio moves, and bump the `?v=` on og:image/twitter:image in index.html so Facebook refetches.
 
 ## Known constraints
 

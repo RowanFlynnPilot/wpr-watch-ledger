@@ -618,16 +618,6 @@ tbody tr:hover td { background: var(--cream); }
 /* methodology */
 .methodology { border-top: 2px solid var(--ink); padding-top: 1.25rem; }
 .methodology p { font-size: 0.85rem; color: var(--ink-soft); max-width: 46rem; }
-.foot-brand {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 11px;
-  margin-top: 2rem;
-  text-decoration: none;
-  text-align: right;
-}
-.foot-brand:hover .foot-wordmark, .foot-brand:focus-visible .foot-wordmark { color: var(--teal-deep); }
 .foot-wordmark {
   display: block;
   font-family: var(--display);
@@ -635,13 +625,6 @@ tbody tr:hover td { background: var(--cream); }
   font-size: 1.05rem;
   line-height: 1.2;
   color: var(--ink);
-}
-.foot-url {
-  display: block;
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  color: var(--teal-deep);
-  margin-top: 2px;
 }
 .foot-badge { width: 44px; height: 44px; }
 
@@ -1017,7 +1000,7 @@ tr.row-home td:first-child { font-weight: 700; }
 @media (max-width: 900px) { .jump { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .jump { grid-template-columns: repeat(3, minmax(0, 1fr)); } .jump-link { font-size: 0.6rem; padding: 0.4rem 0.2rem; } }
 .toolbar-note { flex-basis: 100%; margin: 0; font-family: var(--mono); font-size: 0.72rem; color: var(--teal-deep); }
-.foot-credit { font-size: 0.85rem !important; color: var(--ink-soft) !important; margin: 1.2rem 0 0.2rem; }
+.foot-credit { margin: 0; }
 .foot-credit strong { color: var(--ink); }
 
 /* county picker above the map */
@@ -1073,7 +1056,7 @@ tr.row-home td:first-child { font-weight: 700; }
 @media print {
   body { background: #fff; color: #000; font-size: 11pt; }
   .page { max-width: none; padding: 0; }
-  .toolbar, .map-card, .cp, .table-tools, .table-tools-top, .table-hint, .dl, .link-btn, .graph-tools, .foot-brand .brand-badge { display: none !important; }
+  .toolbar, .map-card, .cp, .table-tools, .table-tools-top, .table-hint, .dl, .link-btn, .graph-tools, .foot-seal { display: none !important; }
   .camera-map { height: 420px; }
   .table-scroll, .roster .table-scroll, .county-rollup .table-scroll { max-height: none; overflow: visible; border: none; }
   table { min-width: 0; font-size: 9pt; }
@@ -1635,3 +1618,21 @@ tr.row-home td:first-child { font-weight: 700; }
 .graph-scroll + .gap-caption, .silent-rows + .gap-caption, .reach-rows + .gap-caption { margin-top: 0.55rem; }
 .graph-scroll:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 2px; }
 .ledger-stale summary:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+
+/* WPR house tagline, set exactly; sits under the wordmark, aligned with it */
+.tagline {
+  font-family: var(--body);
+  font-size: 0.64rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0.35rem 0 0 calc(54px + 13px);
+}
+@media (max-width: 420px) { .tagline { margin-left: 0; letter-spacing: 0.2em; } }
+
+/* WPR house footer: seal left at 44 px, provenance, non-affiliation, credit */
+.foot { display: flex; gap: 14px; align-items: flex-start; margin-top: 2rem; padding-top: 1.1rem; border-top: 1px solid var(--line); }
+.foot-seal { flex-shrink: 0; line-height: 0; }
+.foot-text p { font-size: 0.75rem; line-height: 1.6; color: var(--ink-soft); margin: 0 0 0.35rem; max-width: 40rem; }
+.foot-text p.foot-wordmark { font-family: var(--display); font-weight: 650; font-size: 1.05rem; color: var(--ink); line-height: 1.2; margin-bottom: 0.3rem; }
+.foot-text .foot-credit strong { color: var(--ink); }

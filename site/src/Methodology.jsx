@@ -134,24 +134,33 @@ export default function Methodology({ meta, wisdot, counties, withPortal, staleT
         versioned on GitHub</a>, refreshed every Monday. Both tables above export to CSV.
       </p>
 
-      <p className="foot-credit">
-        Reporting tool developed by <strong>Rowan Flynn</strong> for Wausau Pilot &amp; Review
-        {" · "}<a className="foot-tel" href="tel:+17153015539">715-301-5539</a>
-      </p>
-
-      <a className="foot-brand" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer">
-        <span>
-          <span className="foot-wordmark">
+      <div className="foot">
+        <a className="foot-seal" href="https://wausaupilotandreview.com" target="_blank" rel="noreferrer" aria-label="Wausau Pilot & Review home">
+          <span
+            className="brand-badge foot-badge"
+            aria-hidden="true"
+            style={{ backgroundImage: `url(${import.meta.env.BASE_URL}wpr-badge.jpg)` }}
+          />
+        </a>
+        <div className="foot-text">
+          <p className="foot-wordmark">
             Wausau Pilot <span className="amp">&amp;</span> Review
-          </span>
-          <span className="foot-url">wausaupilotandreview.com</span>
-        </span>
-        <span
-          className="brand-badge foot-badge"
-          aria-hidden="true"
-          style={{ backgroundImage: `url(${import.meta.env.BASE_URL}wpr-badge.jpg)` }}
-        />
-      </a>
+          </p>
+          <p>
+            Data from DeFlock volunteers on OpenStreetMap, Eyes On Flock, USA TODAY, Wisconsin DOT
+            records mapped by Deflock Dane, EFF's Atlas of Surveillance, ICE and the Wisconsin
+            Department of Administration · refreshed every Monday.
+          </p>
+          <p>
+            Not affiliated with or endorsed by Flock Safety, any law enforcement agency listed here,
+            or any of the sources above.
+          </p>
+          <p className="foot-credit">
+            Reporting tool developed by <strong>Rowan Flynn</strong> for Wausau Pilot &amp; Review
+            {" · "}<a className="foot-tel" href="tel:+17153015539">715-301-5539</a>
+          </p>
+        </div>
+      </div>
     </footer>
   );
 }
