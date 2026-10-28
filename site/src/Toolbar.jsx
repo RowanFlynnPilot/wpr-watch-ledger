@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { jumpTo } from "./jump.js";
 import { pageUrl } from "./share.js";
 
 // Under the masthead: jump links to every section, a bookmark button, and share.
@@ -64,7 +65,7 @@ export default function Toolbar({ title }) {
     try { await navigator.share({ title, url: pageUrl() }); } catch { /* user dismissed the sheet */ }
   };
 
-  const jump = (sel) => document.querySelector(sel)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const jump = (sel) => jumpTo(sel);
 
   return (
     <nav className="toolbar" aria-label="Page tools">

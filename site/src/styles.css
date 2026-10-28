@@ -8,9 +8,9 @@
   --rust-text: #a3482f; /* small rust text on cream: 5.3:1, where --rust is 4.4:1 */
   --line: #d9d3c4;
   --white: #fffdf8;
-  --display: "Fraunces", serif;
-  --body: "Public Sans", system-ui, sans-serif;
-  --mono: "JetBrains Mono", monospace;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -358,10 +358,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .map-card-zoom button:hover { border-color: var(--teal-deep); }
 .map-card-zoom button.active { background: var(--teal-deep); border-color: var(--teal-deep); color: var(--white); }
-.map-card-legend { display: flex; flex-direction: column; gap: 0.3rem; }
+.map-card-legend { display: flex; flex-direction: column; gap: 0.45rem; }
 .legend-item { display: inline-flex; align-items: center; gap: 0.4rem; }
 .legend-toggle { cursor: pointer; color: var(--ink); }
-.legend-toggle input { accent-color: var(--teal-deep); margin: 0; }
+.legend-toggle input { accent-color: var(--teal-deep); margin: 0; width: 18px; height: 18px; flex-shrink: 0; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
 .legend-flock { background: #3a867c; border: 1.25px solid #2c6b62; }
 .legend-other { background: #b9b9b2; border: 1.25px solid #6b6b66; }
@@ -501,7 +501,7 @@ th { position: sticky; top: 0; background: var(--white); }
 .cell-name { font-weight: 500; }
 .cell-num { font-family: var(--mono); text-align: right; white-space: nowrap; }
 .delta { font-size: 0.68rem; color: var(--ink-soft); margin-left: 0.35rem; }
-.cell-sources a { margin-right: 0.6rem; font-size: 0.8rem; }
+.cell-sources a { margin-right: 0.6rem; font-size: 0.8rem; display: inline-block; padding: 4px 0; min-height: 24px; line-height: 16px; }
 tbody tr:nth-child(even) td { background: #fbf7ee; }
 tbody tr:hover td { background: var(--cream); }
 .table-count { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); }
@@ -1636,3 +1636,24 @@ tr.row-home td:first-child { font-weight: 700; }
 .foot-text p { font-size: 0.75rem; line-height: 1.6; color: var(--ink-soft); margin: 0 0 0.35rem; max-width: 40rem; }
 .foot-text p.foot-wordmark { font-family: var(--display); font-weight: 650; font-size: 1.05rem; color: var(--ink); line-height: 1.2; margin-bottom: 0.3rem; }
 .foot-text .foot-credit strong { color: var(--ink); }
+
+/* Below-the-fold sections skip style, layout and paint until a reader nears them: the roster's
+   299 rows and the inner circle's 996 SVG lines cost the phone about a second of blocking time
+   on load. Sizes are the sections' measured heights at the 599 px article width; "auto" makes
+   the browser remember each one's real size once rendered. The map is deliberately excluded: a
+   skipped section hands Leaflet a 0 x 0 box (see CLAUDE.md, fitIfSized). */
+.silent, .spotlight, .county-rollup, .roster, .sharing, .reach, .who-else-section, .action, .methodology {
+  content-visibility: auto;
+}
+.silent { contain-intrinsic-size: auto 1300px; }
+.spotlight { contain-intrinsic-size: auto 1700px; }
+.county-rollup { contain-intrinsic-size: auto 740px; }
+.roster { contain-intrinsic-size: auto 1220px; }
+.sharing { contain-intrinsic-size: auto 1500px; }
+.reach { contain-intrinsic-size: auto 1640px; }
+.who-else-section { contain-intrinsic-size: auto 2250px; }
+.action { contain-intrinsic-size: auto 650px; }
+.methodology { contain-intrinsic-size: auto 2400px; }
+@media print {
+  .silent, .spotlight, .county-rollup, .roster, .sharing, .reach, .who-else-section, .action, .methodology { content-visibility: visible; }
+}

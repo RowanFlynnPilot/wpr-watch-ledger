@@ -247,6 +247,17 @@ ratio moves, and bump the `?v=` on og:image/twitter:image in index.html so Faceb
   The gap bar is role="group", not "img", because its ticks are buttons. Check 320 px for
   sideways scroll after layout changes (selects and fixed grid minimums are the usual cause).
 
+- Below-the-fold sections (silent searchers onward, NOT the map) use `content-visibility: auto`
+  with a `contain-intrinsic-size` equal to their measured height at 599 px. A/B Lighthouse with
+  real throttling (2026-10-28): style+layout+paint -30%, blocking time down. Give any new section
+  below the map an estimate there, never the map section (a skipped section hands Leaflet a 0 x 0
+  box). In-page smooth scrolls go through `jumpTo()` in jump.js, which snaps the last pixels once
+  the deferred sections render and honours reduced motion; don't call scrollIntoView smooth directly.
+  Self-hosting the fonts via @fontsource was tested the same day and showed no measurable speed
+  gain, so the Google Fonts link stays (its only remaining argument is privacy, a call for Rowan).
+  Never run `npm ci` while `vite preview` is serving from site/: it leaves node_modules broken
+  and every later "build" silently does nothing.
+
 - Never size anything in `vh` alone. Inside the auto-height WordPress frame the viewport IS the
   page, so a vh height grows with the frame (the roster unrolled to 18,000 px). Pair it with a
   fixed ceiling: `min(72vh, 46rem)`.

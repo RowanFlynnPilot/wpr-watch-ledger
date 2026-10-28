@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { jumpTo } from "./jump.js";
 import CameraMap from "./CameraMap.jsx";
 import AgencyTable from "./AgencyTable.jsx";
 import SharingList from "./SharingList.jsx";
@@ -100,15 +101,15 @@ export default function App() {
   // Picked from elsewhere on the page (the decisions timeline): show it in the lookup.
   const pickAndShow = (p) => {
     setPick(p);
-    document.querySelector(".lookup")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    jumpTo(".lookup");
   };
   const showCounty = (name) => {
     setMapCounties([name]);
-    document.querySelector(".map-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    jumpTo(".map-section");
   };
   const findInRoster = (a) => {
     setRosterQuery({ text: a.name, n: Date.now() });
-    document.querySelector(".roster")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    jumpTo(".roster");
   };
 
   useEffect(() => {
@@ -243,7 +244,7 @@ export default function App() {
         <button
           type="button"
           className="stat stat-dropped stat-link"
-          onClick={() => document.querySelector(".decisions")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          onClick={() => jumpTo(".decisions")}
           title="See who, and when"
         >
           <span className="stat-num">{fmt(dropped.length)}</span>
