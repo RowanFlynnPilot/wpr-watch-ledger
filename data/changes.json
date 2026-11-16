@@ -1441,6 +1441,82 @@
     "added": [],
     "removed": []
    }
+  },
+  {
+   "date": "2026-11-16",
+   "since": "2026-11-02",
+   "cameras": {
+    "total": 2105,
+    "added": 21,
+    "removed": 12,
+    "by_county": [
+     {
+      "county": "Wood County",
+      "added": 11,
+      "removed": 0
+     },
+     {
+      "county": "Marinette County",
+      "added": 5,
+      "removed": 0
+     },
+     {
+      "county": "Milwaukee County",
+      "added": 1,
+      "removed": 3
+     },
+     {
+      "county": "Dane County",
+      "added": 1,
+      "removed": 2
+     },
+     {
+      "county": "Racine County",
+      "added": 0,
+      "removed": 3
+     },
+     {
+      "county": "Walworth County",
+      "added": 0,
+      "removed": 3
+     },
+     {
+      "county": "Adams County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Fond du Lac County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Ozaukee County",
+      "added": 1,
+      "removed": 0
+     },
+     {
+      "county": "Waukesha County",
+      "added": 0,
+      "removed": 1
+     }
+    ]
+   },
+   "portals": {
+    "new": [
+     "Saint Francis Police Department",
+     "West Allis Police Department"
+    ],
+    "gone": []
+   },
+   "status": [],
+   "agencies": {
+    "added": [
+     "Minkin Management",
+     "West Allis Business Improvement District"
+    ],
+    "removed": []
+   }
   }
  ]
 }
